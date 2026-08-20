@@ -1,0 +1,18 @@
+{
+  "name": "RoadTrip Shared Travel Planner",
+  "short_name": "RoadTrip",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#08111f",
+  "theme_color": "#111827",
+  "description": "Shared itinerary, voting and travel expenses planner.",
+  "icons": [
+    {
+      "src": "app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
