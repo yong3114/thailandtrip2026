@@ -668,6 +668,102 @@ body[data-theme="dark"] .filterChip.active{
 }
 </style>
 
+
+<style id="appV22Overrides">
+.quickAddSheet{
+  display:grid;
+  gap:10px;
+  margin-top:8px;
+}
+.quickAddChoice{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,#fff,#f8fafc);
+  border-radius:20px;
+  padding:15px;
+  text-align:left;
+  display:grid;
+  grid-template-columns:48px 1fr auto;
+  gap:12px;
+  align-items:center;
+  color:var(--text);
+}
+.quickAddChoice:hover{
+  border-color:#a5b4fc;
+  transform:translateY(-1px);
+}
+.quickAddIcon{
+  width:48px;height:48px;border-radius:15px;
+  display:grid;place-items:center;
+  background:#eef2ff;
+  font-size:24px;
+}
+.quickAddChoice:nth-child(2) .quickAddIcon{
+  background:#ecfdf5;
+}
+.quickAddTitle{
+  font-weight:900;
+  font-size:16px;
+}
+.quickAddSub{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:3px;
+}
+.quickAddArrow{
+  color:#94a3b8;
+  font-size:18px;
+}
+.linkedTripBox{
+  background:linear-gradient(180deg,#f8fafc,#fff);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+}
+.linkedTripHint{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:6px;
+  line-height:1.45;
+}
+.linkedPreview{
+  margin-top:9px;
+  display:none;
+  padding:10px 11px;
+  border-radius:14px;
+  background:#eef2ff;
+  color:#3730a3;
+  font-size:12px;
+  line-height:1.45;
+}
+.linkedPreview.show{display:block}
+body[data-theme="dark"] .quickAddChoice,
+body[data-theme="dark"] .linkedTripBox{
+  background:#111c2e;
+  border-color:#2b3a55;
+  color:#f8fafc;
+}
+body[data-theme="dark"] .quickAddIcon{
+  background:#29236a;
+}
+body[data-theme="dark"] .quickAddChoice:nth-child(2) .quickAddIcon{
+  background:#12392f;
+}
+body[data-theme="dark"] .linkedPreview{
+  background:#172554;
+  color:#dbeafe;
+}
+@media(max-width:640px){
+  #quickAddDialog{
+    height:auto;
+    max-height:62dvh;
+    border-radius:24px 24px 0 0;
+  }
+  #quickAddDialog .modal{
+    padding-bottom:calc(20px + env(safe-area-inset-bottom));
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -958,10 +1054,47 @@ body[data-theme="dark"] .filterChip.active{
   </form>
 </dialog>
 
+
+<dialog id="quickAddDialog">
+  <div class="modal">
+    <h3>＋ 要添加什么？</h3>
+    <div class="quickAddSheet">
+      <button id="quickAddPlace" class="quickAddChoice" type="button">
+        <span class="quickAddIcon">📍</span>
+        <span>
+          <span class="quickAddTitle">添加地点 / 美食</span>
+          <span class="quickAddSub">景点、餐厅、酒店、购物、按摩等</span>
+        </span>
+        <span class="quickAddArrow">›</span>
+      </button>
+      <button id="quickAddExpense" class="quickAddChoice" type="button">
+        <span class="quickAddIcon">💸</span>
+        <span>
+          <span class="quickAddTitle">添加 Expense</span>
+          <span class="quickAddSub">记录谁付款、RM / THB、分摊给谁</span>
+        </span>
+        <span class="quickAddArrow">›</span>
+      </button>
+    </div>
+    <div class="modalActions">
+      <button class="iconbtn" type="button" id="cancelQuickAdd">取消</button>
+    </div>
+  </div>
+</dialog>
+
 <dialog id="expenseDialog">
   <form id="expenseForm" class="modal">
     <h3 id="expenseModalTitle">新增 Expense</h3>
     <div class="formGrid">
+      <div class="full linkedTripBox">
+        <label>从现有行程选择（可选）
+          <select id="expenseLinkedItem">
+            <option value="">不关联行程地点</option>
+          </select>
+        </label>
+        <div class="linkedTripHint">选一个现有景点 / 美食 / 酒店后，会自动帮你带入标题、地点和预算金额；你仍然可以手动修改。</div>
+        <div id="expenseLinkedPreview" class="linkedPreview"></div>
+      </div>
       <label class="full">标题<input id="expenseTitle" required placeholder="例如：Mookata 晚餐"></label>
       <label>金额<input id="expenseAmount" type="number" min="0" step="0.01" required></label>
       <label>货币
@@ -1088,11 +1221,42 @@ async function init(){
   });
   if(mobileAddBtn){
     mobileAddBtn.addEventListener('click',()=>{
-      const active=document.querySelector('.navbtn.active')?.dataset.panel || 'overview';
-      if(active==='expenses') openExpenseDialog(null);
-      else openItemDialog(null);
+      $('quickAddDialog').showModal();
     });
   }
+  $('quickAddPlace')?.addEventListener('click',()=>{
+    $('quickAddDialog').close();
+    openItemDialog(null);
+  });
+  $('quickAddExpense')?.addEventListener('click',()=>{
+    $('quickAddDialog').close();
+    openExpenseDialog(null);
+  });
+  $('cancelQuickAdd')?.addEventListener('click',()=>$('quickAddDialog').close());
+
+  $('expenseLinkedItem')?.addEventListener('change',()=>{
+    const itemId=$('expenseLinkedItem').value;
+    const linked=items.find(i=>i.id===itemId);
+    const preview=$('expenseLinkedPreview');
+    if(!linked){
+      preview.classList.remove('show');
+      preview.textContent='';
+      return;
+    }
+    $('expenseTitle').value=linked.name || '';
+    if(Number(linked.cost||0)>0){
+      $('expenseAmount').value=Number(linked.cost||0);
+      $('expenseCurrency').value='RM';
+    }
+    const extra=[
+      `关联行程：Day ${linked.day_no} · ${linked.name}`,
+      linked.location ? `地点：${linked.location}` : ''
+    ].filter(Boolean).join('\\n');
+    const existing=$('expenseNote').value.trim();
+    $('expenseNote').value = existing ? `${existing}\\n${extra}` : extra;
+    preview.innerHTML=`<b>Day ${linked.day_no} · ${escapeHtml(linked.name)}</b>${linked.location?`<br>📍 ${escapeHtml(linked.location)}`:''}${Number(linked.cost||0)>0?`<br>💰 行程预算 ${money(linked.cost)}`:''}`;
+    preview.classList.add('show');
+  });
 
   $('itemSearch')?.addEventListener('input',e=>{
     itemSearch=e.target.value.trim().toLowerCase();
@@ -1249,7 +1413,7 @@ function switchPanel(panel){
   if(mobileBar) mobileBar.classList.toggle('hide', !currentTrip);
   if(mobileAddBtn){
     mobileAddBtn.textContent = panel==='expenses' ? '＋' : '＋';
-    mobileAddBtn.setAttribute('aria-label', panel==='expenses' ? '新增 Expense' : '新增地点');
+    mobileAddBtn.setAttribute('aria-label','快速新增：地点或 Expense');
   }
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -1567,6 +1731,17 @@ async function deleteItem(id){
 function openExpenseDialog(id){
   editingExpense = id ? expenses.find(e=>e.id===id) : null;
   $('expenseModalTitle').textContent = editingExpense ? '编辑 Expense' : '新增 Expense';
+
+  // Populate existing itinerary selector, grouped visually by Day in option text.
+  const linkedSelect=$('expenseLinkedItem');
+  const sortedItems=[...items].sort((a,b)=>a.day_no-b.day_no || (a.name||'').localeCompare(b.name||''));
+  linkedSelect.innerHTML = '<option value="">不关联行程地点</option>' + sortedItems.map(i=>
+    `<option value="${i.id}">Day ${i.day_no} · ${escapeHtml(i.name)}${i.location?` · ${escapeHtml(i.location)}`:''}</option>`
+  ).join('');
+  linkedSelect.value='';
+  $('expenseLinkedPreview').classList.remove('show');
+  $('expenseLinkedPreview').textContent='';
+
   $('expenseTitle').value = editingExpense?.title || '';
   $('expenseAmount').value = editingExpense?.amount || '';
   $('expenseCurrency').value = editingExpense?.currency || 'RM';
@@ -1574,6 +1749,7 @@ function openExpenseDialog(id){
   $('expensePaidBy').value = editingExpense?.paid_by || (members[0]?.user_id || '');
   $('expenseDate').value = editingExpense ? new Date(new Date(editingExpense.spent_at).getTime()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16) : nowLocalInput();
   $('expenseNote').value = editingExpense?.note || '';
+
   const selected = editingExpense ? shares.filter(s=>s.expense_id===editingExpense.id).map(s=>s.user_id) : members.map(m=>m.user_id);
   $('expenseShareMembers').innerHTML = members.map(m=>`
     <label class="shareUser"><span><input type="checkbox" class="shareMemberChk" value="${m.user_id}" ${selected.includes(m.user_id)?'checked':''}> ${escapeHtml(m.display_name)}</span></label>
