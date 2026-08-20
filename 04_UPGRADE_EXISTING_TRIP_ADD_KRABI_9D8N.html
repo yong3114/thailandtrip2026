@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Add Krabi · Upgrade to 9D8N</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f4f6fb;color:#111827}
+.wrap{max-width:900px;margin:auto;padding:22px}.hero{background:linear-gradient(135deg,#111827,#7c3aed,#2563eb);color:#fff;padding:24px;border-radius:26px}
+h1{margin:0;font-size:26px}.sub{opacity:.82;margin-top:6px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:20px;padding:18px;margin-top:14px;box-shadow:0 10px 30px #1118270d}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}label{display:grid;gap:6px;font-size:12px;color:#4b5563}
+input,select{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:12px;font-size:16px}button{padding:12px 15px;border:0;border-radius:13px;cursor:pointer;font-weight:700}
+.primary{background:#111827;color:#fff}.purple{background:linear-gradient(135deg,#7c3aed,#3b82f6);color:#fff}.msg{padding:11px;border-radius:12px;margin-top:10px}.ok{background:#f0fdf4;color:#166534}.err{background:#fef2f2;color:#991b1b}
+.small{font-size:12px;color:#6b7280}.route{padding:9px 0;border-bottom:1px solid #eee}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.stat{background:#ffffff1f;padding:10px;border-radius:14px}
+@media(max-width:620px){.grid,.stats{grid-template-columns:1fr}}
+</style></head>
+<body><div class="wrap">
+<div class="hero">
+<h1>🏝️ Add Krabi · Upgrade Existing Trip</h1>
+<div class="sub">把现有 8D7N 自动改成更舒服的 9D8N，不需要重建 Trip。</div>
+<div class="stats"><div class="stat"><b>9D8N</b><div>18–26 Nov</div></div><div class="stat"><b>2 nights</b><div>Krabi</div></div><div class="stat"><b>RM6,200</b><div>建议共同预算</div></div></div>
+</div>
+
+<div class="card"><h3>Step 1 · Connect</h3><p class="small">自动读取同目录 config.js。</p><button id="connect" class="primary">Connect to Supabase</button><div id="m1"></div></div>
+<div class="card" id="loginCard" style="display:none"><h3>Step 2 · Login</h3><div class="grid"><label class="full">Email<input id="email" type="email"></label><label class="full">Password<input id="pw" type="password"></label><button id="login" class="primary full">Login</button></div><div id="m2"></div></div>
+<div class="card" id="upgradeCard" style="display:none">
+<h3>Step 3 · 选择你现在那趟 Trip</h3>
+<div class="grid">
+<label class="full">Trip<select id="trip"></select></label>
+<label>新共同预算 RM<input id="budget" type="number" value="6200"></label>
+<label>THB→RM<input id="rate" type="number" step="0.0001" value="0.13"></label>
+<button id="upgrade" class="purple full">🔥 Upgrade to 9D8N + Add Krabi</button>
+</div>
+<p class="small">会移动原本 Day 4–8 的项目到新天数、更新固定 Budget、增加 Krabi/Alor Setar 项目，并跳过重复。</p>
+<div id="m3"></div>
+</div>
+
+<div class="card"><h3>新路线</h3>
+<div class="route"><b>Day 1</b> · Wed 18 Nov · Johor Bahru → Ipoh</div><div class="route"><b>Day 2</b> · Thu 19 Nov · Ipoh → Bukit Kayu Hitam / Sadao → Hat Yai</div><div class="route"><b>Day 3</b> · Fri 20 Nov · Hat Yai + Songkhla · Food / Old Town / Floating Market</div><div class="route"><b>Day 4</b> · Sat 21 Nov · Hat Yai → Krabi · Ao Nang</div><div class="route"><b>Day 5</b> · Sun 22 Nov · Krabi · Full Day / Vote Your Style</div><div class="route"><b>Day 6</b> · Mon 23 Nov · Krabi → Sadao Border → Alor Setar</div><div class="route"><b>Day 7</b> · Tue 24 Nov · Alor Setar → Cameron Highlands</div><div class="route"><b>Day 8</b> · Wed 25 Nov · Cameron Highlands · Full Day</div><div class="route"><b>Day 9</b> · Thu 26 Nov · Cameron Highlands → Johor Bahru</div>
+</div>
+</div>
+
+<script src="config.js"></script>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const ROUTES=["Wed 18 Nov · Johor Bahru → Ipoh", "Thu 19 Nov · Ipoh → Bukit Kayu Hitam / Sadao → Hat Yai", "Fri 20 Nov · Hat Yai + Songkhla · Food / Old Town / Floating Market", "Sat 21 Nov · Hat Yai → Krabi · Ao Nang", "Sun 22 Nov · Krabi · Full Day / Vote Your Style", "Mon 23 Nov · Krabi → Sadao Border → Alor Setar", "Tue 24 Nov · Alor Setar → Cameron Highlands", "Wed 25 Nov · Cameron Highlands · Full Day", "Thu 26 Nov · Cameron Highlands → Johor Bahru"];
+const NEW_ITEMS=[{"day_no": 4, "name": "[Budget] Krabi Hotel · 2 rooms × 2 nights", "category": "🏨 酒店", "location": "Ao Nang, Mueang Krabi, Krabi, Thailand", "cost": 560, "priority": "⭐ 必去", "link": "https://www.google.com/maps/search/?api=1&query=Ao%20Nang%20Krabi", "note": "💰 目标：RM480–650 / 2 rooms × 2 nights\n📍 建议住 Ao Nang，有停车位、Free Cancellation。\n🗓 Day 4–5 两晚，不要每天换酒店。"}, {"day_no": 6, "name": "[Budget] Alor Setar Hotel · 2 rooms × 1 night", "category": "🏨 酒店", "location": "Alor Setar, Kedah, Malaysia", "cost": 180, "priority": "⭐ 必去", "link": "https://www.google.com/maps/search/?api=1&query=Alor%20Setar%20Kedah", "note": "💰 目标：RM160–220 / 2 rooms × 1 night\n主要当 Krabi 回程后的休息站，干净、有停车位即可。"}, {"day_no": 4, "name": "Ao Nang Beach · Sunset Walk", "category": "📍 景点", "location": "Ao Nang Beach, Ao Nang, Mueang Krabi, Krabi 81180, Thailand", "cost": 0, "priority": "⭐ 必去", "link": "https://www.google.com/maps/search/?api=1&query=Ao%20Nang%20Beach%20Krabi", "note": "🗓 建议时间：16:30–18:00\n🕒 海滩全天开放\n⏱ 建议停留：1–1.5小时\n💰 免费\nHat Yai 开到 Krabi 后不要再塞重景点，check-in 后看 sunset 最舒服。"}, {"day_no": 4, "name": "Ao Nang Landmark Night Market", "category": "🍜 美食", "location": "199 4203, Ao Nang, Mueang Krabi District, Krabi, Thailand", "cost": 0, "priority": "⭐ 必去", "link": "https://www.google.com/maps/search/?api=1&query=Ao%20Nang%20Landmark%20Night%20Market", "note": "🗓 建议时间：18:00–21:00\n🕒 Daily approx. 16:00/17:00–23:00\n⏱ 1.5–2小时\n💰 4人约 RM80–150\nNight market、street food、live music。部分区域有遮棚，下雨也比较好处理。"}, {"day_no": 5, "name": "Railay Beach + Phra Nang Cave Beach", "category": "📍 景点", "location": "Railay Beach, Ao Nang, Mueang Krabi, Krabi, Thailand", "cost": 0, "priority": "⭐ 必去", "link": "https://www.google.com/maps/search/?api=1&query=Railay%20Beach%20Krabi", "note": "🗓 建议时间：08:30–13:30（半天）\n🚤 从 Ao Nang 乘 long-tail boat；TAT资料约 THB100 / person / trip，实际现场确认\n⏱ 半天\n💰 4人来回船费约 THB800 ≈ RM100+；吃喝另算\nRailay West、Phra Nang Cave Beach 很适合第一次来 Krabi。只可坐船进入。"}, {"day_no": 5, "name": "Emerald Pool · Sa Morakot", "category": "📍 景点", "location": "Khlong Thom Nuea, Khlong Thom District, Krabi 81120, Thailand", "cost": 0, "priority": "👍 想去", "link": "https://www.google.com/maps/search/?api=1&query=Emerald%20Pool%20Krabi", "note": "🗓 建议时间：08:30–11:30\n🕒 官方资料约 08:30/09:00–17:00\n💰 外国成人约 THB400/person；4人约 THB1,600 ≈ RM200+\n⏱ 2–3小时\n天然 emerald pool + rainforest。和 Klong Thom Hot Springs 是同一方向，适合一起选。"}, {"day_no": 5, "name": "Klong Thom Hot Springs", "category": "📍 景点", "location": "Khlong Thom Nuea, Khlong Thom District, Krabi 81120, Thailand", "cost": 0, "priority": "👍 想去", "link": "https://www.google.com/maps/search/?api=1&query=Klong%20Thom%20Hot%20Springs%20Krabi", "note": "🗓 建议时间：12:00–14:00（若和 Emerald Pool 一起）\n🕒 08:30–17:00\n💰 THB200/adult；4人 THB800 ≈ RM100+\n⏱ 1–1.5小时\n天然温泉瀑布，水温约38°C。需要泳衣。"}, {"day_no": 5, "name": "Krabi 4 Islands Tour · Optional", "category": "📍 景点", "location": "Ao Nang, Krabi, Thailand", "cost": 0, "priority": "🙂 有空再去", "link": "https://www.google.com/maps/search/?api=1&query=Ao%20Nang%20boat%20tours%20Krabi", "note": "🗓 通常早上出发、下午回程；具体看 operator\n💰 价格随 speedboat/long-tail、National Park fee 不同，先当 Optional，不计入基本 Budget\n如果你们选 4 Islands，就不要同一天再塞 Emerald Pool + Hot Spring。这个卡片纯粹给4个人投票决定旅行风格。"}, {"day_no": 5, "name": "Tiger Cave Temple · Wat Tham Suea", "category": "📍 景点", "location": "Krabi Noi, Mueang Krabi District, Krabi 81000, Thailand", "cost": 0, "priority": "🙂 有空再去", "link": "https://www.google.com/maps/search/?api=1&query=Tiger%20Cave%20Temple%20Krabi", "note": "🗓 建议白天、天气不太热时\n💰 寺庙通常免费 / donation\n⚠️ 山顶约1,260级台阶，非常吃体力；不想运动就直接不投。\nTAT 仍把 Wat Tham Suea 列为 Krabi 推荐自然/文化景点。"}, {"day_no": 5, "name": "Nong Joke Restaurant · Southern Thai Food", "category": "🍜 美食", "location": "Mueang Krabi District, Krabi, Thailand", "cost": 0, "priority": "⭐ 必去", "link": "https://www.google.com/maps/search/?api=1&query=Nong%20Joke%20Restaurant%20Krabi", "note": "🕒 官方 TAT 资料：Daily 11:00–14:00；16:00–21:00\n🗓 建议：Krabi full day 回来后 18:00 dinner\n💰 4人约 RM120–220（看 seafood）\nSouthern Thai cuisine + seafood；有停车位。推荐 yellow curry、crab coconut curry、Bai Liang Pat Khai。"}, {"day_no": 5, "name": "Maharaj Walking Street · Krabi Town", "category": "🍜 美食", "location": "Maharaj Soi 8, Pak Nam, Mueang Krabi, Krabi, Thailand", "cost": 0, "priority": "👍 想去", "link": "https://www.google.com/maps/search/?api=1&query=Krabi%20Walking%20Street%20Maharaj", "note": "🕒 Fri–Sun 17:00–22:00（TAT）\n🗓 Day 5 是 Sunday，刚好有开\n💰 4人 street food 约 RM60–120\n如果 Day 5 玩 inland attractions，晚上可以去 Krabi Town；若已很累就留 Ao Nang。"}, {"day_no": 5, "name": "Chao Fah Pier Night Market", "category": "🍜 美食", "location": "Chao Fah Pier, Pak Nam, Mueang Krabi, Krabi, Thailand", "cost": 0, "priority": "🙂 有空再去", "link": "https://www.google.com/maps/search/?api=1&query=Chao%20Fah%20Pier%20Night%20Market%20Krabi", "note": "🕒 TAT：Daily 17:00–00:30\n💰 4人约 RM60–120\n另一个 Krabi Town 夜市候选；跟 Maharaj Walking Street 二选一即可。"}, {"day_no": 6, "name": "Krabi → Sadao Border · Early Start", "category": "🚗 交通 / Border", "location": "Ao Nang, Krabi → Sadao Border, Songkhla, Thailand", "cost": 0, "priority": "⭐ 必去", "link": "https://www.google.com/maps/search/?api=1&query=Sadao%20Border%20Thailand", "note": "🗓 建议 Thailand time 07:30–08:00 离开 Ao Nang\nKrabi 回 Malaysia 是长途日，不要拖到中午才走。\n出 Thailand 时确认 Temporary Vehicle Import / Customs 文件已经 close。"}, {"day_no": 6, "name": "Alor Setar · Rest Night / Dinner", "category": "🍜 美食", "location": "Alor Setar, Kedah, Malaysia", "cost": 0, "priority": "⭐ 必去", "link": "https://www.google.com/maps/search/?api=1&query=Alor%20Setar%20Kedah%20food", "note": "🗓 目标傍晚抵达\n这一晚的功能是休息，不要再追很多景点。找 local dinner、补充用品、早睡，隔天去 Cameron。"}];
+const cfg=window.ROADTRIP_CONFIG||{};
+const $=id=>document.getElementById(id);
+let sb=null,user=null,trips=[];
+function msg(el,t,type='ok'){el.innerHTML=t?`<div class="msg ${type}">${t}</div>`:''}
+async function loadTrips(){
+ const {data,error}=await sb.from('trips').select('*').order('created_at',{ascending:false});
+ if(error)throw error; trips=data||[];
+ $('trip').innerHTML=trips.map(t=>`<option value="${t.id}">${t.title} · ${t.days}天 · RM${Number(t.budget_target).toLocaleString()} · ${t.invite_code}</option>`).join('');
+ $('upgradeCard').style.display='block';
+}
+$('connect').onclick=async()=>{
+ try{
+  if(!cfg.SUPABASE_URL||cfg.SUPABASE_URL.includes('PASTE_')||!cfg.SUPABASE_KEY||cfg.SUPABASE_KEY.includes('PASTE_')){msg($('m1'),'config.js 未正确设置','err');return}
+  sb=createClient(cfg.SUPABASE_URL,cfg.SUPABASE_KEY);
+  const {data:{session},error}=await sb.auth.getSession(); if(error)throw error;
+  if(session?.user){user=session.user;msg($('m1'),'Connected + Logged in ✅');await loadTrips()}
+  else{$('loginCard').style.display='block';msg($('m1'),'Connection OK ✅ 请 Login')}
+ }catch(e){msg($('m1'),e.message||String(e),'err')}
+};
+$('login').onclick=async()=>{
+ try{const {data,error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('pw').value});if(error)throw error;user=data.user;msg($('m2'),'Login 成功 ✅');await loadTrips()}
+ catch(e){msg($('m2'),e.message||String(e),'err')}
+};
+$('upgrade').onclick=async()=>{
+ const btn=$('upgrade'),tripId=$('trip').value;if(!tripId)return;
+ if(!confirm('确定把这趟 Trip 升级成 9天8夜，并加入 Krabi 吗？'))return;
+ btn.disabled=true;btn.textContent='正在升级...';
+ try{
+  // 1) Update trip settings.
+  const {error:tErr}=await sb.from('trips').update({
+    days:9,people:4,budget_target:Number($('budget').value||6200),
+    thb_rate:Number($('rate').value||0.13),routes:ROUTES
+  }).eq('id',tripId);
+  if(tErr)throw tErr;
+
+  // 2) Load current items.
+  const {data:all,error:iErr}=await sb.from('items').select('*').eq('trip_id',tripId);
+  if(iErr)throw iErr;
+  const existing=all||[];
+
+  // 3) Move old template days into new layout.
+  // Day 4 Songkhla + Day 5 Hat Yai free/easy -> Day 3
+  // Day 6: Customs stays Day 6, Cameron items -> Day 7
+  // Day 7 Cameron full -> Day 8
+  // Day 8 Cameron->JB -> Day 9
+  for(const item of existing){
+    let newDay=item.day_no;
+    if(item.day_no===4 || item.day_no===5) newDay=3;
+    else if(item.day_no===6){
+      newDay=(item.name||'').includes('Thailand Customs') ? 6 : 7;
+    }
+    else if(item.day_no===7) newDay=8;
+    else if(item.day_no===8) newDay=9;
+    if(newDay!==item.day_no){
+      const {error:uErr}=await sb.from('items').update({day_no:newDay}).eq('id',item.id);
+      if(uErr)throw uErr;
+    }
+  }
+
+  // 4) Update existing budget cards.
+  const budgetUpdates = [
+    ['[Budget] 全程 Petrol Fund',650,null],
+    ['[Budget] Toll + Parking Fund',300,null],
+    ['[Budget] 8天共同餐饮 Fund',1800,'[Budget] 9天共同餐饮 Fund'],
+    ['[Budget] 景点 / 门票 Fund',400,null],
+    ['[Budget] Hat Yai Hotel · 2 rooms × 4 nights',440,'[Budget] Hat Yai Hotel · 2 rooms × 2 nights'],
+    ['[Budget] Thai Massage Fund · 2 sessions × 4 pax',300,null]
+  ];
+  for(const [oldName,cost,newName] of budgetUpdates){
+    const found=existing.find(x=>x.name===oldName);
+    if(found){
+      const payload={cost};
+      if(newName)payload.name=newName;
+      if(oldName.includes('Hat Yai Hotel'))payload.note='💰 目标：RM380–500 / 2 rooms × 2 nights\nDay 2–3 住 Hat Yai；Day 4 转去 Krabi。';
+      const {error:bErr}=await sb.from('items').update(payload).eq('id',found.id);
+      if(bErr)throw bErr;
+    }
+  }
+
+  // 5) Add Krabi + Alor items, skip duplicates.
+  const {data:afterMove,error:aErr}=await sb.from('items').select('day_no,name').eq('trip_id',tripId);
+  if(aErr)throw aErr;
+  const keys=new Set((afterMove||[]).map(x=>`${x.day_no}||${x.name}`));
+  const rows=NEW_ITEMS.filter(i=>!keys.has(`${i.day_no}||${i.name}`)).map(i=>({
+    trip_id:tripId,day_no:i.day_no,name:i.name,category:i.category,location:i.location,
+    cost:i.cost,priority:i.priority,link:i.link,note:i.note,done:false,created_by:user.id,image_url:''
+  }));
+  for(let i=0;i<rows.length;i+=20){
+    const {error:insErr}=await sb.from('items').insert(rows.slice(i,i+20));if(insErr)throw insErr;
+  }
+  msg($('m3'),`🎉 完成！Trip 已升级成 <b>9D8N</b>，加入 <b>${rows.length}</b> 个 Krabi / Alor 项目。<br>现在回主 RoadTrip 网页 Refresh，然后开始投票 ❤️。`,'ok');
+ }catch(e){msg($('m3'),'升级失败：'+(e.message||String(e)),'err')}
+ finally{btn.disabled=false;btn.textContent='🔥 Upgrade to 9D8N + Add Krabi'}
+};
+</script></body></html>
