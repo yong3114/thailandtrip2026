@@ -970,6 +970,27 @@ body[data-theme="dark"] #tripList .muted{
 }
 </style>
 
+
+<style id="appV24ExpenseDayPicker">
+#expenseLinkedDay,
+#expenseLinkedItem{
+  min-height:48px;
+}
+#expenseLinkedItem:disabled{
+  opacity:.62;
+  cursor:not-allowed;
+}
+body[data-theme="dark"] #expenseLinkedItem:disabled{
+  color:#7f8ea5 !important;
+  background:#0a1325 !important;
+}
+@media(max-width:640px){
+  .linkedTripBox .formGrid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -1293,12 +1314,19 @@ body[data-theme="dark"] #tripList .muted{
     <h3 id="expenseModalTitle">新增 Expense</h3>
     <div class="formGrid">
       <div class="full linkedTripBox">
-        <label>从现有行程选择（可选）
-          <select id="expenseLinkedItem">
-            <option value="">不关联行程地点</option>
-          </select>
-        </label>
-        <div class="linkedTripHint">选一个现有景点 / 美食 / 酒店后，会自动帮你带入标题、地点和预算金额；你仍然可以手动修改。</div>
+        <div class="formGrid">
+          <label>先选择 Day
+            <select id="expenseLinkedDay">
+              <option value="">请选择 Day</option>
+            </select>
+          </label>
+          <label>再选择当天行程
+            <select id="expenseLinkedItem" disabled>
+              <option value="">请先选择 Day</option>
+            </select>
+          </label>
+        </div>
+        <div class="linkedTripHint">先选 Day，再选当天的景点 / 美食 / 酒店。选好后会自动带入标题、地点和预算金额；你仍然可以手动修改。</div>
         <div id="expenseLinkedPreview" class="linkedPreview"></div>
       </div>
       <label class="full">标题<input id="expenseTitle" required placeholder="例如：Mookata 晚餐"></label>
@@ -1439,6 +1467,9 @@ async function init(){
     openExpenseDialog(null);
   });
   $('cancelQuickAdd')?.addEventListener('click',()=>$('quickAddDialog').close());
+  $('expenseLinkedDay')?.addEventListener('change',()=>{
+    populateExpenseItemsForDay(Number($('expenseLinkedDay').value||0));
+  });
 
   $('expenseLinkedItem')?.addEventListener('change',()=>{
     const itemId=$('expenseLinkedItem').value;
@@ -1449,18 +1480,33 @@ async function init(){
       preview.textContent='';
       return;
     }
+
     $('expenseTitle').value=linked.name || '';
+
     if(Number(linked.cost||0)>0){
       $('expenseAmount').value=Number(linked.cost||0);
       $('expenseCurrency').value='RM';
     }
-    const extra=[
-      `关联行程：Day ${linked.day_no} · ${linked.name}`,
-      linked.location ? `地点：${linked.location}` : ''
-    ].filter(Boolean).join('\\n');
-    const existing=$('expenseNote').value.trim();
-    $('expenseNote').value = existing ? `${existing}\\n${extra}` : extra;
-    preview.innerHTML=`<b>Day ${linked.day_no} · ${escapeHtml(linked.name)}</b>${linked.location?`<br>📍 ${escapeHtml(linked.location)}`:''}${Number(linked.cost||0)>0?`<br>💰 行程预算 ${money(linked.cost)}`:''}`;
+
+    const linkLine=`关联行程：Day ${linked.day_no} · ${linked.name}`;
+    const locationLine=linked.location ? `地点：${linked.location}` : '';
+
+    // Remove an older auto-linked itinerary block before inserting a new one.
+    let existing=$('expenseNote').value || '';
+    existing=existing
+      .split('\n')
+      .filter(line=>!line.startsWith('关联行程：') && !line.startsWith('地点：'))
+      .join('\n')
+      .trim();
+
+    const autoLines=[linkLine,locationLine].filter(Boolean).join('\n');
+    $('expenseNote').value = existing ? `${existing}\n${autoLines}` : autoLines;
+
+    preview.innerHTML=
+      `<b>Day ${linked.day_no} · ${escapeHtml(linked.name)}</b>`+
+      `${linked.location?`<br>📍 ${escapeHtml(linked.location)}`:''}`+
+      `${Number(linked.cost||0)>0?`<br>💰 行程预算 ${money(linked.cost)}`:''}`;
+
     preview.classList.add('show');
   });
 
@@ -1934,32 +1980,97 @@ async function deleteItem(id){
   if(error) toast(error.message,'err');
 }
 
+
+function populateExpenseItemsForDay(dayNo, selectedItemId=''){
+  const itemSelect=$('expenseLinkedItem');
+  const preview=$('expenseLinkedPreview');
+
+  if(!dayNo){
+    itemSelect.disabled=true;
+    itemSelect.innerHTML='<option value="">请先选择 Day</option>';
+    preview.classList.remove('show');
+    preview.textContent='';
+    return;
+  }
+
+  const dayItems=items
+    .filter(i=>i.day_no===dayNo)
+    .sort((a,b)=>{
+      const rank={'⭐ 必去':0,'👍 想去':1,'🙂 有空再去':2};
+      const pr=(rank[a.priority]??9)-(rank[b.priority]??9);
+      if(pr!==0)return pr;
+      return (a.name||'').localeCompare(b.name||'');
+    });
+
+  itemSelect.disabled=false;
+  itemSelect.innerHTML=
+    '<option value="">不关联行程地点</option>'+
+    dayItems.map(i=>{
+      const budget=Number(i.cost||0)>0 ? ` · ${money(i.cost)}` : '';
+      return `<option value="${i.id}">${escapeHtml(i.category)} · ${escapeHtml(i.name)}${budget}</option>`;
+    }).join('');
+
+  if(selectedItemId && dayItems.some(i=>i.id===selectedItemId)){
+    itemSelect.value=selectedItemId;
+  }else{
+    itemSelect.value='';
+  }
+
+  preview.classList.remove('show');
+  preview.textContent='';
+}
+
 function openExpenseDialog(id){
   editingExpense = id ? expenses.find(e=>e.id===id) : null;
   $('expenseModalTitle').textContent = editingExpense ? '编辑 Expense' : '新增 Expense';
 
-  // Populate existing itinerary selector, grouped visually by Day in option text.
-  const linkedSelect=$('expenseLinkedItem');
-  const sortedItems=[...items].sort((a,b)=>a.day_no-b.day_no || (a.name||'').localeCompare(b.name||''));
-  linkedSelect.innerHTML = '<option value="">不关联行程地点</option>' + sortedItems.map(i=>
-    `<option value="${i.id}">Day ${i.day_no} · ${escapeHtml(i.name)}${i.location?` · ${escapeHtml(i.location)}`:''}</option>`
-  ).join('');
-  linkedSelect.value='';
-  $('expenseLinkedPreview').classList.remove('show');
-  $('expenseLinkedPreview').textContent='';
+  // Day selector first — default to the Day the user is currently viewing.
+  const daySelect=$('expenseLinkedDay');
+  daySelect.innerHTML=
+    '<option value="">请选择 Day</option>'+
+    Array.from({length:currentTrip.days},(_,i)=>{
+      const day=i+1;
+      const route=routes()[i] || '';
+      return `<option value="${day}">Day ${day}${route?` · ${escapeHtml(route)}`:''}</option>`;
+    }).join('');
+
+  const defaultDay=Math.min(Math.max(Number(activeDay||1),1),currentTrip.days);
+  daySelect.value=String(defaultDay);
+  populateExpenseItemsForDay(defaultDay);
 
   $('expenseTitle').value = editingExpense?.title || '';
   $('expenseAmount').value = editingExpense?.amount || '';
   $('expenseCurrency').value = editingExpense?.currency || 'RM';
-  $('expensePaidBy').innerHTML = members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.display_name)}</option>`).join('');
-  $('expensePaidBy').value = editingExpense?.paid_by || (members[0]?.user_id || '');
-  $('expenseDate').value = editingExpense ? new Date(new Date(editingExpense.spent_at).getTime()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16) : nowLocalInput();
+
+  $('expensePaidBy').innerHTML =
+    members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.display_name)}</option>`).join('');
+
+  $('expensePaidBy').value =
+    editingExpense?.paid_by || (members[0]?.user_id || '');
+
+  $('expenseDate').value = editingExpense
+    ? new Date(
+        new Date(editingExpense.spent_at).getTime() -
+        new Date().getTimezoneOffset()*60000
+      ).toISOString().slice(0,16)
+    : nowLocalInput();
+
   $('expenseNote').value = editingExpense?.note || '';
 
-  const selected = editingExpense ? shares.filter(s=>s.expense_id===editingExpense.id).map(s=>s.user_id) : members.map(m=>m.user_id);
-  $('expenseShareMembers').innerHTML = members.map(m=>`
-    <label class="shareUser"><span><input type="checkbox" class="shareMemberChk" value="${m.user_id}" ${selected.includes(m.user_id)?'checked':''}> ${escapeHtml(m.display_name)}</span></label>
-  `).join('');
+  const selected = editingExpense
+    ? shares.filter(s=>s.expense_id===editingExpense.id).map(s=>s.user_id)
+    : members.map(m=>m.user_id);
+
+  $('expenseShareMembers').innerHTML =
+    members.map(m=>`
+      <label class="shareUser">
+        <span>
+          <input type="checkbox" class="shareMemberChk" value="${m.user_id}" ${selected.includes(m.user_id)?'checked':''}>
+          ${escapeHtml(m.display_name)}
+        </span>
+      </label>
+    `).join('');
+
   $('expenseDialog').showModal();
 }
 
