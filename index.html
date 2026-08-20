@@ -1167,6 +1167,209 @@ body[data-theme="dark"] .placeEditHint{
 }
 </style>
 
+
+<style id="appV211CardSystem">
+/* =========================================================
+   V2.11 — unified itinerary cards + category color system
+   ========================================================= */
+
+.recentEditItem{
+  width:100%;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,#ffffff,#f8fafc);
+  color:var(--text);
+  border-radius:15px;
+  padding:11px 12px;
+  margin-bottom:8px;
+  text-align:left;
+  cursor:pointer;
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  transition:.16s ease;
+}
+.recentEditItem:hover{
+  transform:translateY(-1px);
+  border-color:#a5b4fc;
+}
+.recentEditIcon{
+  width:34px;height:34px;border-radius:11px;
+  display:grid;place-items:center;
+  background:#eef2ff;
+  font-size:17px;
+}
+.recentEditTitle{
+  font-weight:850;
+  color:var(--text);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.recentEditMeta{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:3px;
+}
+.recentEditArrow{
+  color:#94a3b8;
+  font-size:18px;
+}
+
+/* All itinerary cards use the same visual proportions. */
+.placeCard{
+  overflow:hidden;
+  border-width:1.5px !important;
+  border-style:solid !important;
+  border-radius:22px !important;
+  background:#fff;
+}
+.placeCard .placeCover,
+.placeCard.budgetCard .placeCover{
+  height:76px !important;
+  min-height:76px !important;
+  max-height:76px !important;
+}
+.placeCard .placeCoverEmoji,
+.placeCard.budgetCard .placeCoverEmoji{
+  font-size:27px !important;
+  line-height:1 !important;
+}
+.placeCard .placeCover img{
+  width:100%;
+  height:76px !important;
+  max-height:76px !important;
+  object-fit:cover;
+}
+.placeCard .placeBody{
+  display:flex;
+  flex-direction:column;
+  min-height:232px;
+  padding:15px !important;
+}
+.placeCard .placeTitleButton .title{
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.placeCard .placeLocation{
+  min-height:19px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.placeCard .pills{
+  min-height:35px;
+}
+.placeCard .placeActions{
+  margin-top:auto;
+}
+.placeCard .placeEditHint{
+  margin-top:6px;
+}
+
+/* Small, consistent category chip in the cover. */
+.categoryMiniLogo{
+  position:absolute;
+  left:9px;
+  top:9px;
+  width:30px;
+  height:30px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  font-size:16px;
+  background:rgba(15,23,42,.76);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.2);
+  backdrop-filter:blur(8px);
+  z-index:2;
+}
+
+/* Category colour families */
+.placeCard.cat-food{border-color:#fb7185 !important}
+.placeCard.cat-food .placeCover{background:linear-gradient(135deg,#4c1d2b,#7f1d1d) !important}
+
+.placeCard.cat-place{border-color:#818cf8 !important}
+.placeCard.cat-place .placeCover{background:linear-gradient(135deg,#312e81,#1d4ed8) !important}
+
+.placeCard.cat-hotel{border-color:#f59e0b !important}
+.placeCard.cat-hotel .placeCover{background:linear-gradient(135deg,#78350f,#a16207) !important}
+
+.placeCard.cat-shop{border-color:#e879f9 !important}
+.placeCard.cat-shop .placeCover{background:linear-gradient(135deg,#701a75,#86198f) !important}
+
+.placeCard.cat-massage{border-color:#34d399 !important}
+.placeCard.cat-massage .placeCover{background:linear-gradient(135deg,#064e3b,#047857) !important}
+
+.placeCard.cat-transport{border-color:#60a5fa !important}
+.placeCard.cat-transport .placeCover{background:linear-gradient(135deg,#1e3a8a,#075985) !important}
+
+.placeCard.cat-budget{border-color:#8b5cf6 !important}
+.placeCard.cat-budget .placeCover{background:linear-gradient(135deg,#4c1d95,#312e81) !important}
+
+.placeCard.cat-other{border-color:#94a3b8 !important}
+.placeCard.cat-other .placeCover{background:linear-gradient(135deg,#334155,#475569) !important}
+
+/* If a photo exists, keep category identity via border + small logo. */
+.placeCard .placeCover:has(img)::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(15,23,42,.05),rgba(15,23,42,.25));
+  pointer-events:none;
+}
+
+/* Dark mode */
+body[data-theme="dark"] .recentEditItem{
+  background:linear-gradient(180deg,#111c2e,#0f172a);
+  border-color:#334155;
+}
+body[data-theme="dark"] .recentEditTitle{color:#fff}
+body[data-theme="dark"] .recentEditIcon{background:#172554}
+body[data-theme="dark"] .placeCard{
+  background:#111c2e;
+}
+
+/* Phone: compact and consistent */
+@media(max-width:640px){
+  .placeCard .placeCover,
+  .placeCard.budgetCard .placeCover{
+    height:62px !important;
+    min-height:62px !important;
+    max-height:62px !important;
+  }
+  .placeCard .placeCover img{
+    height:62px !important;
+    max-height:62px !important;
+  }
+  .placeCard .placeCoverEmoji,
+  .placeCard.budgetCard .placeCoverEmoji{
+    font-size:23px !important;
+  }
+  .categoryMiniLogo{
+    width:27px;height:27px;
+    font-size:14px;
+    left:7px;top:7px;
+  }
+  .placeCard .placeBody{
+    min-height:224px;
+    padding:14px !important;
+  }
+  .placeCard .placeTitleButton .title{
+    font-size:17px !important;
+  }
+  .recentEditItem{
+    padding:10px;
+    grid-template-columns:32px minmax(0,1fr) auto;
+  }
+  .recentEditIcon{
+    width:32px;height:32px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -1428,6 +1631,9 @@ body[data-theme="dark"] .placeEditHint{
     <h3 id="itemModalTitle">新增地点</h3>
     <div class="formGrid">
       <label class="full">名称<input id="itemName" required></label>
+      <label>添加到 Day
+        <select id="itemDay"></select>
+      </label>
       <label>类别
         <select id="itemCategory">
           <option>🍜 美食</option><option>📍 景点</option><option>🏨 酒店</option><option>🛍️ 购物</option><option>💆 按摩</option><option>⛽ 加油 / 休息</option><option>🚗 交通 / Border</option><option>📝 其他</option>
@@ -1971,10 +2177,21 @@ function renderTrip(){
   });
 
   $('recentItems').innerHTML=items.slice(0,5).length?items.slice(0,5).map(i=>`
-    <div style="padding:9px 0;border-bottom:1px solid var(--line)">
-      <b>${escapeHtml(i.name)}</b>
-      <div class="footerMini">${escapeHtml(i.category)} · Day ${i.day_no} · ❤️ ${itemVoteCount(i.id)}</div>
-    </div>`).join(''):'<div class="empty">还没有行程项目</div>';
+    <button class="recentEditItem" type="button" data-recent-edit="${i.id}">
+      <span class="recentEditIcon">${escapeHtml((i.category||'📍').split(' ')[0])}</span>
+      <span>
+        <span class="recentEditTitle">${escapeHtml(i.name)}</span>
+        <span class="recentEditMeta">${escapeHtml(i.category)} · Day ${i.day_no} · ❤️ ${itemVoteCount(i.id)}</span>
+      </span>
+      <span class="recentEditArrow">›</span>
+    </button>`).join(''):'<div class="empty">还没有行程项目</div>';
+  document.querySelectorAll('[data-recent-edit]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const item=items.find(x=>x.id===btn.dataset.recentEdit);
+      if(item) activeDay=item.day_no;
+      openItemDialog(btn.dataset.recentEdit);
+    });
+  });
 
   const settlement = buildSettlements();
   $('settlementBox').innerHTML = settlement.lines.length ? settlement.lines.slice(0,4).map(l=>`
@@ -2046,6 +2263,20 @@ function renderTrip(){
     <div class="insightCard"><b>${escapeHtml(topPayerName)}</b><span>目前先付最多</span></div>`;
 }
 
+
+function getItemVisual(item){
+  const name=(item.name||'').trim();
+  const category=item.category||'';
+  if(name.startsWith('[Budget]')) return {cls:'cat-budget',icon:'💰'};
+  if(category.startsWith('🍜')) return {cls:'cat-food',icon:'🍜'};
+  if(category.startsWith('📍')) return {cls:'cat-place',icon:'📍'};
+  if(category.startsWith('🏨')) return {cls:'cat-hotel',icon:'🏨'};
+  if(category.startsWith('🛍️')) return {cls:'cat-shop',icon:'🛍️'};
+  if(category.startsWith('💆')) return {cls:'cat-massage',icon:'💆'};
+  if(category.startsWith('🚗') || category.startsWith('⛽')) return {cls:'cat-transport',icon:category.startsWith('⛽')?'⛽':'🚗'};
+  return {cls:'cat-other',icon:(category.split(' ')[0]||'📝')};
+}
+
 function renderItems(){
   let dayItems=items.filter(i=>i.day_no===activeDay);
 
@@ -2076,12 +2307,13 @@ function renderItems(){
   }
 
   $('itemsList').innerHTML = dayItems.length ? dayItems.map(item=>{
-    const emoji=escapeHtml((item.category||'📍').split(' ')[0]);
     const isBudget=(item.name||'').trim().startsWith('[Budget]');
+    const visual=getItemVisual(item);
     return `
-    <div class="itemCard placeCard tapToEdit ${isBudget?'budgetCard':''}" data-card-edit="${item.id}" style="margin-bottom:12px">
+    <div class="itemCard placeCard tapToEdit ${visual.cls} ${isBudget?'budgetCard':''}" data-card-edit="${item.id}" style="margin-bottom:12px">
       <div class="placeCover">
-        ${item.image_url?`<img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.name)}">`:`<div class="placeCoverEmoji">${isBudget?'💰':emoji}</div>`}
+        <span class="categoryMiniLogo">${escapeHtml(visual.icon)}</span>
+        ${item.image_url?`<img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.name)}">`:`<div class="placeCoverEmoji">${escapeHtml(visual.icon)}</div>`}
         <div class="placeCoverOverlay">
           <span class="coverBadge">❤️ ${itemVoteCount(item.id)}</span>
           ${item.done?'<span class="coverBadge">✓ 完成</span>':''}
@@ -2192,6 +2424,15 @@ async function toggleVote(itemId){
 function openItemDialog(id){
   editingItem = id ? items.find(i=>i.id===id) : null;
   $('itemModalTitle').textContent = editingItem ? '编辑地点' : '新增地点';
+
+  const daySelect=$('itemDay');
+  daySelect.innerHTML=Array.from({length:currentTrip.days},(_,i)=>{
+    const day=i+1;
+    const route=routes()[i] || '';
+    return `<option value="${day}">Day ${day}${route?` · ${escapeHtml(route)}`:''}</option>`;
+  }).join('');
+  daySelect.value=String(editingItem?.day_no || activeDay || 1);
+
   $('itemName').value = editingItem?.name || '';
   $('itemCategory').value = editingItem?.category || '🍜 美食';
   $('itemPriority').value = editingItem?.priority || '👍 想去';
@@ -2222,7 +2463,7 @@ async function saveItem(e){
     if(file) imageUrl = await uploadPhoto(file);
     const payload = {
       trip_id:currentTrip.id,
-      day_no:activeDay,
+      day_no:Number($('itemDay').value || activeDay || 1),
       name:$('itemName').value.trim(),
       category:$('itemCategory').value,
       priority:$('itemPriority').value,
@@ -2240,8 +2481,10 @@ async function saveItem(e){
       ({error}=await sb.from('items').insert(payload));
     }
     if(error) throw error;
+    activeDay=Number($('itemDay').value || activeDay || 1);
     $('itemDialog').close();
     toast('已保存行程项目');
+    await refreshTrip();
   }catch(err){ toast(err.message || String(err),'err'); }
 }
 
