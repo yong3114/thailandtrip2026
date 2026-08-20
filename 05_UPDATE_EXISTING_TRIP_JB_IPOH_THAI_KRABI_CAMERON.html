@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Update Existing Trip Route</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#07111f;color:#f8fafc}
+.wrap{max-width:900px;margin:auto;padding:20px}
+.hero{background:linear-gradient(135deg,#0f172a,#6d28d9,#2563eb);border-radius:26px;padding:22px;box-shadow:0 18px 50px #0005}
+h1{margin:0;font-size:25px} .sub{color:#cbd5e1;margin-top:7px}
+.card{background:#111c2e;border:1px solid #334155;border-radius:22px;padding:18px;margin-top:14px}
+button,input,select{font:inherit}button{cursor:pointer;border:0;border-radius:14px;padding:12px 15px;font-weight:800}
+.primary{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff}
+input,select{width:100%;padding:12px;border:1px solid #334155;border-radius:14px;background:#0b1530;color:#fff;font-size:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px} .full{grid-column:1/-1}
+label{display:grid;gap:6px;font-size:12px;color:#b8c3d7}
+.route{padding:9px 0;border-bottom:1px solid #334155;font-size:13px;color:#dbeafe}
+.msg{padding:11px;border-radius:12px;margin-top:10px} .ok{background:#12392f;color:#bbf7d0} .err{background:#3a1122;color:#fecdd3}
+.small{font-size:12px;color:#94a3b8}
+@media(max-width:640px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <h1>🚗 Update Route · JB → Ipoh → Thailand → Cameron → JB</h1>
+    <div class="sub">Thailand 保留 Hat Yai / Songkhla / Krabi，取消 Alor Setar 过夜。</div>
+  </div>
+
+  <div class="card">
+    <h3>Step 1 · Connect</h3>
+    <p class="small">自动读取同目录 config.js。</p>
+    <button id="connect" class="primary">Connect to Supabase</button>
+    <div id="m1"></div>
+  </div>
+
+  <div class="card" id="loginCard" style="display:none">
+    <h3>Step 2 · Login</h3>
+    <div class="grid">
+      <label class="full">Email<input id="email" type="email"></label>
+      <label class="full">Password<input id="pw" type="password"></label>
+      <button id="login" class="primary full">Login</button>
+    </div>
+    <div id="m2"></div>
+  </div>
+
+  <div class="card" id="updateCard" style="display:none">
+    <h3>Step 3 · 选择你现有的 Trip</h3>
+    <div class="grid">
+      <label class="full">Trip<select id="trip"></select></label>
+      <label>共同预算 RM<input id="budget" type="number" value="6200"></label>
+      <label>THB → RM<input id="rate" type="number" step="0.0001" value="0.13"></label>
+      <button id="update" class="primary full">🔥 Update Existing Trip Route</button>
+    </div>
+    <p class="small">会保留现有投票、照片、Expenses；只调整路线与相关交通/酒店项目。</p>
+    <div id="m3"></div>
+  </div>
+
+  <div class="card">
+    <h3>更新后的 9D8N</h3>
+    <div class="route"><b>Day 1</b> · Day 1 · Johor Bahru → Ipoh</div><div class="route"><b>Day 2</b> · Day 2 · Ipoh → Bukit Kayu Hitam / Sadao → Hat Yai</div><div class="route"><b>Day 3</b> · Day 3 · Hat Yai + Songkhla · Food / Old Town / Shopping</div><div class="route"><b>Day 4</b> · Day 4 · Hat Yai → Krabi · Ao Nang</div><div class="route"><b>Day 5</b> · Day 5 · Krabi · Full Day / Vote Your Style</div><div class="route"><b>Day 6</b> · Day 6 · Krabi → Hat Yai · Return & Rest</div><div class="route"><b>Day 7</b> · Day 7 · Hat Yai → Sadao / Bukit Kayu Hitam → Cameron Highlands</div><div class="route"><b>Day 8</b> · Day 8 · Cameron Highlands · Full Day</div><div class="route"><b>Day 9</b> · Day 9 · Cameron Highlands → Johor Bahru</div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const cfg=window.ROADTRIP_CONFIG||{};
+const ROUTES=["Day 1 · Johor Bahru → Ipoh", "Day 2 · Ipoh → Bukit Kayu Hitam / Sadao → Hat Yai", "Day 3 · Hat Yai + Songkhla · Food / Old Town / Shopping", "Day 4 · Hat Yai → Krabi · Ao Nang", "Day 5 · Krabi · Full Day / Vote Your Style", "Day 6 · Krabi → Hat Yai · Return & Rest", "Day 7 · Hat Yai → Sadao / Bukit Kayu Hitam → Cameron Highlands", "Day 8 · Cameron Highlands · Full Day", "Day 9 · Cameron Highlands → Johor Bahru"];
+const UPDATES={"[Budget] Alor Setar Hotel · 2 rooms × 1 night": {"day_no": 6, "name": "[Budget] Hat Yai Return Hotel · 2 rooms × 1 night", "location": "Hat Yai Downtown, Songkhla, Thailand", "cost": 220, "link": "https://www.google.com/maps/search/?api=1&query=Hat%20Yai%20Downtown%20Thailand", "note": "💰 目标：RM180–260 / 2 rooms × 1 night\nKrabi 回程先在 Hat Yai 休息一晚，隔天才过 border 去 Cameron，会舒服很多。\n建议继续住市中心、有停车位、Free Cancellation。"}, "Alor Setar · Rest Night / Dinner": {"day_no": 6, "name": "Hat Yai Return · Rest Night / Dinner", "location": "Hat Yai Downtown, Songkhla, Thailand", "cost": 0, "link": "https://www.google.com/maps/search/?api=1&query=Hat%20Yai%20Downtown%20food", "note": "🗓 建议傍晚回到 Hat Yai\n这一晚不要再塞景点：吃饭、按摩、补 7-Eleven、早睡。\n隔天是过关 + Cameron 长途日。"}, "Krabi → Sadao Border · Early Start": {"day_no": 6, "name": "Krabi → Hat Yai · Easy Return Drive", "location": "Ao Nang, Krabi → Hat Yai, Songkhla, Thailand", "cost": 0, "link": "https://www.google.com/maps/search/?api=1&query=Hat%20Yai%20Thailand", "note": "🗓 建议 Thailand time 09:00 前后离开 Krabi\nDay 6 不过 border，只开回 Hat Yai 休息。\n这样不用把 Krabi → Border → Cameron 全塞在同一天。"}, "Thailand Customs · Close Temporary Vehicle Import": {"day_no": 7, "name": "Hat Yai → Sadao Border · Close Temporary Import", "location": "Sadao Border, Songkhla / Bukit Kayu Hitam, Kedah", "cost": 0, "link": "https://www.google.com/maps/search/?api=1&query=Sadao%20Border%20Thailand", "note": "⭐ 必做\n🗓 Day 7 早上离开 Hat Yai 后办理 Thailand 出境。\n确认汽车 Temporary Import / Customs 文件已经完成出境手续，再进入 Malaysia。\n过关后继续前往 Cameron Highlands。"}};
+const EXTRA_ITEMS=[{"day_no": 7, "name": "Hat Yai → Cameron Highlands · Border Day", "category": "🚗 交通 / Border", "location": "Hat Yai → Sadao / Bukit Kayu Hitam → Cameron Highlands", "cost": 0, "priority": "⭐ 必去", "link": "https://www.google.com/maps/search/?api=1&query=Cameron%20Highlands%20Pahang%20Malaysia", "note": "🗓 建议 Thailand time 07:30–08:00 左右离开 Hat Yai\n今天重点是过 border + 长途去 Cameron，不安排重景点。\n建议中途至少休息 2 次；如果太累就轮流开车。", "done": false, "image_url": ""}];
+const $=id=>document.getElementById(id);
+let sb=null,user=null,trips=[];
+
+function msg(el,t,type='ok'){el.innerHTML=t?`<div class="msg ${type}">${t}</div>`:''}
+
+async function loadTrips(){
+  const {data,error}=await sb.from('trips').select('*').order('created_at',{ascending:false});
+  if(error)throw error;
+  trips=data||[];
+  $('trip').innerHTML=trips.map(t=>`<option value="${t.id}">${t.title} · ${t.days}天 · RM${Number(t.budget_target).toLocaleString()} · ${t.invite_code}</option>`).join('');
+  $('updateCard').style.display='block';
+}
+
+$('connect').onclick=async()=>{
+  try{
+    if(!cfg.SUPABASE_URL||cfg.SUPABASE_URL.includes('PASTE_')||!cfg.SUPABASE_KEY||cfg.SUPABASE_KEY.includes('PASTE_')){
+      msg($('m1'),'config.js 还没填好','err');return;
+    }
+    sb=createClient(cfg.SUPABASE_URL,cfg.SUPABASE_KEY);
+    const {data:{session},error}=await sb.auth.getSession();
+    if(error)throw error;
+    if(session?.user){user=session.user;msg($('m1'),'Connected + Logged in ✅');await loadTrips();}
+    else{msg($('m1'),'Connection OK ✅ 请 Login');$('loginCard').style.display='block';}
+  }catch(e){msg($('m1'),e.message||String(e),'err')}
+};
+
+$('login').onclick=async()=>{
+  try{
+    const {data,error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('pw').value});
+    if(error)throw error;
+    user=data.user;
+    msg($('m2'),'Login 成功 ✅');
+    await loadTrips();
+  }catch(e){msg($('m2'),e.message||String(e),'err')}
+};
+
+$('update').onclick=async()=>{
+  const tripId=$('trip').value;
+  if(!tripId)return;
+  if(!confirm('确定把这趟 Trip 更新成 JB → Ipoh → Thailand（Hat Yai + Krabi）→ Cameron → JB 吗？'))return;
+
+  const btn=$('update');
+  btn.disabled=true;btn.textContent='正在更新...';
+
+  try{
+    const {error:tErr}=await sb.from('trips').update({
+      title:'MY 🇲🇾🇹🇭 JB → Ipoh → Thailand (Hat Yai + Krabi) → Cameron → JB 2026',
+      days:9,
+      people:4,
+      budget_target:Number($('budget').value||6200),
+      thb_rate:Number($('rate').value||0.13),
+      routes:ROUTES
+    }).eq('id',tripId);
+    if(tErr)throw tErr;
+
+    const {data:all,error:iErr}=await sb.from('items').select('*').eq('trip_id',tripId);
+    if(iErr)throw iErr;
+    const existing=all||[];
+
+    for(const [oldName,payload] of Object.entries(UPDATES)){
+      const found=existing.find(x=>x.name===oldName);
+      if(found){
+        const {error:uErr}=await sb.from('items').update(payload).eq('id',found.id);
+        if(uErr)throw uErr;
+      }
+    }
+
+    // Add missing Day 7 border-day card
+    const existingNames=new Set(existing.map(x=>x.name));
+    const rows=EXTRA_ITEMS
+      .filter(i=>!existingNames.has(i.name))
+      .map(i=>({
+        ...i,
+        trip_id:tripId,
+        created_by:user.id
+      }));
+
+    if(rows.length){
+      const {error:aErr}=await sb.from('items').insert(rows);
+      if(aErr)throw aErr;
+    }
+
+    msg($('m3'),'🎉 完成！路线已经更新。现在回主 RoadTrip App 刷新，就会看到新的 9D8N 行程。','ok');
+  }catch(e){
+    msg($('m3'),'更新失败：'+(e.message||String(e)),'err');
+  }finally{
+    btn.disabled=false;
+    btn.textContent='🔥 Update Existing Trip Route';
+  }
+};
+</script>
+</body>
+</html>
