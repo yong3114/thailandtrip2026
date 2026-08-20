@@ -764,6 +764,212 @@ body[data-theme="dark"] .linkedPreview{
 }
 </style>
 
+
+<style id="appV23ContrastFixes">
+/* =========================================================
+   V2.3 — Contrast / form visibility / clearer cards
+   ========================================================= */
+
+/* -------- Light theme: clearer cards -------- */
+#tripList .itemCard{
+  background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%) !important;
+  border:1.5px solid #dbe3f0 !important;
+  box-shadow:0 10px 24px rgba(15,23,42,.08);
+}
+#tripList .title{
+  color:#0f172a !important;
+}
+#tripList .muted{
+  color:#64748b !important;
+  font-weight:600;
+}
+#tripList .btn.primary{
+  min-width:86px;
+  box-shadow:0 8px 18px rgba(79,70,229,.18);
+}
+
+/* Add-place button / quick action buttons easier to see */
+#addItemBtn,
+#addExpenseBtn,
+#saveSettingsBtn{
+  box-shadow:0 10px 22px rgba(79,70,229,.18);
+}
+#addItemBtn{
+  background:linear-gradient(135deg,#6d28d9,#2563eb) !important;
+  color:#fff !important;
+  border:none !important;
+}
+
+/* -------- Dialog / forms (light theme) -------- */
+dialog{
+  background:#ffffff;
+}
+.modal{
+  background:#ffffff;
+  color:#0f172a;
+}
+.modal h3{
+  color:#0f172a;
+}
+label,
+.help,
+.linkedTripHint,
+.footerMini{
+  color:#64748b;
+}
+input,
+select,
+textarea{
+  background:#f8fafc !important;
+  color:#0f172a !important;
+  border:1.5px solid #cbd5e1 !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.65);
+}
+input::placeholder,
+textarea::placeholder{
+  color:#94a3b8 !important;
+}
+input:focus,
+select:focus,
+textarea:focus{
+  outline:0;
+  border-color:#818cf8 !important;
+  box-shadow:0 0 0 4px rgba(99,102,241,.12), inset 0 1px 0 rgba(255,255,255,.7);
+}
+.uploadBox{
+  background:linear-gradient(180deg,#f8fafc,#ffffff) !important;
+  border:1.5px dashed #cbd5e1 !important;
+}
+.uploadBox .help{
+  color:#64748b !important;
+}
+.linkedTripBox{
+  background:linear-gradient(180deg,#f8fafc,#ffffff) !important;
+  border:1.5px solid #dbe3f0 !important;
+}
+.shareUser{
+  border:1.5px solid #dbe3f0 !important;
+  background:#ffffff !important;
+}
+.table th{
+  color:#475569;
+}
+.table td{
+  color:#0f172a;
+}
+
+/* Make modal action buttons clearer */
+.modalActions .iconbtn{
+  background:#eef2ff;
+  border-color:#c7d2fe;
+  color:#3730a3;
+}
+#saveItemBtn,
+#saveExpenseBtn{
+  background:linear-gradient(135deg,#6d28d9,#4f46e5) !important;
+  color:#fff !important;
+  border:none !important;
+  box-shadow:0 10px 22px rgba(79,70,229,.2);
+}
+#cancelItemBtn,
+#cancelExpenseBtn{
+  background:#0f172a !important;
+  color:#fff !important;
+  border:none !important;
+}
+
+/* -------- Dark theme: modal and inputs should match -------- */
+body[data-theme="dark"] dialog{
+  background:#0f172a;
+}
+body[data-theme="dark"] .modal{
+  background:#0f172a;
+  color:#f8fafc;
+}
+body[data-theme="dark"] .modal h3{
+  color:#ffffff;
+}
+body[data-theme="dark"] label,
+body[data-theme="dark"] .help,
+body[data-theme="dark"] .linkedTripHint,
+body[data-theme="dark"] .footerMini{
+  color:#b8c3d7;
+}
+body[data-theme="dark"] input,
+body[data-theme="dark"] select,
+body[data-theme="dark"] textarea{
+  background:#0b1530 !important;
+  color:#f8fafc !important;
+  border:1.5px solid #334155 !important;
+  box-shadow:none;
+}
+body[data-theme="dark"] input::placeholder,
+body[data-theme="dark"] textarea::placeholder{
+  color:#8ea0ba !important;
+}
+body[data-theme="dark"] input:focus,
+body[data-theme="dark"] select:focus,
+body[data-theme="dark"] textarea:focus{
+  border-color:#818cf8 !important;
+  box-shadow:0 0 0 4px rgba(99,102,241,.18) !important;
+}
+body[data-theme="dark"] .uploadBox{
+  background:linear-gradient(180deg,#111c2e,#0f172a) !important;
+  border:1.5px dashed #334155 !important;
+}
+body[data-theme="dark"] .linkedTripBox{
+  background:linear-gradient(180deg,#101a2b,#0f172a) !important;
+  border:1.5px solid #334155 !important;
+}
+body[data-theme="dark"] .shareUser{
+  background:#111c2e !important;
+  border:1.5px solid #334155 !important;
+}
+body[data-theme="dark"] .modalActions .iconbtn{
+  background:#172554;
+  border-color:#3346a0;
+  color:#dbeafe;
+}
+body[data-theme="dark"] #cancelItemBtn,
+body[data-theme="dark"] #cancelExpenseBtn{
+  background:#1e293b !important;
+  color:#fff !important;
+}
+body[data-theme="dark"] #tripList .itemCard{
+  background:linear-gradient(180deg,#111c2e 0%,#0f172a 100%) !important;
+  border:1.5px solid #334155 !important;
+}
+body[data-theme="dark"] #tripList .title{
+  color:#ffffff !important;
+}
+body[data-theme="dark"] #tripList .muted{
+  color:#b8c3d7 !important;
+}
+
+/* -------- Phone polish -------- */
+@media(max-width:640px){
+  #tripList .title{
+    font-size:17px;
+    line-height:1.35;
+  }
+  #tripList .btn.primary{
+    min-width:78px;
+    min-height:44px;
+  }
+  input,
+  select,
+  textarea{
+    font-size:16px !important; /* prevent iPhone zoom */
+  }
+  .modal{
+    padding:16px 14px 22px;
+  }
+  .uploadBox{
+    border-radius:18px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
