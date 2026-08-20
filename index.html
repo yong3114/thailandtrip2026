@@ -1156,6 +1156,17 @@ body[data-theme="dark"] .placeEditHint{
 }
 </style>
 
+
+<style id="appV210DeleteFix">
+.tripDeleteBtn:active,
+.deleteSmall:active{
+  transform:scale(.96) !important;
+}
+.deleteSmall{
+  cursor:pointer;
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -1534,7 +1545,7 @@ const configured =
 const $ = id => document.getElementById(id);
 const setupView=$('setupView'), authView=$('authView'), homeView=$('homeView'), tripView=$('tripView');
 let sb=null, user=null, authMode='login';
-let currentTrip=null, members=[], items=[], votes=[], expenses=[], shares=[];
+let currentTrip=null, members=[], items=[], votes=[], expenses=[], shares=[], trips=[];
 let activeDay=1, editingItem=null, editingExpense=null, channel=null;
 let itemSearch='', itemCategoryFilter='全部', itemSortMode='default';
 const mobileBar=$('mobileBar'), mobileAddBtn=$('mobileAddBtn');
@@ -1740,8 +1751,9 @@ async function openHome(){
 async function loadTripList(){
   const {data,error}=await sb.from('trips').select('*').order('created_at',{ascending:false});
   if(error){ $('tripList').innerHTML=`<div class="msg err">${escapeHtml(error.message)}</div>`; return; }
-  if(!data?.length){ $('tripList').innerHTML='<div class="empty">还没有旅行，先建立一个或加入朋友的旅行。</div>'; return; }
-  $('tripList').innerHTML=data.map(t=>`
+  trips=data || [];
+  if(!trips.length){ $('tripList').innerHTML='<div class="empty">还没有旅行，先建立一个或加入朋友的旅行。</div>'; return; }
+  $('tripList').innerHTML=trips.map(t=>`
     <div class="itemCard" style="margin-bottom:10px;background:linear-gradient(180deg,#fff,#f8fbff)">
       <div class="itemTop">
         <div>
@@ -1784,43 +1796,71 @@ async function joinTrip(e){
 
 
 async function deleteOrLeaveTrip(tripId,isOwner){
-  const trip = (trips || []).find?.(t=>t.id===tripId) || null;
+  const trip = trips.find(t=>t.id===tripId) || null;
   const title = trip?.title || '这趟旅行';
 
   if(isOwner){
-    const ok = confirm(`确定要删除「${title}」吗？\n\n这会删除整趟 Trip、行程项目、Expenses、投票和成员资料，而且无法恢复。`);
+    const ok = confirm(
+      `确定要删除「${title}」吗？\n\n`+
+      `这会永久删除整趟 Trip、行程项目、Expenses、投票和成员资料。\n\n此操作无法恢复。`
+    );
     if(!ok) return;
 
-    const {error} = await sb.from('trips').delete().eq('id',tripId).eq('owner_id',user.id);
+    const {data:deleted,error} = await sb
+      .from('trips')
+      .delete()
+      .eq('id',tripId)
+      .eq('owner_id',user.id)
+      .select('id');
+
     if(error){
-      toast(error.message,'err');
+      toast('删除失败：'+error.message,'err');
       return;
     }
+
+    if(!deleted?.length){
+      toast('没有删除成功。请确认你是这趟旅行的 Owner。','err');
+      return;
+    }
+
+    trips = trips.filter(t=>t.id!==tripId);
+
     if(currentTrip?.id===tripId){
       cleanupChannel();
       currentTrip=null;
       if(mobileBar) mobileBar.classList.add('hide');
       await openHome();
     }else{
-      toast('已删除旅行');
+      toast('旅行已删除 ✅');
       await loadTripList();
     }
     return;
   }
 
-  const ok = confirm(`确定要离开「${title}」吗？\n\n离开后你将不会再看到这趟旅行，但其他成员不会受影响。`);
+  const ok = confirm(
+    `确定要离开「${title}」吗？\n\n`+
+    `离开后你将不会再看到这趟旅行，但不会影响其他成员。`
+  );
   if(!ok) return;
 
-  const {error} = await sb
+  const {data:deleted,error} = await sb
     .from('trip_members')
     .delete()
     .eq('trip_id',tripId)
-    .eq('user_id',user.id);
+    .eq('user_id',user.id)
+    .select('trip_id');
 
   if(error){
-    toast(error.message,'err');
+    toast('离开失败：'+error.message,'err');
     return;
   }
+
+  if(!deleted?.length){
+    toast('没有移除成功，请刷新后再试。','err');
+    return;
+  }
+
+  trips = trips.filter(t=>t.id!==tripId);
 
   if(currentTrip?.id===tripId){
     cleanupChannel();
@@ -1828,7 +1868,7 @@ async function deleteOrLeaveTrip(tripId,isOwner){
     if(mobileBar) mobileBar.classList.add('hide');
     await openHome();
   }else{
-    toast('已离开旅行');
+    toast('已离开旅行 ✅');
     await loadTripList();
   }
 }
@@ -2206,9 +2246,35 @@ async function saveItem(e){
 }
 
 async function deleteItem(id){
-  if(!confirm('确定删除这个地点吗？')) return;
-  const {error}=await sb.from('items').delete().eq('id',id);
-  if(error) toast(error.message,'err');
+  const item=items.find(x=>x.id===id);
+  const label=item?.name || '这个地点';
+
+  if(!confirm(`确定删除「${label}」吗？`)) return;
+
+  const {data:deleted,error}=await sb
+    .from('items')
+    .delete()
+    .eq('id',id)
+    .select('id');
+
+  if(error){
+    toast('删除失败：'+error.message,'err');
+    return;
+  }
+
+  if(!deleted?.length){
+    toast('没有删除成功，请确认权限后再试。','err');
+    return;
+  }
+
+  // Remove locally immediately so the card disappears without waiting for Realtime.
+  items=items.filter(x=>x.id!==id);
+  votes=votes.filter(v=>v.item_id!==id);
+  renderTrip();
+  toast('已删除 ✅');
+
+  // Re-sync once in the background for consistency.
+  refreshTrip();
 }
 
 
@@ -2341,9 +2407,33 @@ async function saveExpense(e){
 }
 
 async function deleteExpense(id){
-  if(!confirm('确定删除这笔 expense 吗？')) return;
-  const {error}=await sb.from('expenses').delete().eq('id',id);
-  if(error) toast(error.message,'err');
+  const exp=expenses.find(x=>x.id===id);
+  const label=exp?.title || '这笔 Expense';
+
+  if(!confirm(`确定删除「${label}」吗？`)) return;
+
+  const {data:deleted,error}=await sb
+    .from('expenses')
+    .delete()
+    .eq('id',id)
+    .select('id');
+
+  if(error){
+    toast('删除失败：'+error.message,'err');
+    return;
+  }
+
+  if(!deleted?.length){
+    toast('没有删除成功，请确认权限后再试。','err');
+    return;
+  }
+
+  expenses=expenses.filter(x=>x.id!==id);
+  shares=shares.filter(s=>s.expense_id!==id);
+  renderTrip();
+  toast('Expense 已删除 ✅');
+
+  refreshTrip();
 }
 
 function buildSettlements(){
