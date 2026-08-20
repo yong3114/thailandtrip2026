@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111827">
+<meta name="theme-color" content="#08111f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="RoadTrip">
@@ -1060,6 +1060,102 @@ body[data-theme="dark"] #addExpenseBtn{
 }
 </style>
 
+
+<style id="appV28TripDelete">
+.tripCardActions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.tripDeleteBtn{
+  min-width:86px;
+  min-height:44px;
+  border:1px solid #fbcfe8 !important;
+  background:#fff1f2 !important;
+  color:#be123c !important;
+  border-radius:16px !important;
+  font-weight:800 !important;
+  box-shadow:0 8px 18px rgba(190,24,93,.08);
+}
+.tripDeleteBtn:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.01);
+}
+body[data-theme="dark"] .tripDeleteBtn{
+  background:#3a1122 !important;
+  color:#fda4af !important;
+  border-color:#7f1d1d !important;
+  box-shadow:none;
+}
+@media(max-width:640px){
+  .tripCardActions{
+    gap:8px;
+  }
+  .tripDeleteBtn,
+  #tripList .btn.primary{
+    min-width:72px !important;
+    padding:10px 12px !important;
+  }
+}
+</style>
+
+
+<style id="appV29CardTapToEdit">
+/* V2.9 — tap card almost anywhere to edit */
+.placeCard.tapToEdit{
+  cursor:pointer;
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.placeCard.tapToEdit:hover{
+  transform:translateY(-1px);
+}
+.placeCard.tapToEdit:active{
+  transform:scale(.997);
+}
+.placeCard.tapToEdit .placeBody{
+  position:relative;
+}
+.placeCard.tapToEdit .placeTitleRow > div{
+  min-width:0;
+}
+.placeCard.tapToEdit .title{
+  line-height:1.28;
+}
+.placeEditHint{
+  margin-top:8px;
+  font-size:11px;
+  color:#8b5cf6;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+}
+body[data-theme="dark"] .placeEditHint{
+  color:#c4b5fd;
+}
+
+/* Make the main tap area feel more friendly on phone */
+@media(max-width:640px){
+  .placeCard.tapToEdit{
+    border-width:1.5px !important;
+  }
+  .placeCard.tapToEdit .placeBody{
+    padding:16px 15px 15px !important;
+  }
+  .placeCard.tapToEdit .title{
+    font-size:18px;
+  }
+  .placeCard.tapToEdit .pills{
+    gap:8px;
+  }
+  .placeCard.tapToEdit .pill{
+    min-height:34px;
+    display:inline-flex;
+    align-items:center;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -1595,7 +1691,7 @@ async function init(){
     });
   });
 
-  const savedTheme=localStorage.getItem('roadtrip-theme') || 'light';
+  const savedTheme=localStorage.getItem('roadtrip-theme') || 'dark';
   applyTheme(savedTheme);
   document.querySelectorAll('.themeToggle').forEach(btn=>{
     btn.addEventListener('click',()=>{
@@ -1652,10 +1748,14 @@ async function loadTripList(){
           <div class="title">${escapeHtml(t.title)}</div>
           <div class="muted">${t.days}天 · ${t.people}人 · Budget ${money(t.budget_target)} · Code ${escapeHtml(t.invite_code)}</div>
         </div>
-        <button class="btn primary" data-trip="${t.id}">打开</button>
+        <div class="tripCardActions">
+          <button class="tripDeleteBtn" data-del-trip="${t.id}" data-del-owner="${t.owner_id===user.id?'1':'0'}">${t.owner_id===user.id?'删除':'离开'}</button>
+          <button class="btn primary" data-trip="${t.id}">打开</button>
+        </div>
       </div>
     </div>`).join('');
   document.querySelectorAll('[data-trip]').forEach(b=>b.addEventListener('click',()=>openTrip(b.dataset.trip)));
+  document.querySelectorAll('[data-del-trip]').forEach(b=>b.addEventListener('click',()=>deleteOrLeaveTrip(b.dataset.delTrip, b.dataset.delOwner==='1')));
 }
 
 async function createTrip(e){
@@ -1680,6 +1780,57 @@ async function joinTrip(e){
   if(error){ toast(error.message,'err'); return; }
   history.replaceState({},'',location.pathname);
   await openTrip(data);
+}
+
+
+async function deleteOrLeaveTrip(tripId,isOwner){
+  const trip = (trips || []).find?.(t=>t.id===tripId) || null;
+  const title = trip?.title || '这趟旅行';
+
+  if(isOwner){
+    const ok = confirm(`确定要删除「${title}」吗？\n\n这会删除整趟 Trip、行程项目、Expenses、投票和成员资料，而且无法恢复。`);
+    if(!ok) return;
+
+    const {error} = await sb.from('trips').delete().eq('id',tripId).eq('owner_id',user.id);
+    if(error){
+      toast(error.message,'err');
+      return;
+    }
+    if(currentTrip?.id===tripId){
+      cleanupChannel();
+      currentTrip=null;
+      if(mobileBar) mobileBar.classList.add('hide');
+      await openHome();
+    }else{
+      toast('已删除旅行');
+      await loadTripList();
+    }
+    return;
+  }
+
+  const ok = confirm(`确定要离开「${title}」吗？\n\n离开后你将不会再看到这趟旅行，但其他成员不会受影响。`);
+  if(!ok) return;
+
+  const {error} = await sb
+    .from('trip_members')
+    .delete()
+    .eq('trip_id',tripId)
+    .eq('user_id',user.id);
+
+  if(error){
+    toast(error.message,'err');
+    return;
+  }
+
+  if(currentTrip?.id===tripId){
+    cleanupChannel();
+    currentTrip=null;
+    if(mobileBar) mobileBar.classList.add('hide');
+    await openHome();
+  }else{
+    toast('已离开旅行');
+    await loadTripList();
+  }
 }
 
 async function openTrip(id){
@@ -1888,7 +2039,7 @@ function renderItems(){
     const emoji=escapeHtml((item.category||'📍').split(' ')[0]);
     const isBudget=(item.name||'').trim().startsWith('[Budget]');
     return `
-    <div class="itemCard placeCard ${isBudget?'budgetCard':''}" style="margin-bottom:12px">
+    <div class="itemCard placeCard tapToEdit ${isBudget?'budgetCard':''}" data-card-edit="${item.id}" style="margin-bottom:12px">
       <div class="placeCover">
         ${item.image_url?`<img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.name)}">`:`<div class="placeCoverEmoji">${isBudget?'💰':emoji}</div>`}
         <div class="placeCoverOverlay">
@@ -1904,6 +2055,7 @@ function renderItems(){
               <div class="title">${escapeHtml(item.name)}</div>
             </button>
             ${item.location?`<div class="placeLocation">📍 ${escapeHtml(item.location)}</div>`:''}
+            <div class="placeEditHint">✏️ 点卡片空白处可编辑</div>
           </div>
           <label title="完成"><input class="check" type="checkbox" ${item.done?'checked':''} data-done="${item.id}"></label>
         </div>
@@ -1930,6 +2082,16 @@ function renderItems(){
   document.querySelectorAll('[data-title-edit]').forEach(el=>el.addEventListener('click',()=>openItemDialog(el.dataset.titleEdit)));
   document.querySelectorAll('[data-edit-item]').forEach(el=>el.addEventListener('click',()=>openItemDialog(el.dataset.editItem)));
   document.querySelectorAll('[data-del-item]').forEach(el=>el.addEventListener('click',()=>deleteItem(el.dataset.delItem)));
+
+  document.querySelectorAll('[data-card-edit]').forEach(card=>{
+    card.addEventListener('click',(e)=>{
+      const interactive = e.target.closest(
+        'button, a, input, select, textarea, summary, details, label, [data-vote], [data-edit-item], [data-del-item], [data-done], [data-title-edit]'
+      );
+      if(interactive) return;
+      openItemDialog(card.dataset.cardEdit);
+    });
+  });
 }
 
 function renderExpenses(){
