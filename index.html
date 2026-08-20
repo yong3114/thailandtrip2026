@@ -1694,6 +1694,287 @@ body[data-theme="dark"] .expenseActions .iconbtn{
 }
 </style>
 
+
+<style id="roadTripV30Planner">
+/* =========================================================
+   V3.0 — Real itinerary planner
+   Candidate -> Confirm -> Schedule -> Conflict detection
+   ========================================================= */
+.plannerModeSwitch{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  padding:5px;
+  margin:4px 0 10px;
+  border-radius:18px;
+  background:rgba(148,163,184,.10);
+  border:1px solid var(--line);
+}
+.plannerModeBtn{
+  border:0;
+  border-radius:14px;
+  padding:11px 12px;
+  background:transparent;
+  color:var(--muted);
+  font-weight:850;
+  min-height:44px;
+}
+.plannerModeBtn.active{
+  background:linear-gradient(135deg,#7c3aed,#2563eb);
+  color:#fff;
+  box-shadow:0 8px 20px rgba(79,70,229,.22);
+}
+body[data-theme="dark"] .plannerModeSwitch{
+  background:#0b1530;
+  border-color:#334155;
+}
+.scheduleFields{
+  padding:12px;
+  border-radius:18px;
+  border:1.5px solid #c7d2fe;
+  background:linear-gradient(180deg,#eef2ff,#ffffff);
+}
+.scheduleFieldTitle{
+  font-weight:900;
+  margin-bottom:10px;
+  color:#3730a3;
+}
+.plannerHelp{
+  align-self:end;
+  font-size:11px;
+  color:#64748b;
+  line-height:1.45;
+}
+body[data-theme="dark"] .scheduleFields{
+  border-color:#4347a7;
+  background:linear-gradient(180deg,#172554,#101a2b);
+}
+body[data-theme="dark"] .scheduleFieldTitle{color:#c4b5fd}
+body[data-theme="dark"] .plannerHelp{color:#aab7c9}
+
+.scheduleWarningBox{
+  border:1.5px solid #f59e0b;
+  background:#fffbeb;
+  color:#92400e;
+  border-radius:16px;
+  padding:11px 12px;
+  margin-bottom:10px;
+  font-size:12px;
+  line-height:1.5;
+}
+.scheduleWarningBox strong{display:block;margin-bottom:3px}
+body[data-theme="dark"] .scheduleWarningBox{
+  background:#3a2507;
+  color:#fde68a;
+  border-color:#b45309;
+}
+.scheduleOkBox{
+  border:1px solid #86efac;
+  background:#f0fdf4;
+  color:#166534;
+  border-radius:14px;
+  padding:9px 11px;
+  margin-bottom:10px;
+  font-size:12px;
+}
+body[data-theme="dark"] .scheduleOkBox{
+  background:#0e2f25;
+  color:#bbf7d0;
+  border-color:#166534;
+}
+
+.timelineWrap{
+  position:relative;
+  display:grid;
+  gap:0;
+}
+.timelineStop{
+  display:grid;
+  grid-template-columns:74px 22px minmax(0,1fr);
+  gap:8px;
+  align-items:stretch;
+}
+.timelineTime{
+  padding-top:14px;
+  text-align:right;
+  font-weight:900;
+  font-size:14px;
+  color:#c4b5fd;
+}
+.timelineRail{
+  position:relative;
+  display:flex;
+  justify-content:center;
+}
+.timelineRail::before{
+  content:"";
+  position:absolute;
+  top:0;bottom:0;
+  width:2px;
+  background:#475569;
+}
+.timelineDot{
+  position:relative;
+  z-index:2;
+  width:12px;height:12px;
+  margin-top:18px;
+  border-radius:50%;
+  background:#8b5cf6;
+  border:3px solid #111c2e;
+  box-shadow:0 0 0 2px #8b5cf6;
+}
+.timelineCard{
+  margin:0 0 10px;
+  border:1.5px solid #334155;
+  border-radius:20px;
+  background:linear-gradient(180deg,#111c2e,#0f172a);
+  padding:13px;
+  cursor:pointer;
+}
+.timelineCard:hover{border-color:#6366f1}
+.timelineTop{
+  display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
+}
+.timelineName{
+  font-weight:900;
+  color:#fff;
+  line-height:1.3;
+}
+.timelineMeta{
+  display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;
+}
+.timelineBadge{
+  display:inline-flex;align-items:center;
+  min-height:29px;
+  padding:5px 8px;
+  border-radius:999px;
+  background:#18263a;
+  border:1px solid #334155;
+  color:#dbe7f5;
+  font-size:11px;
+  font-weight:750;
+}
+.timelineEnd{
+  font-size:11px;color:#94a3b8;margin-top:5px;
+}
+.travelSegment{
+  display:grid;
+  grid-template-columns:74px 22px minmax(0,1fr);
+  gap:8px;
+  min-height:42px;
+}
+.travelText{
+  grid-column:3;
+  font-size:11px;
+  color:#93c5fd;
+  padding:6px 10px 10px;
+}
+.travelText.conflict{
+  color:#fecaca;
+  font-weight:800;
+}
+.timelineConflictCard{
+  border-color:#ef4444 !important;
+  box-shadow:0 0 0 1px rgba(239,68,68,.15);
+}
+
+.unscheduledBox{
+  margin-top:12px;
+  border:1.5px dashed #f59e0b;
+  border-radius:20px;
+  padding:12px;
+  background:rgba(245,158,11,.07);
+}
+.unscheduledTitle{
+  font-weight:900;color:#fbbf24;margin-bottom:8px;
+}
+.unscheduledItem{
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  border:1px solid #334155;
+  background:#111c2e;
+  color:#fff;
+  border-radius:14px;
+  padding:10px 11px;
+  margin-top:7px;
+  text-align:left;
+}
+.unscheduledItem span:last-child{
+  color:#c4b5fd;font-size:12px;font-weight:800;
+}
+
+.planStatusBadge{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:6px 9px;
+  font-size:11px;
+  font-weight:900;
+  border:1px solid;
+}
+.plan-candidate{color:#bfdbfe;background:#172554;border-color:#1d4ed8}
+.plan-confirmed{color:#bbf7d0;background:#0e2f25;border-color:#16a34a}
+.plan-backup{color:#fde68a;background:#3a2507;border-color:#b45309}
+.plan-skipped{color:#fecaca;background:#3a1122;border-color:#991b1b}
+
+.confirmPlanBtn{
+  border:1px solid #16a34a !important;
+  background:#0e2f25 !important;
+  color:#bbf7d0 !important;
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:850;
+}
+.confirmPlanBtn.confirmed{
+  background:#166534 !important;
+  color:#fff !important;
+}
+.backupPlanBtn{
+  border:1px solid #b45309 !important;
+  background:#3a2507 !important;
+  color:#fde68a !important;
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:850;
+}
+
+.candidatePlanRow{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.candidatePlanRow .confirmPlanBtn,
+.candidatePlanRow .backupPlanBtn{
+  min-height:40px;
+}
+
+@media(max-width:640px){
+  .plannerModeSwitch{position:sticky;top:0;z-index:8}
+  .timelineStop,.travelSegment{
+    grid-template-columns:56px 18px minmax(0,1fr);
+    gap:6px;
+  }
+  .timelineTime{
+    font-size:12px;
+    padding-top:14px;
+  }
+  .timelineCard{padding:12px}
+  .timelineMeta{gap:5px}
+  .timelineBadge{font-size:10.5px}
+  .travelText{
+    grid-column:3;
+    padding-left:8px;
+  }
+  .scheduleFields .formGrid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -1854,7 +2135,13 @@ body[data-theme="dark"] .expenseActions .iconbtn{
           </div>
           <div class="tabs" id="dayTabs"></div>
 
-          <div class="itineraryTools">
+          <div class="plannerModeSwitch">
+            <button type="button" class="plannerModeBtn active" data-itinerary-mode="timeline">🗓 已确认时间表</button>
+            <button type="button" class="plannerModeBtn" data-itinerary-mode="candidates">🗳 候选 / 投票</button>
+          </div>
+          <div id="scheduleWarnings"></div>
+
+          <div class="itineraryTools" id="itineraryTools">
             <div class="searchRow">
               <div class="searchBox">
                 <span class="searchIcon">⌕</span>
@@ -1968,6 +2255,29 @@ body[data-theme="dark"] .expenseActions .iconbtn{
           <option>⭐ 必去</option><option selected>👍 想去</option><option>🙂 有空再去</option>
         </select>
       </label>
+      <label>行程状态
+        <select id="itemPlanStatus">
+          <option value="candidate">🗳 候选 / 等投票</option>
+          <option value="confirmed">✅ 确认要去</option>
+          <option value="backup">🟡 备选</option>
+          <option value="skipped">✕ 不去</option>
+        </select>
+      </label>
+      <div class="full scheduleFields">
+        <div class="scheduleFieldTitle">🕒 确认后排时间</div>
+        <div class="formGrid">
+          <label>开始时间
+            <input id="itemStartTime" type="time">
+          </label>
+          <label>预计停留（分钟）
+            <input id="itemDuration" type="number" min="0" max="1440" step="5" value="60">
+          </label>
+          <label>去下一站车程（分钟）
+            <input id="itemTravel" type="number" min="0" max="600" step="5" value="0">
+          </label>
+          <div class="plannerHelp">例如 09:00 到餐厅，吃 60 分钟，再开车 20 分钟；下一站最早应排 10:20。</div>
+        </div>
+      </div>
       <label class="full">地点 / 地址<input id="itemLocation"></label>
       <label>预计花费 RM<input id="itemCost" type="number" min="0" step="0.01" value="0"></label>
       <label class="full">Google Maps / 网站链接<input id="itemLink"></label>
@@ -2077,7 +2387,7 @@ const setupView=$('setupView'), authView=$('authView'), homeView=$('homeView'), 
 let sb=null, user=null, authMode='login';
 let currentTrip=null, members=[], items=[], votes=[], expenses=[], shares=[], trips=[];
 let activeDay=1, editingItem=null, editingExpense=null, channel=null;
-let itemSearch='', itemCategoryFilter='全部', itemSortMode='default';
+let itemSearch='', itemCategoryFilter='全部', itemSortMode='default', itineraryMode='timeline';
 const mobileBar=$('mobileBar'), mobileAddBtn=$('mobileAddBtn');
 
 if(!configured){
@@ -2223,6 +2533,13 @@ async function init(){
   $('itemSort')?.addEventListener('change',e=>{
     itemSortMode=e.target.value;
     renderItems();
+  });
+  document.querySelectorAll('[data-itinerary-mode]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      itineraryMode=btn.dataset.itineraryMode;
+      document.querySelectorAll('[data-itinerary-mode]').forEach(b=>b.classList.toggle('active',b===btn));
+      renderItems();
+    });
   });
   document.querySelectorAll('#categoryFilters [data-cat]').forEach(btn=>{
     btn.addEventListener('click',()=>{
@@ -2505,7 +2822,7 @@ function renderTrip(){
       <span class="recentEditIcon">${escapeHtml((i.category||'📍').split(' ')[0])}</span>
       <span>
         <span class="recentEditTitle">${escapeHtml(i.name)}</span>
-        <span class="recentEditMeta">${escapeHtml(i.category)} · Day ${i.day_no} · ❤️ ${itemVoteCount(i.id)}</span>
+        <span class="recentEditMeta">${escapeHtml(i.category)} · Day ${i.day_no} · ${planStatusLabel(i.plan_status||'candidate')} · ❤️ ${itemVoteCount(i.id)}</span>
       </span>
       <span class="recentEditArrow">›</span>
     </button>`).join(''):'<div class="empty">还没有行程项目</div>';
@@ -2555,9 +2872,12 @@ function renderTrip(){
   const dayBudget=dayItems.reduce((s,x)=>s+Number(x.cost||0),0);
   const dayVotes=dayItems.reduce((s,x)=>s+itemVoteCount(x.id),0);
   const dayDone=dayItems.filter(x=>x.done).length;
+  const scheduleInfo=getDaySchedule(activeDay);
   $('dayMiniStats').innerHTML=`
-    <span class="dayMiniStat">📌 ${dayItems.length} 项</span>
-    <span class="dayMiniStat">✅ ${dayDone}/${dayItems.length || 0}</span>
+    <span class="dayMiniStat">📌 ${dayItems.length} 候选</span>
+    <span class="dayMiniStat">✅ ${scheduleInfo.confirmed.length} 确认</span>
+    <span class="dayMiniStat">🕒 ${scheduleInfo.scheduled.length} 已排时间</span>
+    <span class="dayMiniStat">${scheduleInfo.conflicts.length?'⚠️':'✓'} ${scheduleInfo.conflicts.length} 冲突</span>
     <span class="dayMiniStat">❤️ ${dayVotes} 票</span>
     <span class="dayMiniStat">💰 ${money(dayBudget)}</span>`;
 
@@ -2588,6 +2908,93 @@ function renderTrip(){
 }
 
 
+
+function planStatusLabel(status){
+  return ({
+    candidate:'🗳 候选',
+    confirmed:'✅ 已确认',
+    backup:'🟡 备选',
+    skipped:'✕ 不去'
+  })[status||'candidate'] || '🗳 候选';
+}
+function planStatusClass(status){
+  return ({
+    candidate:'plan-candidate',
+    confirmed:'plan-confirmed',
+    backup:'plan-backup',
+    skipped:'plan-skipped'
+  })[status||'candidate'] || 'plan-candidate';
+}
+function timeToMinutes(value){
+  if(!value) return null;
+  const parts=String(value).slice(0,5).split(':').map(Number);
+  if(parts.length!==2 || parts.some(Number.isNaN)) return null;
+  return parts[0]*60+parts[1];
+}
+function minutesToTime(total){
+  total=((Number(total)||0)%1440+1440)%1440;
+  const h=Math.floor(total/60), m=total%60;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+}
+function getDaySchedule(dayNo){
+  const confirmed=items
+    .filter(i=>i.day_no===dayNo && i.plan_status==='confirmed' && !(i.name||'').trim().startsWith('[Budget]'));
+
+  const scheduled=confirmed
+    .filter(i=>i.start_time)
+    .map(i=>({
+      ...i,
+      startMin:timeToMinutes(i.start_time),
+      duration:Number(i.duration_minutes||60),
+      travel:Number(i.travel_minutes||0)
+    }))
+    .filter(i=>i.startMin!==null)
+    .sort((a,b)=>a.startMin-b.startMin);
+
+  const unscheduled=confirmed.filter(i=>!i.start_time);
+  const conflicts=[];
+
+  for(let idx=0;idx<scheduled.length-1;idx++){
+    const cur=scheduled[idx];
+    const next=scheduled[idx+1];
+    const ready=cur.startMin+cur.duration+cur.travel;
+    if(ready>next.startMin){
+      conflicts.push({
+        currentId:cur.id,
+        nextId:next.id,
+        overlap:ready-next.startMin,
+        ready,
+        nextStart:next.startMin
+      });
+    }
+  }
+  return {confirmed,scheduled,unscheduled,conflicts};
+}
+async function setPlanStatus(itemId,status,openSchedule=false){
+  const item=items.find(i=>i.id===itemId);
+  if(!item) return;
+
+  const {error}=await sb.from('items').update({plan_status:status}).eq('id',itemId);
+  if(error){
+    toast(error.message,'err');
+    return;
+  }
+
+  item.plan_status=status;
+  renderTrip();
+
+  if(status==='confirmed'){
+    toast('已确认加入行程 ✅');
+    if(openSchedule && !item.start_time){
+      setTimeout(()=>openItemDialog(itemId),100);
+    }
+  }else if(status==='backup'){
+    toast('已放入备选 🟡');
+  }else{
+    toast('行程状态已更新');
+  }
+}
+
 function getItemVisual(item){
   const name=(item.name||'').trim();
   const category=item.category||'';
@@ -2602,6 +3009,122 @@ function getItemVisual(item){
 }
 
 function renderItems(){
+  const tools=$('itineraryTools');
+  const warningBox=$('scheduleWarnings');
+  const schedule=getDaySchedule(activeDay);
+
+  document.querySelectorAll('[data-itinerary-mode]').forEach(btn=>{
+    btn.classList.toggle('active',btn.dataset.itineraryMode===itineraryMode);
+  });
+
+  if(itineraryMode==='timeline'){
+    if(tools) tools.style.display='none';
+
+    if(schedule.conflicts.length){
+      warningBox.innerHTML=`
+        <div class="scheduleWarningBox">
+          <strong>⚠️ 这一天有 ${schedule.conflicts.length} 个时间冲突</strong>
+          需要调整开始时间、停留时间或车程，下面已经标红。
+        </div>`;
+    }else if(schedule.confirmed.length && schedule.unscheduled.length){
+      warningBox.innerHTML=`
+        <div class="scheduleWarningBox">
+          <strong>🕒 还有 ${schedule.unscheduled.length} 个“已确认”地点没有排时间</strong>
+          点下面的项目设定几点去，才算真正完成当天计划。
+        </div>`;
+    }else if(schedule.confirmed.length){
+      warningBox.innerHTML=`<div class="scheduleOkBox">✅ 当天已确认行程没有发现时间重叠。</div>`;
+    }else{
+      warningBox.innerHTML='';
+    }
+
+    let timelineHtml='';
+
+    if(schedule.scheduled.length){
+      timelineHtml+=`<div class="timelineWrap">`;
+
+      schedule.scheduled.forEach((item,idx)=>{
+        const conflictFrom=schedule.conflicts.find(c=>c.currentId===item.id);
+        const conflictTo=schedule.conflicts.find(c=>c.nextId===item.id);
+        const end=item.startMin+item.duration;
+        const visual=getItemVisual(item);
+
+        timelineHtml+=`
+          <div class="timelineStop">
+            <div class="timelineTime">${minutesToTime(item.startMin)}</div>
+            <div class="timelineRail"><span class="timelineDot"></span></div>
+            <div class="timelineCard ${conflictFrom||conflictTo?'timelineConflictCard':''}" data-timeline-edit="${item.id}">
+              <div class="timelineTop">
+                <div>
+                  <div class="timelineName">${escapeHtml(visual.icon)} ${escapeHtml(item.name)}</div>
+                  ${item.location?`<div class="placeLocation">📍 ${escapeHtml(item.location)}</div>`:''}
+                </div>
+                <span class="planStatusBadge plan-confirmed">✅ 确认</span>
+              </div>
+              <div class="timelineMeta">
+                <span class="timelineBadge">🕒 ${minutesToTime(item.startMin)}–${minutesToTime(end)}</span>
+                <span class="timelineBadge">⏱ ${item.duration} min</span>
+                <span class="timelineBadge">❤️ ${itemVoteCount(item.id)}</span>
+                ${Number(item.cost||0)>0?`<span class="timelineBadge">💰 ${money(item.cost)}</span>`:''}
+              </div>
+              <div class="timelineEnd">点卡片可修改时间 / 停留 / 状态</div>
+            </div>
+          </div>`;
+
+        if(idx<schedule.scheduled.length-1){
+          const next=schedule.scheduled[idx+1];
+          const ready=item.startMin+item.duration+item.travel;
+          const conflict=ready>next.startMin;
+          timelineHtml+=`
+            <div class="travelSegment">
+              <div></div><div class="timelineRail"></div>
+              <div class="travelText ${conflict?'conflict':''}">
+                🚗 预计车程 ${item.travel} min
+                ${conflict
+                  ? ` · ⚠️ 最早 ${minutesToTime(ready)} 才能到，但下一站排 ${minutesToTime(next.startMin)}（撞 ${ready-next.startMin} min）`
+                  : ` · 下一站 ${minutesToTime(next.startMin)}`
+                }
+              </div>
+            </div>`;
+        }
+      });
+
+      timelineHtml+=`</div>`;
+    }else{
+      timelineHtml+=`
+        <div class="empty">
+          这一天还没有排好的时间表。<br>
+          先去「🗳 候选 / 投票」确认要去的地方，再设置时间。
+        </div>`;
+    }
+
+    if(schedule.unscheduled.length){
+      timelineHtml+=`
+        <div class="unscheduledBox">
+          <div class="unscheduledTitle">🕒 已确认，但还没排时间</div>
+          ${schedule.unscheduled.map(item=>`
+            <button class="unscheduledItem" data-unscheduled-edit="${item.id}">
+              <span>${escapeHtml((getItemVisual(item).icon))} ${escapeHtml(item.name)}</span>
+              <span>设置时间 ›</span>
+            </button>`).join('')}
+        </div>`;
+    }
+
+    $('itemsList').innerHTML=timelineHtml;
+
+    document.querySelectorAll('[data-timeline-edit]').forEach(el=>{
+      el.addEventListener('click',()=>openItemDialog(el.dataset.timelineEdit));
+    });
+    document.querySelectorAll('[data-unscheduled-edit]').forEach(el=>{
+      el.addEventListener('click',()=>openItemDialog(el.dataset.unscheduledEdit));
+    });
+    return;
+  }
+
+  // Candidate / voting mode
+  if(tools) tools.style.display='';
+  warningBox.innerHTML='';
+
   let dayItems=items.filter(i=>i.day_no===activeDay);
 
   if(itemCategoryFilter!=='全部'){
@@ -2609,7 +3132,7 @@ function renderItems(){
   }
   if(itemSearch){
     dayItems=dayItems.filter(i=>
-      [i.name,i.location,i.note,i.category,i.priority].join(' ').toLowerCase().includes(itemSearch)
+      [i.name,i.location,i.note,i.category,i.priority,i.plan_status].join(' ').toLowerCase().includes(itemSearch)
     );
   }
 
@@ -2621,18 +3144,21 @@ function renderItems(){
     dayItems.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
   }else{
     dayItems.sort((a,b)=>{
-      const priorityRank={'⭐ 必去':0,'👍 想去':1,'🙂 有空再去':2};
-      const pr=(priorityRank[a.priority]??9)-(priorityRank[b.priority]??9);
-      if(pr!==0)return pr;
+      const statusRank={confirmed:0,candidate:1,backup:2,skipped:3};
+      const sr=(statusRank[a.plan_status||'candidate']??9)-(statusRank[b.plan_status||'candidate']??9);
+      if(sr!==0)return sr;
       const vr=itemVoteCount(b.id)-itemVoteCount(a.id);
       if(vr!==0)return vr;
-      return Number(b.cost||0)-Number(a.cost||0);
+      const priorityRank={'⭐ 必去':0,'👍 想去':1,'🙂 有空再去':2};
+      return (priorityRank[a.priority]??9)-(priorityRank[b.priority]??9);
     });
   }
 
   $('itemsList').innerHTML = dayItems.length ? dayItems.map(item=>{
     const isBudget=(item.name||'').trim().startsWith('[Budget]');
     const visual=getItemVisual(item);
+    const status=item.plan_status||'candidate';
+
     return `
     <div class="itemCard placeCard tapToEdit ${visual.cls} ${isBudget?'budgetCard':''}" data-card-edit="${item.id}" style="margin-bottom:12px">
       <div class="placeCover">
@@ -2647,20 +3173,34 @@ function renderItems(){
         <div class="placeTitleRow">
           <div style="flex:1;min-width:0">
             ${isBudget?'<div class="budgetTag">💰 TRIP BUDGET</div>':''}
+            ${!isBudget?`<span class="planStatusBadge ${planStatusClass(status)}">${planStatusLabel(status)}</span>`:''}
             <button class="placeTitleButton" type="button" data-title-edit="${item.id}" title="点击编辑">
               <div class="title">${escapeHtml(item.name)}</div>
             </button>
             ${item.location?`<div class="placeLocation">📍 ${escapeHtml(item.location)}</div>`:''}
-            <div class="placeEditHint">✏️ 点卡片空白处可编辑</div>
           </div>
           <label title="完成"><input class="check" type="checkbox" ${item.done?'checked':''} data-done="${item.id}"></label>
         </div>
+
         <div class="pills">
           <span class="pill">${escapeHtml(item.category)}</span>
           <span class="pill">${escapeHtml(item.priority)}</span>
           ${Number(item.cost)>0?`<span class="pill">💰 ${money(item.cost)}</span>`:''}
+          ${item.start_time?`<span class="pill">🕒 ${String(item.start_time).slice(0,5)}</span>`:''}
         </div>
+
+        ${!isBudget?`
+          <div class="candidatePlanRow">
+            <button class="confirmPlanBtn ${status==='confirmed'?'confirmed':''}" data-confirm-plan="${item.id}">
+              ${status==='confirmed'?'✅ 已确认':'✅ 确认 + 排时间'}
+            </button>
+            <button class="backupPlanBtn" data-backup-plan="${item.id}">
+              ${status==='backup'?'🟡 已备选':'🟡 放备选'}
+            </button>
+          </div>`:''}
+
         ${item.note?`<details class="itemDetails"><summary>查看时间 / 预算 / 备注</summary><div class="note">${escapeHtml(item.note)}</div></details>`:''}
+
         <div class="placeActions">
           <button class="voteBtn ${itemVotedByMe(item.id)?'active':''}" data-vote="${item.id}">
             ❤️ ${itemVotedByMe(item.id)?'已投票':'投票'}
@@ -2671,7 +3211,7 @@ function renderItems(){
         </div>
       </div>
     </div>`;
-  }).join('') : `<div class="empty">没有符合筛选条件的项目。<br>换个类别或搜索词试试看 ✨</div>`;
+  }).join('') : `<div class="empty">没有符合筛选条件的项目。</div>`;
 
   document.querySelectorAll('[data-done]').forEach(el=>el.addEventListener('change',()=>toggleDone(el.dataset.done, el.checked)));
   document.querySelectorAll('[data-vote]').forEach(el=>el.addEventListener('click',()=>toggleVote(el.dataset.vote)));
@@ -2679,10 +3219,27 @@ function renderItems(){
   document.querySelectorAll('[data-edit-item]').forEach(el=>el.addEventListener('click',()=>openItemDialog(el.dataset.editItem)));
   document.querySelectorAll('[data-del-item]').forEach(el=>el.addEventListener('click',()=>deleteItem(el.dataset.delItem)));
 
+  document.querySelectorAll('[data-confirm-plan]').forEach(el=>{
+    el.addEventListener('click',async()=>{
+      const item=items.find(i=>i.id===el.dataset.confirmPlan);
+      if(item?.plan_status==='confirmed'){
+        openItemDialog(item.id);
+      }else{
+        await setPlanStatus(el.dataset.confirmPlan,'confirmed',true);
+      }
+    });
+  });
+  document.querySelectorAll('[data-backup-plan]').forEach(el=>{
+    el.addEventListener('click',async()=>{
+      const item=items.find(i=>i.id===el.dataset.backupPlan);
+      await setPlanStatus(el.dataset.backupPlan,item?.plan_status==='backup'?'candidate':'backup',false);
+    });
+  });
+
   document.querySelectorAll('[data-card-edit]').forEach(card=>{
     card.addEventListener('click',(e)=>{
       const interactive = e.target.closest(
-        'button, a, input, select, textarea, summary, details, label, [data-vote], [data-edit-item], [data-del-item], [data-done], [data-title-edit]'
+        'button, a, input, select, textarea, summary, details, label, [data-vote], [data-edit-item], [data-del-item], [data-done], [data-title-edit], [data-confirm-plan], [data-backup-plan]'
       );
       if(interactive) return;
       openItemDialog(card.dataset.cardEdit);
@@ -2762,6 +3319,10 @@ function openItemDialog(id){
   $('itemName').value = editingItem?.name || '';
   $('itemCategory').value = editingItem?.category || '🍜 美食';
   $('itemPriority').value = editingItem?.priority || '👍 想去';
+  $('itemPlanStatus').value = editingItem?.plan_status || 'candidate';
+  $('itemStartTime').value = editingItem?.start_time ? String(editingItem.start_time).slice(0,5) : '';
+  $('itemDuration').value = Number(editingItem?.duration_minutes ?? 60);
+  $('itemTravel').value = Number(editingItem?.travel_minutes ?? 0);
   $('itemLocation').value = editingItem?.location || '';
   $('itemCost').value = editingItem?.cost || 0;
   $('itemLink').value = editingItem?.link || '';
@@ -2793,6 +3354,10 @@ async function saveItem(e){
       name:$('itemName').value.trim(),
       category:$('itemCategory').value,
       priority:$('itemPriority').value,
+      plan_status:$('itemPlanStatus').value,
+      start_time:$('itemStartTime').value || null,
+      duration_minutes:Number($('itemDuration').value||60),
+      travel_minutes:Number($('itemTravel').value||0),
       location:$('itemLocation').value.trim(),
       cost:Number($('itemCost').value||0),
       link:$('itemLink').value.trim(),
