@@ -1,0 +1,911 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Thailand Road Trip V4</title>
+<style>
+:root{
+  --bg:#0b1220;--bg2:#111827;--panel:#ffffff;--text:#111827;--muted:#6b7280;
+  --line:#e5e7eb;--primary:#7c3aed;--primary2:#3b82f6;--soft:#f3f4f6;
+  --good:#16a34a;--bad:#dc2626;--amber:#f59e0b;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);
+background:
+radial-gradient(circle at 0% 0%, rgba(124,58,237,.28), transparent 28%),
+radial-gradient(circle at 100% 0%, rgba(59,130,246,.25), transparent 28%),
+linear-gradient(180deg,var(--bg),#0f172a 42%,#eef2ff 42%,#f8fafc 100%);
+min-height:100vh}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1180px;margin:auto;padding:18px}
+.hide{display:none!important}
+.hero{background:rgba(255,255,255,.12);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.16);color:#fff;border-radius:28px;padding:22px}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.hero h1{margin:0;font-size:28px}
+.sub{margin-top:4px;color:rgba(255,255,255,.78);font-size:13px}
+.btn,.ghost,.smallbtn{border:1px solid transparent;border-radius:14px;padding:10px 14px;background:#fff;color:#111827;transition:.18s}
+.btn:hover,.ghost:hover,.smallbtn:hover{transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;font-weight:700}
+.btn.dark{background:#111827;color:#fff}
+.ghost{background:rgba(255,255,255,.10);color:#fff;border-color:rgba(255,255,255,.16)}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.card{background:#fff;border:1px solid rgba(255,255,255,.3);border-radius:22px;padding:16px;box-shadow:0 10px 36px rgba(17,24,39,.06)}
+.card.glass{background:rgba(255,255,255,.85);backdrop-filter:blur(10px)}
+.stat .num{font-size:22px;font-weight:800}
+.stat .label{font-size:12px;color:var(--muted)}
+.main{display:grid;grid-template-columns:260px 1fr;gap:14px;margin-top:14px}
+.sidebar,.content{min-width:0}
+.navbox .navbtn{width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:16px;padding:12px 14px;margin-bottom:8px}
+.navbox .navbtn.active{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border-color:transparent}
+.navbox .navbtn .small{display:block;font-size:12px;opacity:.8}
+.sectionTitle{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px}
+.sectionTitle h2{margin:0;font-size:24px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.tabs{display:flex;gap:8px;overflow:auto;padding-bottom:10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 14px}
+.tab.active{background:#111827;color:#fff}
+.route{font-size:13px;color:var(--muted);margin-top:3px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.itemCard,.expenseCard{background:#fff;border:1px solid var(--line);border-radius:22px;padding:14px;box-shadow:0 8px 24px rgba(17,24,39,.05)}
+.itemTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.title{font-weight:800;font-size:18px}
+.muted{color:var(--muted)}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.pill{font-size:12px;background:#f3f4f6;border-radius:999px;padding:6px 10px;color:#4b5563}
+.note{margin-top:8px;color:#4b5563;font-size:13px;white-space:pre-wrap}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.iconbtn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px}
+.voteBtn{display:inline-flex;align-items:center;gap:6px;border:1px solid #fbcfe8;background:#fff;border-radius:999px;padding:8px 12px;color:#be185d}
+.voteBtn.active{background:#ec4899;color:#fff;border-color:#ec4899}
+.check{width:20px;height:20px}
+.imageWrap{margin-top:10px}
+.imageWrap img{width:100%;max-height:220px;object-fit:cover;border-radius:18px;border:1px solid var(--line)}
+.overviewGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.progress{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden}
+.progress > div{height:100%;background:linear-gradient(135deg,var(--primary),var(--primary2))}
+.members{display:flex;flex-wrap:wrap;gap:8px}
+.member{display:inline-flex;align-items:center;gap:6px;background:#eef2ff;border-radius:999px;padding:7px 10px;font-size:12px}
+.empty{padding:30px;text-align:center;border:1px dashed #cbd5e1;border-radius:20px;color:var(--muted);background:#fff}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:10px;border-bottom:1px solid #e5e7eb;text-align:left;font-size:14px}
+.splitGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.shareUser{border:1px solid var(--line);border-radius:14px;padding:10px;background:#fff}
+.shareUser input{margin-right:6px}
+.authWrap{max-width:520px;margin:30px auto}
+label{display:grid;gap:6px;font-size:12px;color:#4b5563}
+input,select,textarea{width:100%;border:1px solid #d1d5db;border-radius:14px;padding:12px;background:#fff}
+textarea{min-height:92px;resize:vertical}
+.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.full{grid-column:1/-1}
+.msg{padding:10px 12px;border-radius:12px;font-size:13px;margin-bottom:12px}
+.msg.err{background:#fef2f2;color:#991b1b}
+.msg.ok{background:#f0fdf4;color:#166534}
+dialog{border:0;border-radius:24px;padding:0;width:min(760px,calc(100% - 18px));box-shadow:0 30px 80px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(15,23,42,.65)}
+.modal{padding:18px}
+.modal h3{margin:0 0 12px}
+.modalActions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.help{font-size:12px;color:#6b7280}
+.uploadBox{border:1px dashed #cbd5e1;border-radius:16px;padding:12px;background:#f8fafc}
+.footerMini{margin-top:6px;font-size:12px;color:var(--muted)}
+@media (max-width:980px){
+ .main{grid-template-columns:1fr}
+ .cards,.overviewGrid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:640px){
+ .wrap{padding:12px}
+ .cards,.overviewGrid,.grid2,.formGrid,.splitGrid{grid-template-columns:1fr}
+ .hero h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section id="setupView" class="card authWrap">
+    <h2>🔧 还差一步</h2>
+    <p class="muted">请编辑同一个文件夹里的 config.js，填入 Supabase Project URL 和 Publishable key，然后重新 Commit / 部署。</p>
+  </section>
+
+  <section id="authView" class="hide">
+    <div class="authWrap">
+      <div class="hero">
+        <h1>🇲🇾🚗🇹🇭 Thailand Road Trip V4</h1>
+        <div class="sub">更漂亮的共享行程 · 投票 · Expenses · 图片上传</div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h2 id="authTitle">登录</h2>
+        <div id="authMsg"></div>
+        <form id="authForm" class="formGrid">
+          <label id="nameLabel" class="full hide">你的名字
+            <input id="authName" placeholder="例如：阿满">
+          </label>
+          <label class="full">Email
+            <input id="authEmail" type="email" required>
+          </label>
+          <label class="full">Password
+            <input id="authPassword" type="password" minlength="6" required>
+          </label>
+          <button class="btn primary full" type="submit" id="authSubmit">登录</button>
+        </form>
+        <div class="actions">
+          <button id="toggleAuth" class="iconbtn" type="button">第一次用？注册</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="homeView" class="hide">
+    <div class="hero">
+      <div class="top">
+        <div>
+          <h1>Shared Road Trips</h1>
+          <div class="sub" id="userEmail"></div>
+        </div>
+        <button id="logoutBtn" class="ghost">退出</button>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:14px">
+      <div class="card glass">
+        <h3>＋ 建立新旅行</h3>
+        <form id="createTripForm" class="formGrid">
+          <label class="full">标题<input id="newTitle" value="🇲🇾🚗🇹🇭 Thailand Road Trip 2026"></label>
+          <label>天数<input id="newDays" type="number" min="1" max="30" value="9"></label>
+          <label>人数<input id="newPeople" type="number" min="1" max="20" value="4"></label>
+          <label>共同预算 RM<input id="newBudget" type="number" min="0" value="5500"></label>
+          <label>THB→RM 汇率<input id="newRate" type="number" min="0" step="0.0001" value="0.1300"></label>
+          <div class="help full">例如 THB 100 ≈ RM 13，汇率就填 0.13。</div>
+          <button class="btn primary full" type="submit">建立旅行</button>
+        </form>
+      </div>
+      <div class="card glass">
+        <h3>👥 加入朋友的旅行</h3>
+        <form id="joinTripForm" class="formGrid">
+          <label class="full">Invite Code
+            <input id="joinCode" maxlength="8" placeholder="例如：A1B2C3D4">
+          </label>
+          <button class="btn dark full" type="submit">加入旅行</button>
+        </form>
+        <div class="footerMini">朋友把邀请码或带 ?join=CODE 的链接发给你即可。</div>
+      </div>
+    </div>
+
+    <div class="card glass" style="margin-top:14px">
+      <div class="sectionTitle"><h2>你的旅行</h2></div>
+      <div id="tripList"></div>
+    </div>
+  </section>
+
+  <section id="tripView" class="hide">
+    <div class="hero">
+      <div class="top">
+        <div>
+          <h1 id="tripTitle"></h1>
+          <div class="sub" id="tripSubtitle"></div>
+        </div>
+        <div class="toolbar">
+          <button class="ghost" id="copyShareBtn">复制邀请</button>
+          <button class="ghost" id="backHomeBtn">旅行列表</button>
+        </div>
+      </div>
+      <div class="cards">
+        <div class="card glass stat"><div class="num" id="plannedTotal">RM0</div><div class="label">行程估算</div></div>
+        <div class="card glass stat"><div class="num" id="actualTotal">RM0</div><div class="label">实际 Expenses</div></div>
+        <div class="card glass stat"><div class="num" id="budgetRemain">RM0</div><div class="label">预算剩余</div></div>
+        <div class="card glass stat"><div class="num" id="voteTotal">0</div><div class="label">总投票数</div></div>
+      </div>
+    </div>
+
+    <div class="main">
+      <aside class="sidebar">
+        <div class="card navbox">
+          <button class="navbtn active" data-panel="overview">🏠 Overview<span class="small">预算 / 汇率 / 快速总览</span></button>
+          <button class="navbtn" data-panel="itinerary">📅 Itinerary<span class="small">按天安排行程</span></button>
+          <button class="navbtn" data-panel="expenses">💸 Expenses<span class="small">记账与结算</span></button>
+          <button class="navbtn" data-panel="shared">👥 Shared<span class="small">邀请 / 成员 / 设置</span></button>
+        </div>
+      </aside>
+
+      <section class="content">
+        <div id="overviewPanel">
+          <div class="overviewGrid">
+            <div class="card">
+              <div class="sectionTitle"><h3>预算进度</h3></div>
+              <div class="progress"><div id="budgetBar" style="width:0%"></div></div>
+              <div class="footerMini" id="budgetText"></div>
+            </div>
+            <div class="card">
+              <h3>汇率</h3>
+              <div class="title" id="rateText">1 THB = RM 0.13</div>
+              <div class="footerMini">Expenses 里用 THB 记录时，会自动换算成 RM 做总预算统计。</div>
+            </div>
+            <div class="card">
+              <h3>最受欢迎</h3>
+              <div id="topVotes" class="muted">暂无投票</div>
+            </div>
+          </div>
+
+          <div class="grid2" style="margin-top:12px">
+            <div class="card">
+              <h3>最近添加的行程</h3>
+              <div id="recentItems"></div>
+            </div>
+            <div class="card">
+              <h3>Settlement 建议</h3>
+              <div id="settlementBox"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="itineraryPanel" class="hide">
+          <div class="sectionTitle">
+            <div>
+              <h2>Itinerary</h2>
+              <div class="route" id="currentRoute"></div>
+            </div>
+            <div class="toolbar">
+              <button class="btn dark" id="addItemBtn">＋ 添加地点 / 美食</button>
+            </div>
+          </div>
+          <div class="tabs" id="dayTabs"></div>
+          <div id="itemsList"></div>
+        </div>
+
+        <div id="expensesPanel" class="hide">
+          <div class="sectionTitle">
+            <div>
+              <h2>Expenses</h2>
+              <div class="route">支持 RM / THB，自动算总额与结算。</div>
+            </div>
+            <div class="toolbar"><button class="btn dark" id="addExpenseBtn">＋ 新增 Expense</button></div>
+          </div>
+          <div class="grid2">
+            <div class="card">
+              <h3>Expense Summary</h3>
+              <table class="table">
+                <tr><th>总实际支出</th><td id="sumActual"></td></tr>
+                <tr><th>预算目标</th><td id="sumBudget"></td></tr>
+                <tr><th>剩余 / 超出</th><td id="sumRemain"></td></tr>
+              </table>
+            </div>
+            <div class="card">
+              <h3>结算建议</h3>
+              <div id="settlementDetails"></div>
+            </div>
+          </div>
+          <div style="margin-top:12px" id="expenseList"></div>
+        </div>
+
+        <div id="sharedPanel" class="hide">
+          <div class="grid2">
+            <div class="card">
+              <h3>邀请朋友</h3>
+              <div class="title" id="inviteCode"></div>
+              <div class="footerMini">把上面的邀请码或复制邀请内容发给朋友。</div>
+              <div class="actions"><button class="btn primary" id="copyShareBtn2">复制邀请内容</button></div>
+            </div>
+            <div class="card">
+              <h3>成员</h3>
+              <div class="members" id="memberList"></div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <h3>旅行设置</h3>
+            <form id="settingsForm" class="formGrid">
+              <label class="full">标题<input id="setTitle"></label>
+              <label>天数<input id="setDays" type="number" min="1" max="30"></label>
+              <label>人数<input id="setPeople" type="number" min="1" max="20"></label>
+              <label>共同预算 RM<input id="setBudget" type="number" min="0"></label>
+              <label>THB→RM 汇率<input id="setRate" type="number" min="0" step="0.0001"></label>
+              <label class="full">当前 Day 路线<input id="setCurrentRoute"></label>
+              <button class="btn primary full" type="submit">保存设置</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+</div>
+
+<dialog id="itemDialog">
+  <form id="itemForm" class="modal">
+    <h3 id="itemModalTitle">新增地点</h3>
+    <div class="formGrid">
+      <label class="full">名称<input id="itemName" required></label>
+      <label>类别
+        <select id="itemCategory">
+          <option>🍜 美食</option><option>📍 景点</option><option>🏨 酒店</option><option>🛍️ 购物</option><option>💆 按摩</option><option>⛽ 加油 / 休息</option><option>🚗 交通 / Border</option><option>📝 其他</option>
+        </select>
+      </label>
+      <label>优先级
+        <select id="itemPriority">
+          <option>⭐ 必去</option><option selected>👍 想去</option><option>🙂 有空再去</option>
+        </select>
+      </label>
+      <label class="full">地点 / 地址<input id="itemLocation"></label>
+      <label>预计花费 RM<input id="itemCost" type="number" min="0" step="0.01" value="0"></label>
+      <label class="full">Google Maps / 网站链接<input id="itemLink"></label>
+      <label class="full">备注<textarea id="itemNote"></textarea></label>
+      <div class="full uploadBox">
+        <label>上传照片（可选）
+          <input id="itemPhoto" type="file" accept="image/*">
+        </label>
+        <div class="help">会上传到 Supabase Storage 的 trip-photos bucket。</div>
+        <div id="currentPhotoBox" class="footerMini"></div>
+      </div>
+    </div>
+    <div class="modalActions">
+      <button class="iconbtn" type="button" id="cancelItemBtn">取消</button>
+      <button class="btn primary" type="submit">保存</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="expenseDialog">
+  <form id="expenseForm" class="modal">
+    <h3 id="expenseModalTitle">新增 Expense</h3>
+    <div class="formGrid">
+      <label class="full">标题<input id="expenseTitle" required placeholder="例如：Mookata 晚餐"></label>
+      <label>金额<input id="expenseAmount" type="number" min="0" step="0.01" required></label>
+      <label>货币
+        <select id="expenseCurrency"><option>RM</option><option>THB</option></select>
+      </label>
+      <label>谁付款
+        <select id="expensePaidBy"></select>
+      </label>
+      <label>日期时间
+        <input id="expenseDate" type="datetime-local">
+      </label>
+      <label class="full">备注<textarea id="expenseNote"></textarea></label>
+      <div class="full">
+        <div class="help" style="margin-bottom:8px">分摊给谁（默认全选）</div>
+        <div id="expenseShareMembers" class="splitGrid"></div>
+      </div>
+    </div>
+    <div class="modalActions">
+      <button class="iconbtn" type="button" id="cancelExpenseBtn">取消</button>
+      <button class="btn primary" type="submit">保存</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="config.js"></script>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL = window.ROADTRIP_CONFIG?.SUPABASE_URL || '';
+const SUPABASE_PUBLISHABLE_KEY = window.ROADTRIP_CONFIG?.SUPABASE_KEY || '';
+
+const configured =
+  SUPABASE_URL.startsWith('https://') &&
+  !SUPABASE_URL.includes('PASTE_') &&
+  SUPABASE_PUBLISHABLE_KEY.length > 20 &&
+  !SUPABASE_PUBLISHABLE_KEY.includes('PASTE_');
+
+const $ = id => document.getElementById(id);
+const setupView=$('setupView'), authView=$('authView'), homeView=$('homeView'), tripView=$('tripView');
+let sb=null, user=null, authMode='login';
+let currentTrip=null, members=[], items=[], votes=[], expenses=[], shares=[];
+let activeDay=1, editingItem=null, editingExpense=null, channel=null;
+
+if(!configured){
+  setupView.classList.remove('hide');
+}else{
+  setupView.classList.add('hide');
+  sb=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+  init();
+}
+
+function show(view){[authView,homeView,tripView].forEach(v=>v.classList.add('hide'));view.classList.remove('hide')}
+function toast(msg,type='ok'){
+  const div=document.createElement('div');
+  div.className='msg '+(type==='err'?'err':'ok');
+  div.textContent=msg; div.style.position='fixed'; div.style.right='18px'; div.style.bottom='18px'; div.style.zIndex=9999;
+  document.body.appendChild(div); setTimeout(()=>div.remove(),1700);
+}
+function setMsg(el, text, type=''){ el.innerHTML=text?`<div class="msg ${type}">${escapeHtml(text)}</div>`:''; }
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function money(v){return 'RM '+Number(v||0).toLocaleString('en-MY',{maximumFractionDigits:2})}
+function moneyCurr(v,c){return c+' '+Number(v||0).toLocaleString('en-MY',{maximumFractionDigits:2})}
+function displayName(){return user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'Traveller'}
+function routes(){
+  const r=Array.isArray(currentTrip?.routes)?[...currentTrip.routes]:[];
+  while(currentTrip && r.length<currentTrip.days)r.push(`Day ${r.length+1} · 自定义行程`);
+  return r;
+}
+function rmValue(amount,currency){
+  const rate=Number(currentTrip?.thb_rate||0.13);
+  return currency==='THB' ? Number(amount||0)*rate : Number(amount||0);
+}
+function nowLocalInput(){
+  const d=new Date();
+  const offset=d.getTimezoneOffset();
+  const local=new Date(d.getTime()-offset*60000);
+  return local.toISOString().slice(0,16);
+}
+function ownerMember(){ return members.find(m=>m.role==='owner') }
+
+async function init(){
+  const {data:{session}}=await sb.auth.getSession();
+  user=session?.user||null;
+  if(user) await openHome(); else show(authView);
+  sb.auth.onAuthStateChange(async(_event,session)=>{
+    user=session?.user||null;
+    if(!user){cleanupChannel();currentTrip=null;show(authView)}
+  });
+
+  $('toggleAuth').addEventListener('click',()=>{
+    authMode=authMode==='login'?'register':'login';
+    $('authTitle').textContent=authMode==='login'?'登录':'注册';
+    $('authSubmit').textContent=authMode==='login'?'登录':'注册';
+    $('toggleAuth').textContent=authMode==='login'?'第一次用？注册':'已经有账号？登录';
+    $('nameLabel').classList.toggle('hide',authMode==='login');
+    setMsg($('authMsg'),'');
+  });
+
+  $('authForm').addEventListener('submit',onAuth);
+  $('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut()});
+  $('backHomeBtn').addEventListener('click',async()=>{cleanupChannel();currentTrip=null;await openHome()});
+  $('createTripForm').addEventListener('submit',createTrip);
+  $('joinTripForm').addEventListener('submit',joinTrip);
+
+  const q=new URLSearchParams(location.search).get('join');
+  if(q) $('joinCode').value=q.toUpperCase();
+
+  document.querySelectorAll('.navbtn').forEach(btn=>{
+    btn.addEventListener('click',()=>switchPanel(btn.dataset.panel));
+  });
+  $('addItemBtn').addEventListener('click',()=>openItemDialog(null));
+  $('cancelItemBtn').addEventListener('click',()=>$('itemDialog').close());
+  $('itemForm').addEventListener('submit',saveItem);
+  $('addExpenseBtn').addEventListener('click',()=>openExpenseDialog(null));
+  $('cancelExpenseBtn').addEventListener('click',()=>$('expenseDialog').close());
+  $('expenseForm').addEventListener('submit',saveExpense);
+  $('settingsForm').addEventListener('submit',saveSettings);
+  $('copyShareBtn').addEventListener('click',copyInvite);
+  $('copyShareBtn2').addEventListener('click',copyInvite);
+}
+
+async function onAuth(e){
+  e.preventDefault();
+  setMsg($('authMsg'),'');
+  const email=$('authEmail').value.trim(), password=$('authPassword').value;
+  try{
+    if(authMode==='register'){
+      const name=$('authName').value.trim()||email.split('@')[0];
+      const {data,error}=await sb.auth.signUp({email,password,options:{data:{display_name:name}}});
+      if(error) throw error;
+      if(data.session){user=data.user; await openHome();}
+      else setMsg($('authMsg'),'注册成功，请先到 Email 确认后再登录。','ok');
+    }else{
+      const {data,error}=await sb.auth.signInWithPassword({email,password});
+      if(error) throw error;
+      user=data.user; await openHome();
+    }
+  }catch(err){ setMsg($('authMsg'), err.message || String(err), 'err'); }
+}
+
+async function openHome(){
+  show(homeView);
+  $('userEmail').textContent=user.email||'';
+  await loadTripList();
+}
+
+async function loadTripList(){
+  const {data,error}=await sb.from('trips').select('*').order('created_at',{ascending:false});
+  if(error){ $('tripList').innerHTML=`<div class="msg err">${escapeHtml(error.message)}</div>`; return; }
+  if(!data?.length){ $('tripList').innerHTML='<div class="empty">还没有旅行，先建立一个或加入朋友的旅行。</div>'; return; }
+  $('tripList').innerHTML=data.map(t=>`
+    <div class="itemCard" style="margin-bottom:10px">
+      <div class="itemTop">
+        <div>
+          <div class="title">${escapeHtml(t.title)}</div>
+          <div class="muted">${t.days}天 · ${t.people}人 · Budget ${money(t.budget_target)} · Code ${escapeHtml(t.invite_code)}</div>
+        </div>
+        <button class="btn primary" data-trip="${t.id}">打开</button>
+      </div>
+    </div>`).join('');
+  document.querySelectorAll('[data-trip]').forEach(b=>b.addEventListener('click',()=>openTrip(b.dataset.trip)));
+}
+
+async function createTrip(e){
+  e.preventDefault();
+  const {data,error}=await sb.rpc('create_trip',{
+    p_title:$('newTitle').value.trim(),
+    p_days:Number($('newDays').value||9),
+    p_budget:Number($('newBudget').value||0),
+    p_people:Number($('newPeople').value||4),
+    p_name:displayName()
+  });
+  if(error){ toast(error.message,'err'); return; }
+  const row=Array.isArray(data)?data[0]:data;
+  await sb.from('trips').update({thb_rate:Number($('newRate').value||0.13)}).eq('id',row.trip_id);
+  await openTrip(row.trip_id);
+}
+
+async function joinTrip(e){
+  e.preventDefault();
+  const code=$('joinCode').value.trim().toUpperCase();
+  const {data,error}=await sb.rpc('join_trip_by_code',{p_code:code,p_name:displayName()});
+  if(error){ toast(error.message,'err'); return; }
+  history.replaceState({},'',location.pathname);
+  await openTrip(data);
+}
+
+async function openTrip(id){
+  const {data,error}=await sb.from('trips').select('*').eq('id',id).single();
+  if(error){ toast(error.message,'err'); return; }
+  currentTrip=data; activeDay=Math.min(activeDay,currentTrip.days)||1;
+  show(tripView);
+  await refreshTrip();
+  subscribeTrip();
+}
+
+async function refreshTrip(){
+  if(!currentTrip) return;
+  const [tripRes, membersRes, itemsRes, votesRes, expensesRes, sharesRes] = await Promise.all([
+    sb.from('trips').select('*').eq('id',currentTrip.id).single(),
+    sb.from('trip_members').select('*').eq('trip_id',currentTrip.id).order('joined_at'),
+    sb.from('items').select('*').eq('trip_id',currentTrip.id).order('created_at',{ascending:false}),
+    sb.from('item_votes').select('item_id,user_id,created_at'),
+    sb.from('expenses').select('*').eq('trip_id',currentTrip.id).order('spent_at',{ascending:false}),
+    sb.from('expense_shares').select('expense_id,user_id')
+  ]);
+  if(tripRes.data) currentTrip=tripRes.data;
+  members=(membersRes.data||[]);
+  items=(itemsRes.data||[]);
+  const itemIds = new Set(items.map(i=>i.id));
+  votes=(votesRes.data||[]).filter(v=>itemIds.has(v.item_id));
+  const expenseIds = new Set((expensesRes.data||[]).map(e=>e.id));
+  expenses=(expensesRes.data||[]);
+  shares=(sharesRes.data||[]).filter(s=>expenseIds.has(s.expense_id));
+  renderTrip();
+}
+
+function subscribeTrip(){
+  cleanupChannel();
+  channel=sb.channel('trip-v4-'+currentTrip.id)
+    .on('postgres_changes',{event:'*',schema:'public',table:'trips',filter:`id=eq.${currentTrip.id}`},()=>refreshTrip())
+    .on('postgres_changes',{event:'*',schema:'public',table:'trip_members',filter:`trip_id=eq.${currentTrip.id}`},()=>refreshTrip())
+    .on('postgres_changes',{event:'*',schema:'public',table:'items',filter:`trip_id=eq.${currentTrip.id}`},()=>refreshTrip())
+    .on('postgres_changes',{event:'*',schema:'public',table:'item_votes'},()=>refreshTrip())
+    .on('postgres_changes',{event:'*',schema:'public',table:'expenses',filter:`trip_id=eq.${currentTrip.id}`},()=>refreshTrip())
+    .on('postgres_changes',{event:'*',schema:'public',table:'expense_shares'},()=>refreshTrip())
+    .subscribe();
+}
+function cleanupChannel(){ if(channel && sb){ sb.removeChannel(channel); channel=null; } }
+
+function switchPanel(panel){
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active', b.dataset.panel===panel));
+  ['overview','itinerary','expenses','shared'].forEach(p=>$(p+'Panel').classList.toggle('hide', p!==panel));
+}
+
+function itemVoteCount(itemId){ return votes.filter(v=>v.item_id===itemId).length; }
+function itemVotedByMe(itemId){ return votes.some(v=>v.item_id===itemId && v.user_id===user.id); }
+function topVotedItems(limit=5){
+  return [...items].map(i=>({...i, vote_count:itemVoteCount(i.id)})).sort((a,b)=>b.vote_count-a.vote_count).slice(0,limit);
+}
+
+function renderTrip(){
+  $('tripTitle').textContent=currentTrip.title;
+  $('tripSubtitle').textContent=`${currentTrip.days}天 · ${currentTrip.people}人同行`;
+  $('inviteCode').textContent=currentTrip.invite_code;
+
+  const planned=items.reduce((s,x)=>s+Number(x.cost||0),0);
+  const actual=expenses.reduce((s,e)=>s+rmValue(e.amount,e.currency),0);
+  const remain=Number(currentTrip.budget_target||0)-actual;
+  const totalVotes=votes.length;
+  $('plannedTotal').textContent=money(planned);
+  $('actualTotal').textContent=money(actual);
+  $('budgetRemain').textContent=(remain>=0?'+ ':'- ')+money(Math.abs(remain));
+  $('voteTotal').textContent=String(totalVotes);
+
+  const pct=currentTrip.budget_target>0?Math.min(100, actual/Number(currentTrip.budget_target)*100):0;
+  $('budgetBar').style.width=pct+'%';
+  $('budgetText').textContent=`实际 Expenses ${money(actual)} / 预算目标 ${money(currentTrip.budget_target)} · ${remain>=0?'剩余':'超出'} ${money(Math.abs(remain))}`;
+  $('rateText').textContent=`1 THB = RM ${Number(currentTrip.thb_rate||0.13).toFixed(4)}`;
+
+  const top=topVotedItems(3);
+  $('topVotes').innerHTML=top.length?top.map(i=>`<div style="margin-bottom:8px"><b>${escapeHtml(i.name)}</b> · ❤️ ${i.vote_count}</div>`).join(''):'<span class="muted">暂无投票</span>';
+
+  $('recentItems').innerHTML=items.slice(0,5).length?items.slice(0,5).map(i=>`<div style="padding:8px 0;border-bottom:1px solid #eee"><b>${escapeHtml(i.name)}</b><div class="footerMini">${escapeHtml(i.category)} · Day ${i.day_no}</div></div>`).join(''):'<div class="empty">还没有行程项目</div>';
+
+  const settlement = buildSettlements();
+  $('settlementBox').innerHTML = settlement.lines.length ? settlement.lines.slice(0,4).map(l=>`<div style="padding:6px 0"><b>${escapeHtml(l.from)}</b> → <b>${escapeHtml(l.to)}</b> ${money(l.amount)}</div>`).join('') : '<div class="muted">还没有足够的 expense 数据</div>';
+  $('settlementDetails').innerHTML = settlement.lines.length ? settlement.lines.map(l=>`<div style="padding:6px 0"><b>${escapeHtml(l.from)}</b> 需要转给 <b>${escapeHtml(l.to)}</b> ${money(l.amount)}</div>`).join('') : '<div class="muted">记录几笔 expense 后，这里会自动给建议。</div>';
+
+  $('dayTabs').innerHTML=Array.from({length:currentTrip.days},(_,i)=>`<button class="tab ${activeDay===i+1?'active':''}" data-day="${i+1}">Day ${i+1}</button>`).join('');
+  document.querySelectorAll('#dayTabs [data-day]').forEach(b=>b.addEventListener('click',()=>{activeDay=Number(b.dataset.day); renderTrip();}));
+  $('currentRoute').textContent=routes()[activeDay-1] || '';
+  renderItems();
+  renderExpenses();
+  $('memberList').innerHTML=members.map(m=>`<span class="member">${m.role==='owner'?'👑':'👤'} ${escapeHtml(m.display_name)}</span>`).join('');
+
+  $('setTitle').value=currentTrip.title;
+  $('setDays').value=currentTrip.days;
+  $('setPeople').value=currentTrip.people;
+  $('setBudget').value=currentTrip.budget_target;
+  $('setRate').value=currentTrip.thb_rate || 0.13;
+  $('setCurrentRoute').value=routes()[activeDay-1] || '';
+
+  $('sumActual').textContent=money(actual);
+  $('sumBudget').textContent=money(currentTrip.budget_target);
+  $('sumRemain').textContent=`${remain>=0?'剩余':'超出'} ${money(Math.abs(remain))}`;
+}
+
+function renderItems(){
+  const dayItems=items.filter(i=>i.day_no===activeDay).sort((a,b)=>(Number(b.cost||0)-Number(a.cost||0)));
+  $('itemsList').innerHTML = dayItems.length ? dayItems.map(item=>`
+    <div class="itemCard" style="margin-bottom:12px">
+      <div class="itemTop">
+        <div>
+          <div class="title">${escapeHtml(item.name)}</div>
+          <div class="muted">${escapeHtml(item.location||'')}</div>
+        </div>
+        <input class="check" type="checkbox" ${item.done?'checked':''} data-done="${item.id}">
+      </div>
+      <div class="pills">
+        <span class="pill">${escapeHtml(item.category)}</span>
+        <span class="pill">${escapeHtml(item.priority)}</span>
+        ${Number(item.cost)>0?`<span class="pill">预算 ${money(item.cost)}</span>`:''}
+        <span class="pill">❤️ ${itemVoteCount(item.id)}</span>
+      </div>
+      ${item.note?`<div class="note">${escapeHtml(item.note)}</div>`:''}
+      ${item.image_url?`<div class="imageWrap"><img src="${escapeHtml(item.image_url)}" alt=""></div>`:''}
+      <div class="actions">
+        <button class="voteBtn ${itemVotedByMe(item.id)?'active':''}" data-vote="${item.id}">❤️ ${itemVotedByMe(item.id)?'已投票':'投票'}</button>
+        ${item.link?`<a class="iconbtn" href="${escapeHtml(item.link)}" target="_blank" rel="noopener">地图 / 链接</a>`:''}
+        <button class="iconbtn" data-edit-item="${item.id}">编辑</button>
+        <button class="iconbtn" data-del-item="${item.id}">删除</button>
+      </div>
+    </div>
+  `).join('') : `<div class="empty">这一天还没有项目，按「＋ 添加地点 / 美食」开始吧。</div>`;
+
+  document.querySelectorAll('[data-done]').forEach(el=>el.addEventListener('change',()=>toggleDone(el.dataset.done, el.checked)));
+  document.querySelectorAll('[data-vote]').forEach(el=>el.addEventListener('click',()=>toggleVote(el.dataset.vote)));
+  document.querySelectorAll('[data-edit-item]').forEach(el=>el.addEventListener('click',()=>openItemDialog(el.dataset.editItem)));
+  document.querySelectorAll('[data-del-item]').forEach(el=>el.addEventListener('click',()=>deleteItem(el.dataset.delItem)));
+}
+
+function renderExpenses(){
+  const memberMap = Object.fromEntries(members.map(m=>[m.user_id,m.display_name]));
+  $('expensePaidBy').innerHTML = members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.display_name)}</option>`).join('');
+  $('expenseShareMembers').innerHTML = members.map(m=>`
+    <label class="shareUser"><span><input type="checkbox" class="shareMemberChk" value="${m.user_id}" checked> ${escapeHtml(m.display_name)}</span></label>
+  `).join('');
+
+  $('expenseList').innerHTML = expenses.length ? expenses.map(exp=>{
+    const expShares = shares.filter(s=>s.expense_id===exp.id).map(s=>s.user_id);
+    const each = expShares.length ? rmValue(exp.amount,exp.currency)/expShares.length : 0;
+    return `
+      <div class="expenseCard" style="margin-bottom:12px">
+        <div class="itemTop">
+          <div>
+            <div class="title">${escapeHtml(exp.title)}</div>
+            <div class="muted">${new Date(exp.spent_at).toLocaleString()} · 付款：${escapeHtml(memberMap[exp.paid_by]||'')}</div>
+          </div>
+          <div style="text-align:right">
+            <div class="title">${moneyCurr(exp.amount,exp.currency)}</div>
+            <div class="footerMini">≈ ${money(rmValue(exp.amount,exp.currency))}</div>
+          </div>
+        </div>
+        ${exp.note?`<div class="note">${escapeHtml(exp.note)}</div>`:''}
+        <div class="pills">
+          <span class="pill">分摊人数 ${expShares.length}</span>
+          ${expShares.length?`<span class="pill">每人 ≈ ${money(each)}</span>`:''}
+        </div>
+        <div class="actions">
+          <button class="iconbtn" data-edit-expense="${exp.id}">编辑</button>
+          <button class="iconbtn" data-del-expense="${exp.id}">删除</button>
+        </div>
+      </div>
+    `;
+  }).join('') : `<div class="empty">还没有 Expense，先记第一笔油费、酒店或晚餐吧。</div>`;
+
+  document.querySelectorAll('[data-edit-expense]').forEach(el=>el.addEventListener('click',()=>openExpenseDialog(el.dataset.editExpense)));
+  document.querySelectorAll('[data-del-expense]').forEach(el=>el.addEventListener('click',()=>deleteExpense(el.dataset.delExpense)));
+}
+
+async function toggleDone(id, done){
+  const {error}=await sb.from('items').update({done}).eq('id',id);
+  if(error) toast(error.message,'err');
+}
+
+async function toggleVote(itemId){
+  const mine = votes.find(v=>v.item_id===itemId && v.user_id===user.id);
+  if(mine){
+    const {error}=await sb.from('item_votes').delete().eq('item_id',itemId).eq('user_id',user.id);
+    if(error) toast(error.message,'err');
+  }else{
+    const {error}=await sb.from('item_votes').insert({item_id:itemId,user_id:user.id});
+    if(error) toast(error.message,'err');
+  }
+}
+
+function openItemDialog(id){
+  editingItem = id ? items.find(i=>i.id===id) : null;
+  $('itemModalTitle').textContent = editingItem ? '编辑地点' : '新增地点';
+  $('itemName').value = editingItem?.name || '';
+  $('itemCategory').value = editingItem?.category || '🍜 美食';
+  $('itemPriority').value = editingItem?.priority || '👍 想去';
+  $('itemLocation').value = editingItem?.location || '';
+  $('itemCost').value = editingItem?.cost || 0;
+  $('itemLink').value = editingItem?.link || '';
+  $('itemNote').value = editingItem?.note || '';
+  $('itemPhoto').value = '';
+  $('currentPhotoBox').innerHTML = editingItem?.image_url ? `当前照片：<a href="${escapeHtml(editingItem.image_url)}" target="_blank">查看</a>` : '当前没有照片';
+  $('itemDialog').showModal();
+}
+
+async function uploadPhoto(file){
+  if(!file) return '';
+  const ext=(file.name.split('.').pop() || 'jpg').toLowerCase();
+  const path=`${currentTrip.id}/${crypto.randomUUID()}.${ext}`;
+  const {error}=await sb.storage.from('trip-photos').upload(path,file,{upsert:false});
+  if(error) throw error;
+  const {data}=sb.storage.from('trip-photos').getPublicUrl(path);
+  return data.publicUrl;
+}
+
+async function saveItem(e){
+  e.preventDefault();
+  try{
+    let imageUrl = editingItem?.image_url || '';
+    const file = $('itemPhoto').files[0];
+    if(file) imageUrl = await uploadPhoto(file);
+    const payload = {
+      trip_id:currentTrip.id,
+      day_no:activeDay,
+      name:$('itemName').value.trim(),
+      category:$('itemCategory').value,
+      priority:$('itemPriority').value,
+      location:$('itemLocation').value.trim(),
+      cost:Number($('itemCost').value||0),
+      link:$('itemLink').value.trim(),
+      note:$('itemNote').value.trim(),
+      image_url:imageUrl
+    };
+    let error;
+    if(editingItem){
+      ({error}=await sb.from('items').update(payload).eq('id',editingItem.id));
+    }else{
+      payload.created_by=user.id;
+      ({error}=await sb.from('items').insert(payload));
+    }
+    if(error) throw error;
+    $('itemDialog').close();
+    toast('已保存行程项目');
+  }catch(err){ toast(err.message || String(err),'err'); }
+}
+
+async function deleteItem(id){
+  if(!confirm('确定删除这个地点吗？')) return;
+  const {error}=await sb.from('items').delete().eq('id',id);
+  if(error) toast(error.message,'err');
+}
+
+function openExpenseDialog(id){
+  editingExpense = id ? expenses.find(e=>e.id===id) : null;
+  $('expenseModalTitle').textContent = editingExpense ? '编辑 Expense' : '新增 Expense';
+  $('expenseTitle').value = editingExpense?.title || '';
+  $('expenseAmount').value = editingExpense?.amount || '';
+  $('expenseCurrency').value = editingExpense?.currency || 'RM';
+  $('expensePaidBy').innerHTML = members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.display_name)}</option>`).join('');
+  $('expensePaidBy').value = editingExpense?.paid_by || (members[0]?.user_id || '');
+  $('expenseDate').value = editingExpense ? new Date(new Date(editingExpense.spent_at).getTime()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16) : nowLocalInput();
+  $('expenseNote').value = editingExpense?.note || '';
+  const selected = editingExpense ? shares.filter(s=>s.expense_id===editingExpense.id).map(s=>s.user_id) : members.map(m=>m.user_id);
+  $('expenseShareMembers').innerHTML = members.map(m=>`
+    <label class="shareUser"><span><input type="checkbox" class="shareMemberChk" value="${m.user_id}" ${selected.includes(m.user_id)?'checked':''}> ${escapeHtml(m.display_name)}</span></label>
+  `).join('');
+  $('expenseDialog').showModal();
+}
+
+async function saveExpense(e){
+  e.preventDefault();
+  const selected = [...document.querySelectorAll('.shareMemberChk:checked')].map(c=>c.value);
+  if(!selected.length){ toast('至少选择 1 位分摊成员','err'); return; }
+  const payload = {
+    trip_id:currentTrip.id,
+    title:$('expenseTitle').value.trim(),
+    amount:Number($('expenseAmount').value||0),
+    currency:$('expenseCurrency').value,
+    paid_by:$('expensePaidBy').value,
+    note:$('expenseNote').value.trim(),
+    spent_at:new Date($('expenseDate').value || Date.now()).toISOString()
+  };
+  try{
+    let expenseId = editingExpense?.id;
+    if(editingExpense){
+      const {error}=await sb.from('expenses').update(payload).eq('id',editingExpense.id);
+      if(error) throw error;
+      expenseId = editingExpense.id;
+      const {error:delErr}=await sb.from('expense_shares').delete().eq('expense_id',expenseId);
+      if(delErr) throw delErr;
+    }else{
+      payload.created_by = user.id;
+      const {data,error}=await sb.from('expenses').insert(payload).select().single();
+      if(error) throw error;
+      expenseId = data.id;
+    }
+    const shareRows = selected.map(uid=>({expense_id:expenseId,user_id:uid}));
+    const {error:shareErr}=await sb.from('expense_shares').insert(shareRows);
+    if(shareErr) throw shareErr;
+    $('expenseDialog').close();
+    toast('Expense 已保存');
+  }catch(err){ toast(err.message || String(err),'err'); }
+}
+
+async function deleteExpense(id){
+  if(!confirm('确定删除这笔 expense 吗？')) return;
+  const {error}=await sb.from('expenses').delete().eq('id',id);
+  if(error) toast(error.message,'err');
+}
+
+function buildSettlements(){
+  const nameOf = uid => members.find(m=>m.user_id===uid)?.display_name || uid;
+  const balance={};
+  members.forEach(m=>balance[m.user_id]=0);
+  expenses.forEach(exp=>{
+    const rm = rmValue(exp.amount, exp.currency);
+    balance[exp.paid_by] = (balance[exp.paid_by]||0) + rm;
+    const part = shares.filter(s=>s.expense_id===exp.id).map(s=>s.user_id);
+    if(part.length){
+      const each = rm / part.length;
+      part.forEach(uid=> balance[uid] = (balance[uid]||0) - each);
+    }
+  });
+  const creditors = Object.entries(balance).filter(([,amt])=>amt>0.009).map(([uid,amt])=>({uid,amt}));
+  const debtors = Object.entries(balance).filter(([,amt])=>amt<-0.009).map(([uid,amt])=>({uid,amt:-amt}));
+  creditors.sort((a,b)=>b.amt-a.amt); debtors.sort((a,b)=>b.amt-a.amt);
+  const lines=[];
+  let i=0,j=0;
+  while(i<debtors.length && j<creditors.length){
+    const d=debtors[i], c=creditors[j];
+    const pay=Math.min(d.amt, c.amt);
+    if(pay>0.009) lines.push({from:nameOf(d.uid), to:nameOf(c.uid), amount:Number(pay.toFixed(2))});
+    d.amt-=pay; c.amt-=pay;
+    if(d.amt<0.01) i++;
+    if(c.amt<0.01) j++;
+  }
+  return {balance, lines};
+}
+
+async function saveSettings(e){
+  e.preventDefault();
+  const newDays=Math.max(1,Math.min(30,Number($('setDays').value||currentTrip.days)));
+  const r=routes();
+  while(r.length<newDays) r.push(`Day ${r.length+1} · 自定义行程`);
+  r[activeDay-1] = $('setCurrentRoute').value.trim() || r[activeDay-1];
+  const payload = {
+    title:$('setTitle').value.trim() || currentTrip.title,
+    days:newDays,
+    people:Number($('setPeople').value||currentTrip.people),
+    budget_target:Number($('setBudget').value||currentTrip.budget_target),
+    thb_rate:Number($('setRate').value||currentTrip.thb_rate||0.13),
+    routes:r
+  };
+  const {error}=await sb.from('trips').update(payload).eq('id',currentTrip.id);
+  if(error) toast(error.message,'err');
+  else toast('旅行设置已更新');
+}
+
+async function copyInvite(){
+  const link=`${location.origin}${location.pathname}?join=${currentTrip.invite_code}`;
+  const text=`加入我们的旅行：${currentTrip.title}\nInvite Code: ${currentTrip.invite_code}\n${link}`;
+  try{
+    await navigator.clipboard.writeText(text);
+    toast('邀请内容已复制');
+  }catch{
+    prompt('复制下面内容发给朋友：', text);
+  }
+}
+</script>
+</body>
+</html>
