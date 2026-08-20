@@ -991,6 +991,75 @@ body[data-theme="dark"] #expenseLinkedItem:disabled{
 }
 </style>
 
+
+<style id="appV25ButtonMatch">
+/* V2.5 — make Add Expense match Add Place / Food */
+#addItemBtn,
+#addExpenseBtn{
+  background:linear-gradient(135deg,#6d28d9,#2563eb) !important;
+  color:#ffffff !important;
+  border:none !important;
+  box-shadow:0 10px 22px rgba(79,70,229,.22) !important;
+  font-weight:800 !important;
+}
+
+#addItemBtn:hover,
+#addExpenseBtn:hover{
+  filter:brightness(1.04);
+  transform:translateY(-1px);
+}
+
+#addItemBtn:active,
+#addExpenseBtn:active{
+  transform:translateY(0);
+  filter:brightness(.98);
+}
+
+body[data-theme="dark"] #addItemBtn,
+body[data-theme="dark"] #addExpenseBtn{
+  background:linear-gradient(135deg,#7c3aed,#2563eb) !important;
+  color:#ffffff !important;
+  border:none !important;
+  box-shadow:0 10px 24px rgba(59,130,246,.24) !important;
+}
+</style>
+
+
+<style id="appV26CompactBudgetCard">
+/* V2.6 — compact Budget card header */
+.placeCard.budgetCard .placeCover{
+  min-height:72px !important;
+  height:72px !important;
+}
+.placeCard.budgetCard .placeCoverEmoji{
+  font-size:32px !important;
+  line-height:1 !important;
+}
+.placeCard.budgetCard .placeCoverOverlay{
+  bottom:8px !important;
+  right:8px !important;
+}
+.placeCard.budgetCard .coverBadge{
+  padding:5px 8px !important;
+  font-size:10px !important;
+}
+
+/* Phone: even more compact */
+@media(max-width:640px){
+  .placeCard.budgetCard .placeCover{
+    min-height:60px !important;
+    height:60px !important;
+  }
+  .placeCard.budgetCard .placeCoverEmoji{
+    font-size:26px !important;
+  }
+  .placeCard.budgetCard .placeCoverOverlay{
+    bottom:6px !important;
+    right:6px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
