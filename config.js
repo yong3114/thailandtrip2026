@@ -8,3 +8,4 @@ window.ROADTRIP_CONFIG = {
   SUPABASE_URL: 'https://wltmkdtkkchxguashnbr.supabase.co',
   SUPABASE_KEY: 'sb_publishable_IWOO7tqbx8VkkYJius9hNw_T47vmepb'
 };
+ 
