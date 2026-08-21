@@ -4635,6 +4635,144 @@ dialog .modal{
 }
 </style>
 
+
+<style id="roadTripV515R5MobileFlow">
+/* =========================================================
+   R5 — Mobile flow polish
+   ========================================================= */
+.mobileCompactHeader{display:none}
+
+@media(max-width:760px){
+  /* Full Hero only belongs to Overview on phone */
+  #tripView.mobileSubpage .hero{
+    display:none !important;
+  }
+
+  #tripView.mobileSubpage .mobileCompactHeader{
+    display:flex !important;
+    position:sticky;
+    top:max(0px,env(safe-area-inset-top));
+    z-index:22;
+    align-items:center;
+    gap:10px;
+    min-height:56px;
+    margin:0 0 10px;
+    padding:8px 10px;
+    border:1px solid var(--rt-border);
+    border-radius:16px;
+    background:color-mix(in srgb,var(--rt-surface) 92%,transparent);
+    -webkit-backdrop-filter:blur(16px);
+    backdrop-filter:blur(16px);
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+  }
+
+  .mobileCompactBack,
+  .mobileCompactMore{
+    flex:0 0 auto;
+    width:40px;
+    height:40px;
+    min-height:40px !important;
+    padding:0;
+    border-radius:12px;
+    border:1px solid var(--rt-border);
+    background:var(--rt-surface-2);
+    color:var(--rt-text);
+    font-weight:900;
+  }
+  .mobileCompactBack{
+    font-size:24px;
+    line-height:1;
+  }
+  .mobileCompactMore{
+    font-size:15px;
+    letter-spacing:1px;
+  }
+
+  .mobileCompactText{
+    flex:1;
+    min-width:0;
+  }
+  .mobileCompactTrip{
+    color:var(--rt-muted);
+    font-size:9.5px;
+    font-weight:800;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .mobileCompactPanel{
+    margin-top:1px;
+    color:var(--rt-text);
+    font-size:15px;
+    font-weight:950;
+    line-height:1.2;
+  }
+
+  /* On Overview keep the real hero, but compact it slightly */
+  #tripView:not(.mobileSubpage) .hero{
+    padding:15px !important;
+    border-radius:22px !important;
+  }
+  #tripView:not(.mobileSubpage) .hero h1{
+    font-size:24px !important;
+  }
+  #tripView:not(.mobileSubpage) .hero .sub{
+    margin-top:5px !important;
+    font-size:11px !important;
+  }
+  #tripView:not(.mobileSubpage) .hero .cards{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:8px !important;
+    margin-top:11px !important;
+  }
+  #tripView:not(.mobileSubpage) .hero .card{
+    padding:10px !important;
+    border-radius:15px !important;
+  }
+  #tripView:not(.mobileSubpage) .hero .stat .num{
+    font-size:17px !important;
+  }
+  #tripView:not(.mobileSubpage) .hero .stat .label{
+    font-size:9.5px !important;
+  }
+  #tripView:not(.mobileSubpage) .hero .toolbar{
+    gap:5px !important;
+  }
+  #tripView:not(.mobileSubpage) .hero .toolbar button{
+    min-height:38px !important;
+    padding:7px 9px !important;
+    font-size:10px !important;
+  }
+  #tripView:not(.mobileSubpage) .appV2Badge{
+    font-size:8px !important;
+  }
+
+  /* Content begins much sooner on subpages */
+  #tripView.mobileSubpage .main{
+    margin-top:0 !important;
+  }
+  #tripView.mobileSubpage .content{
+    padding-top:0 !important;
+  }
+
+  /* The swipe instruction should not consume space forever */
+  .uiSwipeHint{
+    margin:0 0 5px !important;
+    font-size:8.5px !important;
+    opacity:.55 !important;
+  }
+}
+
+@media(min-width:761px){
+  #tripView.mobileSubpage .hero{
+    display:block !important;
+  }
+  .mobileCompactHeader{
+    display:none !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -4717,7 +4855,7 @@ dialog .modal{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.5R4 · UI POLISH · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.5R5 · MOBILE FLOW · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -4733,6 +4871,15 @@ dialog .modal{
         <div class="card glass stat"><div class="num" id="budgetRemain">RM0</div><div class="label">预算剩余</div></div>
         <div class="card glass stat"><div class="num" id="voteTotal">0</div><div class="label">总投票数</div></div>
       </div>
+    </div>
+
+    <div class="mobileCompactHeader hide" id="mobileCompactHeader">
+      <button class="mobileCompactBack" type="button" id="mobileCompactHomeBtn" aria-label="回到首页">‹</button>
+      <div class="mobileCompactText">
+        <div class="mobileCompactTrip" id="mobileCompactTrip"></div>
+        <div class="mobileCompactPanel" id="mobileCompactPanel"></div>
+      </div>
+      <button class="mobileCompactMore" type="button" id="mobileCompactMoreBtn" aria-label="更多">•••</button>
     </div>
 
     <div class="main">
@@ -5657,7 +5804,7 @@ setTimeout(applySafeChecklistFilter,300);
     const nextIndex=dx<0 ? index+1 : index-1;
     if(nextIndex<0 || nextIndex>=panelOrder.length) return;
 
-    switchPanel(panelOrder[nextIndex]);
+    switchPanel(panelOrder[nextIndex],{preserveScroll:true});
   },{passive:true});
 
   // Tiny visual confirmation for taps on interactive controls.
@@ -5770,6 +5917,13 @@ async function init(){
   $('settingsForm').addEventListener('submit',saveSettings);
   $('copyShareBtn').addEventListener('click',copyInvite);
   $('copyShareBtn2').addEventListener('click',copyInvite);
+
+  $('mobileCompactHomeBtn')?.addEventListener('click',()=>switchPanel('overview'));
+  $('mobileCompactMoreBtn')?.addEventListener('click',()=>{
+    // Reuse existing Shared page as the mobile "more/settings" destination.
+    switchPanel('shared');
+  });
+  window.addEventListener('resize',()=>updateMobilePanelChrome(currentVisiblePanel),{passive:true});
 
   $('openTodayModeBtn')?.addEventListener('click',()=>openTodayMode(activeDay));
   $('closeTodayModeBtn')?.addEventListener('click',()=>$('todayDialog').close());
@@ -6124,16 +6278,64 @@ function subscribeTrip(){
 }
 function cleanupChannel(){ if(channel && sb){ sb.removeChannel(channel); channel=null; } }
 
-function switchPanel(panel){
+const mobilePanelScroll={overview:0,itinerary:0,expenses:0,shared:0};
+let currentVisiblePanel='overview';
+
+function updateMobilePanelChrome(panel){
+  const tripViewEl=$('tripView');
+  if(!tripViewEl) return;
+
+  const mobile=window.matchMedia('(max-width:760px)').matches;
+  tripViewEl.classList.toggle('mobileSubpage',mobile && panel!=='overview');
+
+  const labels={
+    overview:'Overview',
+    itinerary:'Itinerary',
+    expenses:'Budget & Expenses',
+    shared:'Shared'
+  };
+
+  if($('mobileCompactTrip')){
+    $('mobileCompactTrip').textContent=currentTrip?.title||'RoadTrip';
+  }
+  if($('mobileCompactPanel')){
+    $('mobileCompactPanel').textContent=labels[panel]||'RoadTrip';
+  }
+}
+
+function switchPanel(panel,options={}){
+  const valid=['overview','itinerary','expenses','shared'];
+  if(!valid.includes(panel)) return;
+
+  const isMobile=window.matchMedia('(max-width:760px)').matches;
+  const preserveScroll=!!options.preserveScroll;
+
+  if(isMobile && preserveScroll && currentVisiblePanel){
+    mobilePanelScroll[currentVisiblePanel]=window.scrollY||0;
+  }
+
+  currentVisiblePanel=panel;
+
   document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active', b.dataset.panel===panel));
   document.querySelectorAll('.mobileTab').forEach(b=>b.classList.toggle('active', b.dataset.panel===panel));
-  ['overview','itinerary','expenses','shared'].forEach(p=>$(p+'Panel').classList.toggle('hide', p!==panel));
+  valid.forEach(p=>$(p+'Panel').classList.toggle('hide', p!==panel));
+
   if(mobileBar) mobileBar.classList.toggle('hide', !currentTrip);
+
   if(mobileAddBtn){
-    mobileAddBtn.textContent = panel==='expenses' ? '＋' : '＋';
+    mobileAddBtn.textContent='＋';
     mobileAddBtn.setAttribute('aria-label','快速新增：地点或 Expense');
   }
-  window.scrollTo({top:0,behavior:'smooth'});
+
+  updateMobilePanelChrome(panel);
+
+  requestAnimationFrame(()=>{
+    if(isMobile && preserveScroll){
+      window.scrollTo({top:mobilePanelScroll[panel]||0,behavior:'auto'});
+    }else{
+      window.scrollTo({top:0,behavior:'auto'});
+    }
+  });
 }
 
 function itemVoteCount(itemId){ return votes.filter(v=>v.item_id===itemId).length; }
