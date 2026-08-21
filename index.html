@@ -2828,6 +2828,102 @@ dialog.sheetDismissing .modal{
 }
 </style>
 
+
+<style id="roadTripV46DarkContrastFix">
+/* =========================================================
+   V4.6 — Dark mode readability / Expense Summary contrast
+   ========================================================= */
+
+/* Expense Summary table */
+.expenseSummaryCard .table,
+.expenseSummaryCard .table th,
+.expenseSummaryCard .table td{
+  color:var(--text) !important;
+}
+
+.expenseSummaryCard .table th{
+  color:#aebbd0 !important;
+  font-weight:700 !important;
+  opacity:1 !important;
+}
+
+.expenseSummaryCard .table td{
+  color:#f8fafc !important;
+  font-weight:900 !important;
+  opacity:1 !important;
+}
+
+.expenseSummaryCard .table tr{
+  border-color:#475569 !important;
+}
+
+.expenseSummaryCard .table th,
+.expenseSummaryCard .table td{
+  border-bottom-color:#475569 !important;
+}
+
+/* Explicitly keep key values readable */
+#sumActual,
+#sumBudget,
+#sumRemain{
+  color:#f8fafc !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+
+/* Settlement area */
+#settlementDetails,
+#settlementDetails div,
+#settlementBox,
+#settlementBox div{
+  color:#dbe7f5 !important;
+}
+
+#settlementDetails b,
+#settlementBox b{
+  color:#ffffff !important;
+}
+
+/* Budget hub and insight numbers */
+.budgetHubStat strong,
+.insightCard b{
+  color:#ffffff !important;
+  opacity:1 !important;
+}
+
+.budgetHubStat span,
+.insightCard span{
+  color:#aebbd0 !important;
+  opacity:1 !important;
+}
+
+/* Light mode restores dark text */
+body:not([data-theme="dark"]) .expenseSummaryCard .table th{
+  color:#64748b !important;
+}
+
+body:not([data-theme="dark"]) .expenseSummaryCard .table td,
+body:not([data-theme="dark"]) #sumActual,
+body:not([data-theme="dark"]) #sumBudget,
+body:not([data-theme="dark"]) #sumRemain{
+  color:#0f172a !important;
+}
+
+body:not([data-theme="dark"]) #settlementDetails,
+body:not([data-theme="dark"]) #settlementDetails div,
+body:not([data-theme="dark"]) #settlementBox,
+body:not([data-theme="dark"]) #settlementBox div{
+  color:#334155 !important;
+}
+
+body:not([data-theme="dark"]) #settlementDetails b,
+body:not([data-theme="dark"]) #settlementBox b,
+body:not([data-theme="dark"]) .budgetHubStat strong,
+body:not([data-theme="dark"]) .insightCard b{
+  color:#0f172a !important;
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
