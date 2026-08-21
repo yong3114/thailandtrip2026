@@ -5996,6 +5996,136 @@ dialog .sheetDragHandle{
 }
 </style>
 
+
+<style id="roadTripV5162ModalActionsTheme">
+/* =========================================================
+   V5.1.6.2 — compact modal actions + home theme icon
+   ========================================================= */
+
+/* Home theme icon */
+.homeThemeIconBtn{
+  width:42px;
+  height:42px;
+  min-height:42px;
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border-radius:13px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  font-size:17px;
+  font-weight:900;
+  box-shadow:none;
+}
+
+body[data-theme="dark"] .homeThemeIconBtn{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.12);
+}
+
+.homeThemeIconBtn:active{
+  transform:scale(.96) !important;
+}
+
+/* Remove obsolete home dropdown layout */
+.homeThemeControl{
+  display:none !important;
+}
+
+/* Compact dialog action area */
+dialog .modalActions{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:8px !important;
+  margin-top:14px !important;
+  padding-top:10px !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+
+/* All action buttons stop stretching */
+dialog .modalActions > button{
+  width:auto !important;
+  min-width:88px !important;
+  min-height:42px !important;
+  padding:8px 15px !important;
+  border-radius:13px !important;
+  flex:0 0 auto !important;
+}
+
+/* Cancel = subtle secondary */
+dialog .modalActions > .iconbtn{
+  background:var(--rt-surface-2) !important;
+  border-color:var(--rt-border) !important;
+  color:var(--rt-text-2) !important;
+  box-shadow:none !important;
+}
+
+/* Save = compact primary */
+dialog .modalActions > .btn.primary{
+  min-width:96px !important;
+  box-shadow:0 7px 16px rgba(47,128,237,.14) !important;
+}
+
+/* Quick Add cancel already has custom style, keep it separate */
+.quickAddCancel{
+  width:100% !important;
+}
+
+/* Create trip actions align naturally too */
+#createTripDialog .modalActions,
+#itemDialog .modalActions,
+#expenseDialog .modalActions,
+#checklistDialog .modalActions{
+  border-top:1px solid color-mix(in srgb,var(--rt-border) 78%,transparent);
+}
+
+@media(max-width:640px){
+  .homeTopActions{
+    width:auto !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:8px !important;
+    margin-top:0 !important;
+  }
+
+  .homeHero .top{
+    flex-direction:row !important;
+    align-items:flex-start !important;
+    justify-content:space-between !important;
+  }
+
+  .homeThemeIconBtn{
+    width:40px;
+    height:40px;
+    min-height:40px;
+    border-radius:12px;
+    font-size:16px;
+  }
+
+  dialog .modalActions{
+    gap:7px !important;
+    margin-top:12px !important;
+    padding-top:9px !important;
+  }
+
+  dialog .modalActions > button{
+    min-width:78px !important;
+    min-height:40px !important;
+    padding:7px 13px !important;
+    border-radius:12px !important;
+    font-size:12px !important;
+  }
+
+  dialog .modalActions > .btn.primary{
+    min-width:88px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -6042,14 +6172,7 @@ dialog .sheetDragHandle{
         </div>
 
         <div class="homeTopActions">
-          <label class="homeThemeControl" aria-label="主题">
-            <span>主题</span>
-            <select id="homeThemeMode">
-              <option value="system">跟随系统</option>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </select>
-          </label>
+          <button id="homeThemeToggle" class="homeThemeIconBtn" type="button" aria-label="切换主题">◐</button>
           <button id="logoutBtn" class="ghost">退出</button>
         </div>
       </div>
@@ -6101,7 +6224,7 @@ dialog .sheetDragHandle{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.6.1 · SHEET SCROLL FIX · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.6.2 · HOME THEME + MODAL ACTIONS · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -7373,8 +7496,9 @@ async function init(){
     });
   });
 
-  $('homeThemeMode')?.addEventListener('change',e=>{
-    setThemePreference(e.target.value||'system');
+  $('homeThemeToggle')?.addEventListener('click',()=>{
+    const next=document.body.dataset.theme==='dark'?'light':'dark';
+    setThemePreference(next);
   });
 
 
@@ -7382,8 +7506,7 @@ async function init(){
 
 const systemThemeQuery=window.matchMedia('(prefers-color-scheme: dark)');
 
-function effectiveThemeForMode(mode){
-  if(mode==='light' || mode==='dark') return mode;
+function systemTheme(){
   return systemThemeQuery.matches ? 'dark' : 'light';
 }
 
@@ -7394,6 +7517,14 @@ function applyTheme(theme){
     btn.textContent=theme==='dark'?'☀':'◐';
   });
 
+  if($('homeThemeToggle')){
+    $('homeThemeToggle').textContent=theme==='dark'?'☀':'◐';
+    $('homeThemeToggle').setAttribute(
+      'aria-label',
+      theme==='dark'?'切换到 Light Mode':'切换到 Dark Mode'
+    );
+  }
+
   const meta=document.querySelector('meta[name="theme-color"]');
   if(meta){
     meta.setAttribute('content',theme==='dark'?'#08111f':'#F4FAFF');
@@ -7401,33 +7532,24 @@ function applyTheme(theme){
 }
 
 function currentThemePreference(){
-  return localStorage.getItem('roadtrip-theme-mode') || 'system';
+  return localStorage.getItem('roadtrip-theme-mode');
 }
 
-function setThemePreference(mode){
-  const safe=['system','light','dark'].includes(mode)?mode:'system';
+function setThemePreference(theme){
+  const safe=theme==='light'?'light':'dark';
   localStorage.setItem('roadtrip-theme-mode',safe);
-
-  if($('homeThemeMode')){
-    $('homeThemeMode').value=safe;
-  }
-
-  applyTheme(effectiveThemeForMode(safe));
+  applyTheme(safe);
 }
 
 function initThemePreference(){
-  const mode=currentThemePreference();
-
-  if($('homeThemeMode')){
-    $('homeThemeMode').value=mode;
-  }
-
-  applyTheme(effectiveThemeForMode(mode));
+  const saved=currentThemePreference();
+  applyTheme(saved==='light'||saved==='dark' ? saved : systemTheme());
 }
 
 systemThemeQuery.addEventListener?.('change',()=>{
-  if(currentThemePreference()==='system'){
-    applyTheme(effectiveThemeForMode('system'));
+  // Only follow the phone automatically before the user has manually chosen.
+  if(!currentThemePreference()){
+    applyTheme(systemTheme());
   }
 });
 
