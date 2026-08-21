@@ -2927,6 +2927,538 @@ body:not([data-theme="dark"]) .insightCard b{
 <style id="roadTripV472StableRecovery">
 .appV2Badge{letter-spacing:.04em}
 </style>
+
+<style id="roadTripV48VisualSystem">
+/* =========================================================
+   ROADTRIP V4.8 — VISUAL SYSTEM
+   High-contrast, iPhone-friendly, consistent dark/light theme
+   ========================================================= */
+
+/* ---------- Shared semantic colors ---------- */
+body{
+  --rt-bg:#f4f7fb;
+  --rt-surface:#ffffff;
+  --rt-surface-2:#f8fafc;
+  --rt-surface-3:#eef2f7;
+  --rt-text:#0f172a;
+  --rt-text-2:#334155;
+  --rt-muted:#64748b;
+  --rt-faint:#94a3b8;
+  --rt-border:#d9e2ee;
+  --rt-border-strong:#c7d2e1;
+  --rt-purple:#6d28d9;
+  --rt-purple-soft:#f3efff;
+  --rt-blue:#2563eb;
+  --rt-green:#15803d;
+  --rt-green-soft:#ecfdf3;
+  --rt-amber:#b45309;
+  --rt-amber-soft:#fff7ed;
+  --rt-red:#b91c1c;
+  --rt-red-soft:#fff1f2;
+}
+
+body[data-theme="dark"]{
+  --rt-bg:#08111f;
+  --rt-surface:#0f1a2b;
+  --rt-surface-2:#121f33;
+  --rt-surface-3:#17263d;
+  --rt-text:#f8fafc;
+  --rt-text-2:#dbe7f5;
+  --rt-muted:#b1bfd1;
+  --rt-faint:#91a3b8;
+  --rt-border:#2d3e57;
+  --rt-border-strong:#40536d;
+  --rt-purple:#a78bfa;
+  --rt-purple-soft:#241b45;
+  --rt-blue:#60a5fa;
+  --rt-green:#4ade80;
+  --rt-green-soft:#0d2a20;
+  --rt-amber:#fbbf24;
+  --rt-amber-soft:#35230c;
+  --rt-red:#f87171;
+  --rt-red-soft:#35131a;
+}
+
+/* ---------- App background / typography ---------- */
+body{
+  color:var(--rt-text) !important;
+}
+
+body[data-theme="dark"]{
+  background:
+    radial-gradient(circle at top left,rgba(109,40,217,.18),transparent 27%),
+    linear-gradient(180deg,#07101d 0%,#0a1322 100%) !important;
+}
+
+h1,h2,h3,h4,
+.title,
+.timelineName,
+.placeTitleButton .title,
+.recentEditTitle,
+.budgetHubCardTitle{
+  color:var(--rt-text) !important;
+}
+
+.sub,
+.route,
+.muted,
+.footerMini,
+.help,
+.linkedTripHint,
+.plannerHelp,
+.placeLocation,
+.note{
+  color:var(--rt-muted) !important;
+  opacity:1 !important;
+}
+
+/* Tiny secondary text must still be readable in dark mode */
+body[data-theme="dark"] .small,
+body[data-theme="dark"] .footerMini,
+body[data-theme="dark"] .help,
+body[data-theme="dark"] .route,
+body[data-theme="dark"] .placeLocation,
+body[data-theme="dark"] .note,
+body[data-theme="dark"] .linkedTripHint,
+body[data-theme="dark"] .plannerHelp{
+  color:#b8c6d9 !important;
+}
+
+/* ---------- Cards / surfaces ---------- */
+.card,
+.itemCard,
+.expenseCard,
+.dayRouteCard,
+.insightCard,
+.voteLeader,
+.budgetHubCard,
+.timelineCard,
+.unscheduledBox{
+  background:var(--rt-surface) !important;
+  color:var(--rt-text) !important;
+  border-color:var(--rt-border) !important;
+}
+
+body[data-theme="dark"] .card,
+body[data-theme="dark"] .itemCard,
+body[data-theme="dark"] .expenseCard,
+body[data-theme="dark"] .dayRouteCard,
+body[data-theme="dark"] .insightCard,
+body[data-theme="dark"] .voteLeader,
+body[data-theme="dark"] .budgetHubCard,
+body[data-theme="dark"] .timelineCard,
+body[data-theme="dark"] .unscheduledBox{
+  box-shadow:none !important;
+}
+
+.glass{
+  background:color-mix(in srgb,var(--rt-surface) 92%,transparent) !important;
+}
+
+/* ---------- Member chips: fixes screenshot issue ---------- */
+.members{
+  gap:9px !important;
+}
+
+.member{
+  background:#eef2ff !important;
+  border:1px solid #c7d2fe !important;
+  color:#3730a3 !important;
+  font-weight:800 !important;
+  min-height:36px;
+  padding:8px 12px !important;
+}
+
+body[data-theme="dark"] .member{
+  background:#18263a !important;
+  border-color:#40536d !important;
+  color:#f1f5f9 !important;
+}
+
+body[data-theme="dark"] .member *{
+  color:#f1f5f9 !important;
+}
+
+/* ---------- Pills / badges ---------- */
+.pill,
+.miniBadge,
+.dayMiniStat,
+.timelineBadge,
+.voteCountStrict,
+.plannerSectionCount{
+  background:var(--rt-surface-3) !important;
+  border-color:var(--rt-border) !important;
+  color:var(--rt-text-2) !important;
+  opacity:1 !important;
+}
+
+.planStatusBadge{
+  font-weight:900 !important;
+}
+
+.plan-confirmed,
+.autoConfirmedFlag,
+.scheduleOkBox{
+  background:var(--rt-green-soft) !important;
+  color:var(--rt-green) !important;
+  border-color:color-mix(in srgb,var(--rt-green) 55%,var(--rt-border)) !important;
+}
+
+.plan-backup{
+  background:var(--rt-amber-soft) !important;
+  color:var(--rt-amber) !important;
+  border-color:color-mix(in srgb,var(--rt-amber) 55%,var(--rt-border)) !important;
+}
+
+.plan-skipped{
+  background:var(--rt-red-soft) !important;
+  color:var(--rt-red) !important;
+  border-color:color-mix(in srgb,var(--rt-red) 55%,var(--rt-border)) !important;
+}
+
+.plan-candidate{
+  background:var(--rt-purple-soft) !important;
+  color:var(--rt-purple) !important;
+  border-color:color-mix(in srgb,var(--rt-purple) 50%,var(--rt-border)) !important;
+}
+
+/* ---------- Buttons ---------- */
+button,
+.btn,
+.ghost,
+.iconbtn,
+.voteBtn,
+.filterChip,
+.plannerModeBtn,
+.tab{
+  font-weight:800;
+}
+
+.btn.primary,
+#addItemBtn,
+#addExpenseBtn,
+#itemSaveBtn{
+  color:#ffffff !important;
+}
+
+.ghost,
+.iconbtn{
+  background:var(--rt-surface-2) !important;
+  color:var(--rt-text-2) !important;
+  border-color:var(--rt-border) !important;
+}
+
+body[data-theme="dark"] .ghost,
+body[data-theme="dark"] .iconbtn{
+  background:#152238 !important;
+  color:#e7eef8 !important;
+  border-color:#344760 !important;
+}
+
+.tripDeleteBtn{
+  color:#be123c !important;
+  background:#fff1f2 !important;
+  border-color:#fecdd3 !important;
+}
+
+body[data-theme="dark"] .tripDeleteBtn{
+  color:#fecdd3 !important;
+  background:#3a1420 !important;
+  border-color:#7f1d1d !important;
+}
+
+/* ---------- Tabs / filters ---------- */
+.tab,
+.filterChip,
+.plannerModeBtn{
+  color:var(--rt-muted) !important;
+  border-color:var(--rt-border) !important;
+}
+
+.tab.active,
+.filterChip.active,
+.plannerModeBtn.active{
+  background:var(--rt-purple-soft) !important;
+  color:var(--rt-purple) !important;
+  border-color:color-mix(in srgb,var(--rt-purple) 55%,var(--rt-border)) !important;
+}
+
+body[data-theme="dark"] .tab.active,
+body[data-theme="dark"] .filterChip.active,
+body[data-theme="dark"] .plannerModeBtn.active{
+  background:#2b1f4d !important;
+  color:#ddd6fe !important;
+  border-color:#6d5bd0 !important;
+}
+
+/* ---------- Inputs / form labels ---------- */
+label{
+  color:var(--rt-text-2) !important;
+  font-weight:700;
+}
+
+input,
+select,
+textarea{
+  background:var(--rt-surface-2) !important;
+  color:var(--rt-text) !important;
+  border-color:var(--rt-border-strong) !important;
+  caret-color:var(--rt-blue);
+}
+
+input::placeholder,
+textarea::placeholder{
+  color:var(--rt-faint) !important;
+  opacity:1 !important;
+}
+
+select option{
+  background:var(--rt-surface) !important;
+  color:var(--rt-text) !important;
+}
+
+body[data-theme="dark"] input,
+body[data-theme="dark"] select,
+body[data-theme="dark"] textarea{
+  background:#101c2e !important;
+  color:#f8fafc !important;
+  border-color:#40536d !important;
+}
+
+body[data-theme="dark"] input:disabled,
+body[data-theme="dark"] select:disabled{
+  color:#91a3b8 !important;
+  background:#0d1726 !important;
+  opacity:1 !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:var(--rt-blue) !important;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--rt-blue) 18%,transparent) !important;
+  outline:none !important;
+}
+
+/* ---------- Dialogs / bottom sheets ---------- */
+dialog,
+.modal{
+  background:var(--rt-surface) !important;
+  color:var(--rt-text) !important;
+}
+
+.modalActions{
+  border-top-color:var(--rt-border) !important;
+}
+
+body[data-theme="dark"] .modalActions{
+  background:linear-gradient(180deg,rgba(15,26,43,0),#0f1a2b 25%) !important;
+}
+
+/* ---------- Tables ---------- */
+.table,
+.table th,
+.table td{
+  color:var(--rt-text) !important;
+}
+
+.table th{
+  color:var(--rt-muted) !important;
+  font-weight:800 !important;
+}
+
+.table td{
+  color:var(--rt-text) !important;
+  font-weight:800 !important;
+}
+
+.table th,
+.table td{
+  border-bottom-color:var(--rt-border) !important;
+}
+
+#sumActual,
+#sumBudget,
+#sumRemain{
+  color:var(--rt-text) !important;
+}
+
+/* ---------- Expense / settlement ---------- */
+#settlementDetails,
+#settlementBox{
+  color:var(--rt-text-2) !important;
+}
+
+#settlementDetails div,
+#settlementBox div{
+  color:var(--rt-text-2) !important;
+  border-bottom-color:var(--rt-border) !important;
+}
+
+#settlementDetails b,
+#settlementBox b{
+  color:var(--rt-text) !important;
+}
+
+.insightCard b,
+.budgetHubStat strong,
+.stat .num{
+  color:var(--rt-text) !important;
+}
+
+.insightCard span,
+.budgetHubStat span,
+.stat .label{
+  color:var(--rt-muted) !important;
+  opacity:1 !important;
+}
+
+/* ---------- Budget hub ---------- */
+.budgetHub{
+  border-color:#7c67d8 !important;
+}
+
+.budgetHubSummary h3{
+  color:var(--rt-text) !important;
+}
+
+.budgetCollapsedMeta{
+  color:var(--rt-muted) !important;
+}
+
+.budgetHubChevron{
+  color:var(--rt-purple) !important;
+  background:var(--rt-surface-3) !important;
+  border-color:var(--rt-border) !important;
+}
+
+.budgetHubAmount{
+  color:var(--rt-purple) !important;
+}
+
+/* ---------- Trip list ---------- */
+#tripList .itemCard{
+  background:var(--rt-surface) !important;
+  border-color:var(--rt-border) !important;
+}
+
+#tripList .title{
+  color:var(--rt-text) !important;
+}
+
+#tripList .muted{
+  color:var(--rt-muted) !important;
+}
+
+/* ---------- Navigation ---------- */
+.navbtn{
+  color:var(--rt-text-2) !important;
+}
+
+.navbtn .small{
+  color:var(--rt-muted) !important;
+}
+
+.navbtn.active{
+  background:var(--rt-purple-soft) !important;
+  color:var(--rt-purple) !important;
+}
+
+body[data-theme="dark"] .navbtn.active{
+  background:#251b43 !important;
+  color:#ddd6fe !important;
+}
+
+.mobileBar{
+  border-color:var(--rt-border) !important;
+}
+
+.mobileTab{
+  color:var(--rt-muted) !important;
+}
+
+.mobileTab.active{
+  color:var(--rt-purple) !important;
+}
+
+/* ---------- Links ---------- */
+a{
+  color:var(--rt-blue);
+}
+
+/* ---------- Empty / notice states ---------- */
+.empty,
+.timelineEmptyGuide,
+.candidateOnlyNotice,
+.confirmedOnlyNotice,
+.scheduleWarningBox{
+  color:var(--rt-text-2) !important;
+  border-color:var(--rt-border) !important;
+}
+
+.candidateOnlyNotice{
+  background:var(--rt-purple-soft) !important;
+}
+
+.confirmedOnlyNotice{
+  background:var(--rt-green-soft) !important;
+}
+
+.scheduleWarningBox{
+  background:var(--rt-amber-soft) !important;
+  color:var(--rt-amber) !important;
+}
+
+/* ---------- Progress ---------- */
+.progress{
+  background:var(--rt-surface-3) !important;
+}
+
+/* ---------- iPhone visual polish ---------- */
+@media(max-width:640px){
+  h1{font-size:26px !important}
+  h2{font-size:21px !important}
+  h3{font-size:17px !important}
+
+  .card{
+    border-radius:20px !important;
+  }
+
+  .member{
+    min-height:38px;
+    font-size:12px !important;
+  }
+
+  .footerMini,
+  .route,
+  .muted,
+  .help{
+    line-height:1.5;
+  }
+
+  .mobileTab span:last-child{
+    color:inherit !important;
+  }
+
+  .expenseSummaryCard .table th,
+  .expenseSummaryCard .table td{
+    font-size:13px !important;
+  }
+}
+
+/* ---------- Accessibility: selected/disabled clarity ---------- */
+button:disabled,
+.btn:disabled,
+.iconbtn:disabled{
+  opacity:.55 !important;
+}
+
+*:focus-visible{
+  outline:3px solid color-mix(in srgb,var(--rt-blue) 65%,transparent) !important;
+  outline-offset:2px;
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -3009,7 +3541,7 @@ body:not([data-theme="dark"]) .insightCard b{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V4.7.2 · STABLE RECOVERY</div>
+          <div class="appV2Badge">✦ ROADTRIP V4.8 · VISUAL POLISH</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
