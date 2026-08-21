@@ -4978,6 +4978,107 @@ html,body{
 }
 </style>
 
+
+<style id="roadTripV515R10NativePager">
+@media(max-width:760px){
+  html,body{
+    width:100%;
+    max-width:100%;
+    overflow:hidden !important;
+    overscroll-behavior:none;
+  }
+
+  #tripView{
+    height:100dvh;
+    overflow:hidden !important;
+    display:flex;
+    flex-direction:column;
+  }
+
+  #tripView.hide{display:none !important}
+
+  #tripView .hero,
+  #tripView .mobileCompactHeader{
+    flex:0 0 auto;
+  }
+
+  #tripView .main{
+    flex:1 1 auto;
+    min-height:0;
+    margin-top:10px !important;
+    display:block !important;
+    overflow:hidden !important;
+  }
+
+  #tripView .sidebar{display:none !important}
+
+  #tripView .content{
+    display:flex !important;
+    flex-direction:row;
+    align-items:stretch;
+    width:100%;
+    height:100%;
+    min-height:0;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    scroll-snap-type:x mandatory;
+    scroll-behavior:smooth;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;
+    scrollbar-width:none;
+    transform:none !important;
+    opacity:1 !important;
+    will-change:auto !important;
+  }
+
+  #tripView .content::-webkit-scrollbar{display:none}
+
+  #overviewPanel,
+  #itineraryPanel,
+  #expensesPanel,
+  #sharedPanel{
+    display:block !important;
+    flex:0 0 100%;
+    width:100%;
+    min-width:100%;
+    height:100%;
+    min-height:0;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+    overscroll-behavior-y:contain;
+    -webkit-overflow-scrolling:touch;
+    box-sizing:border-box;
+    padding-bottom:calc(112px + env(safe-area-inset-bottom));
+  }
+
+  #tripView.pagerSubpage .hero{display:none !important}
+  #tripView:not(.pagerSubpage) .mobileCompactHeader{display:none !important}
+  #tripView.pagerSubpage .mobileCompactHeader{display:flex !important}
+
+  .uiSwipeHint{display:none !important}
+  .mobileBar{z-index:40 !important}
+
+  .tabs,
+  .mobileQuick,
+  .dayRouteStrip,
+  .filterRow,
+  .expensePeopleOverview,
+  .memberTickGrid{
+    overscroll-behavior-x:contain;
+  }
+}
+
+@media(min-width:761px){
+  #tripView{
+    height:auto !important;
+    overflow:visible !important;
+    display:block !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -5060,7 +5161,7 @@ html,body{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.5R9 · NATIVE SCROLL · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.5R10 · NATIVE PAGER · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -6069,6 +6170,7 @@ async function init(){
   $('copyShareBtn').addEventListener('click',copyInvite);
   $('copyShareBtn2').addEventListener('click',copyInvite);
 
+  setupNativePager();
   $('mobileCompactHomeBtn')?.addEventListener('click',()=>switchPanel('overview'));
   $('mobileCompactMoreBtn')?.addEventListener('click',()=>{
     // Reuse existing Shared page as the mobile "more/settings" destination.
@@ -6431,26 +6533,54 @@ function cleanupChannel(){ if(channel && sb){ sb.removeChannel(channel); channel
 
 const mobilePanelScroll={overview:0,itinerary:0,expenses:0,shared:0};
 let currentVisiblePanel='overview';
+let pagerScrollTimer=null;
+
+function panelLabel(panel){
+  return ({
+    overview:'Overview',
+    itinerary:'Itinerary',
+    expenses:'Budget & Expenses',
+    shared:'Shared'
+  })[panel] || 'RoadTrip';
+}
 
 function updateMobilePanelChrome(panel){
   const tripViewEl=$('tripView');
   if(!tripViewEl) return;
 
   const mobile=window.matchMedia('(max-width:760px)').matches;
-  tripViewEl.classList.toggle('mobileSubpage',mobile && panel!=='overview');
-
-  const labels={
-    overview:'Overview',
-    itinerary:'Itinerary',
-    expenses:'Budget & Expenses',
-    shared:'Shared'
-  };
+  tripViewEl.classList.toggle('pagerSubpage',mobile && panel!=='overview');
 
   if($('mobileCompactTrip')){
     $('mobileCompactTrip').textContent=currentTrip?.title||'RoadTrip';
   }
   if($('mobileCompactPanel')){
-    $('mobileCompactPanel').textContent=labels[panel]||'RoadTrip';
+    $('mobileCompactPanel').textContent=panelLabel(panel);
+  }
+}
+
+function pagerIndexForPanel(panel){
+  return ['overview','itinerary','expenses','shared'].indexOf(panel);
+}
+
+function panelForPagerIndex(index){
+  return ['overview','itinerary','expenses','shared'][index] || 'overview';
+}
+
+function syncPagerNav(panel){
+  currentVisiblePanel=panel;
+
+  document.querySelectorAll('.navbtn').forEach(b=>
+    b.classList.toggle('active',b.dataset.panel===panel)
+  );
+  document.querySelectorAll('.mobileTab').forEach(b=>
+    b.classList.toggle('active',b.dataset.panel===panel)
+  );
+
+  updateMobilePanelChrome(panel);
+
+  if(mobileBar){
+    mobileBar.classList.toggle('hide',!currentTrip);
   }
 }
 
@@ -6459,19 +6589,39 @@ function switchPanel(panel,options={}){
   if(!valid.includes(panel)) return;
 
   const isMobile=window.matchMedia('(max-width:760px)').matches;
-  const preserveScroll=!!options.preserveScroll;
 
-  if(isMobile && preserveScroll && currentVisiblePanel){
-    mobilePanelScroll[currentVisiblePanel]=window.scrollY||0;
+  if(isMobile){
+    const content=document.querySelector('#tripView .content');
+    const index=pagerIndexForPanel(panel);
+
+    syncPagerNav(panel);
+
+    if(content && index>=0){
+      const left=index*content.clientWidth;
+      content.scrollTo({
+        left,
+        behavior:options.instant ? 'auto' : 'smooth'
+      });
+    }
+    return;
   }
 
   currentVisiblePanel=panel;
 
-  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active', b.dataset.panel===panel));
-  document.querySelectorAll('.mobileTab').forEach(b=>b.classList.toggle('active', b.dataset.panel===panel));
-  valid.forEach(p=>$(p+'Panel').classList.toggle('hide', p!==panel));
+  document.querySelectorAll('.navbtn').forEach(b=>
+    b.classList.toggle('active',b.dataset.panel===panel)
+  );
+  document.querySelectorAll('.mobileTab').forEach(b=>
+    b.classList.toggle('active',b.dataset.panel===panel)
+  );
 
-  if(mobileBar) mobileBar.classList.toggle('hide', !currentTrip);
+  valid.forEach(p=>
+    $(p+'Panel').classList.toggle('hide',p!==panel)
+  );
+
+  if(mobileBar){
+    mobileBar.classList.toggle('hide',!currentTrip);
+  }
 
   if(mobileAddBtn){
     mobileAddBtn.textContent='＋';
@@ -6479,14 +6629,43 @@ function switchPanel(panel,options={}){
   }
 
   updateMobilePanelChrome(panel);
+  window.scrollTo({top:0,behavior:'auto'});
+}
 
-  requestAnimationFrame(()=>{
-    if(isMobile && preserveScroll){
-      window.scrollTo({top:mobilePanelScroll[panel]||0,behavior:'auto'});
-    }else{
-      window.scrollTo({top:0,behavior:'auto'});
-    }
-  });
+function setupNativePager(){
+  const content=document.querySelector('#tripView .content');
+  if(!content || content.dataset.pagerReady==='1') return;
+
+  content.dataset.pagerReady='1';
+
+  content.addEventListener('scroll',()=>{
+    if(!window.matchMedia('(max-width:760px)').matches) return;
+
+    clearTimeout(pagerScrollTimer);
+    pagerScrollTimer=setTimeout(()=>{
+      const width=Math.max(1,content.clientWidth);
+      const index=Math.max(0,Math.min(3,Math.round(content.scrollLeft/width)));
+      const panel=panelForPagerIndex(index);
+
+      if(panel!==currentVisiblePanel){
+        syncPagerNav(panel);
+      }
+    },90);
+  },{passive:true});
+
+  window.addEventListener('resize',()=>{
+    if(!window.matchMedia('(max-width:760px)').matches) return;
+
+    const index=pagerIndexForPanel(currentVisiblePanel);
+    if(index<0) return;
+
+    requestAnimationFrame(()=>{
+      content.scrollTo({
+        left:index*content.clientWidth,
+        behavior:'auto'
+      });
+    });
+  },{passive:true});
 }
 
 function itemVoteCount(itemId){ return votes.filter(v=>v.item_id===itemId).length; }
