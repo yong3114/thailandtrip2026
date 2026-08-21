@@ -4919,36 +4919,6 @@ dialog .modal{
     font-weight:750;
   }
 
-  /* ---------- Interactive swipe motion ---------- */
-  .content{
-    will-change:transform,opacity;
-    transform:translate3d(0,0,0);
-    opacity:1;
-  }
-
-  .content.uiSwipeTracking{
-    transition:none !important;
-  }
-
-  .content.uiSwipeSnap{
-    transition:
-      transform .28s cubic-bezier(.22,.78,.24,1),
-      opacity .26s ease !important;
-  }
-
-  .content.uiSwipeExit{
-    transition:
-      transform .21s cubic-bezier(.34,.08,.78,.3),
-      opacity .21s ease !important;
-  }
-
-  .content.uiSwipeEnter{
-    transition:none !important;
-  }
-
-  body.uiSwipeActive{
-    overscroll-behavior-x:none;
-  }
 }
 
 @media(max-width:390px){
@@ -4965,42 +4935,45 @@ dialog .modal{
 </style>
 
 
-<style id="roadTripV515R7SwipeHardening">
-@media(max-width:760px){
-  html,body{
-    max-width:100%;
-    overflow-x:hidden;
-  }
-  #tripView .content{
-    backface-visibility:hidden;
-    -webkit-backface-visibility:hidden;
-    transform-style:preserve-3d;
-  }
-  body.uiSwipeActive{
-    overflow-x:hidden !important;
-    overscroll-behavior-x:none;
-  }
+<style id="roadTripV515R9NativeScroll">
+/* R9 — Native mobile scrolling: no custom swipe interception */
+html,body{
+  overflow-x:hidden !important;
 }
-</style>
 
-
-<style id="roadTripV515R8ScrollSafe">
 @media(max-width:760px){
-  html,body,#tripView,.main,.content{
+  html,body,#tripView,.main,.content,
+  #overviewPanel,#itineraryPanel,#expensesPanel,#sharedPanel{
     touch-action:auto !important;
   }
 
-  body{
+  html,body{
     overflow-y:auto !important;
+    overscroll-behavior-y:auto !important;
     -webkit-overflow-scrolling:touch;
   }
 
+  #tripView,
+  #tripView .main,
   #tripView .content{
-    overscroll-behavior-y:auto;
+    overflow-y:visible !important;
+    max-height:none !important;
+    height:auto !important;
+  }
+
+  #tripView .content{
+    transform:none !important;
+    opacity:1 !important;
+    will-change:auto !important;
   }
 
   body.uiSwipeActive{
     overflow-y:auto !important;
+    overflow-x:hidden !important;
+  }
+
+  .uiSwipeHint{
+    display:none !important;
   }
 }
 </style>
@@ -5087,7 +5060,7 @@ dialog .modal{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.5R8 · SCROLL SAFE · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.5R9 · NATIVE SCROLL · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -5979,323 +5952,8 @@ setTimeout(applySafeChecklistFilter,300);
 // No trip/item/expense/checklist data logic is changed.
 // ============================================================
 (function setupUiPolish(){
-  const panelOrder=['overview','itinerary','expenses','shared'];
-
-  let gesture={
-    tracking:false,
-    horizontal:false,
-    decided:false,
-    startX:0,
-    startY:0,
-    startTime:0,
-    target:null,
-    panel:'overview',
-    index:0,
-    lastX:0,
-    lastTime:0,
-    velocityX:0
-  };
-
-  let animationLocked=false;
-  let animationTimer=null;
-
-  const contentEl=()=>document.querySelector('#tripView .content');
-  const currentPanel=()=>currentVisiblePanel || 'overview';
-
-  const isSwipeBlockedTarget=target=>{
-    if(!target) return true;
-    return !!target.closest(
-      'dialog,input,textarea,select,button,a,summary,'+
-      '.tabs,.mobileQuick,.expensePeopleOverview,.memberTickGrid,'+
-      '.dayRouteStrip,.filterRow,'+
-      '[contenteditable="true"],[data-no-swipe]'
-    );
-  };
-
-  const hasHorizontalScroller=target=>{
-    let node=target;
-    while(node && node!==document.body){
-      const style=getComputedStyle(node);
-      if(
-        (style.overflowX==='auto'||style.overflowX==='scroll') &&
-        node.scrollWidth>node.clientWidth+4
-      ){
-        return true;
-      }
-      node=node.parentElement;
-    }
-    return false;
-  };
-
-  const resetGesture=()=>{
-    gesture.tracking=false;
-    gesture.horizontal=false;
-    gesture.decided=false;
-    gesture.target=null;
-    gesture.velocityX=0;
-  };
-
-  const clearAnimationTimer=()=>{
-    if(animationTimer){
-      clearTimeout(animationTimer);
-      animationTimer=null;
-    }
-  };
-
-  const cleanMotion=()=>{
-    clearAnimationTimer();
-    const el=contentEl();
-    if(el){
-      el.classList.remove('uiSwipeTracking','uiSwipeSnap','uiSwipeExit','uiSwipeEnter');
-      el.style.transform='';
-      el.style.opacity='';
-    }
-    document.body.classList.remove('uiSwipeActive');
-    animationLocked=false;
-  };
-
-  const snapBack=()=>{
-    const el=contentEl();
-    if(!el){
-      cleanMotion();
-      return;
-    }
-
-    animationLocked=true;
-    el.classList.remove('uiSwipeTracking','uiSwipeExit','uiSwipeEnter');
-    el.classList.add('uiSwipeSnap');
-    el.style.transform='translate3d(0,0,0)';
-    el.style.opacity='1';
-    animationTimer=setTimeout(cleanMotion,260);
-  };
-
-  const commitSwipe=(direction,nextPanel)=>{
-    if(animationLocked) return;
-
-    const el=contentEl();
-    if(!el){
-      switchPanel(nextPanel,{preserveScroll:true});
-      return;
-    }
-
-    animationLocked=true;
-    document.body.classList.add('uiSwipeActive');
-
-    const width=Math.max(window.innerWidth,320);
-    const exitX=direction<0 ? -width : width;
-    const enterX=direction<0
-      ? Math.min(width*.28,110)
-      : -Math.min(width*.28,110);
-
-    el.classList.remove('uiSwipeTracking','uiSwipeSnap','uiSwipeEnter');
-    el.classList.add('uiSwipeExit');
-    el.style.transform=`translate3d(${exitX}px,0,0)`;
-    el.style.opacity='.08';
-
-    animationTimer=setTimeout(()=>{
-      switchPanel(nextPanel,{preserveScroll:true});
-
-      requestAnimationFrame(()=>{
-        const nextEl=contentEl();
-        if(!nextEl){
-          cleanMotion();
-          return;
-        }
-
-        nextEl.classList.remove('uiSwipeExit','uiSwipeSnap');
-        nextEl.classList.add('uiSwipeEnter');
-        nextEl.style.transform=`translate3d(${enterX}px,0,0)`;
-        nextEl.style.opacity='.38';
-
-        void nextEl.offsetWidth;
-
-        requestAnimationFrame(()=>{
-          nextEl.classList.remove('uiSwipeEnter');
-          nextEl.classList.add('uiSwipeSnap');
-          nextEl.style.transform='translate3d(0,0,0)';
-          nextEl.style.opacity='1';
-          animationTimer=setTimeout(cleanMotion,290);
-        });
-      });
-    },205);
-  };
-
-  document.addEventListener('touchstart',e=>{
-    if(
-      animationLocked ||
-      !currentTrip ||
-      e.touches.length!==1 ||
-      document.querySelector('dialog[open]')
-    ){
-      return;
-    }
-
-    const t=e.touches[0];
-    const edgeGuard=28;
-
-    if(t.clientX<=edgeGuard || t.clientX>=window.innerWidth-edgeGuard){
-      resetGesture();
-      return;
-    }
-
-    const target=e.target;
-    if(isSwipeBlockedTarget(target) || hasHorizontalScroller(target)){
-      resetGesture();
-      return;
-    }
-
-    const panel=currentPanel();
-    const index=panelOrder.indexOf(panel);
-    if(index<0){
-      resetGesture();
-      return;
-    }
-
-    const now=performance.now();
-    gesture={
-      tracking:true,
-      horizontal:false,
-      decided:false,
-      startX:t.clientX,
-      startY:t.clientY,
-      startTime:now,
-      target,
-      panel,
-      index,
-      lastX:t.clientX,
-      lastTime:now,
-      velocityX:0
-    };
-  },{passive:true});
-
-  document.addEventListener('touchmove',e=>{
-    if(
-      !gesture.tracking ||
-      animationLocked ||
-      e.touches.length!==1 ||
-      !currentTrip
-    ){
-      return;
-    }
-
-    const t=e.touches[0];
-    const dx=t.clientX-gesture.startX;
-    const dy=t.clientY-gesture.startY;
-    const absX=Math.abs(dx);
-    const absY=Math.abs(dy);
-
-    // Do not decide too early. Small natural finger wobble should remain normal scrolling.
-    if(!gesture.decided){
-      if(absX<16 && absY<16) return;
-
-      // Vertical scroll wins unless horizontal intent is VERY clear.
-      if(absY>=absX*.72){
-        gesture.decided=true;
-        gesture.horizontal=false;
-        gesture.tracking=false;
-        return;
-      }
-
-      // Require strong horizontal dominance before taking over.
-      if(absX < 22 || absX < absY*1.38){
-        return;
-      }
-
-      gesture.decided=true;
-      gesture.horizontal=true;
-      document.body.classList.add('uiSwipeActive');
-    }
-
-    if(!gesture.horizontal) return;
-
-    const canGoRight=gesture.index>0;
-    const canGoLeft=gesture.index<panelOrder.length-1;
-
-    let displayDx=dx;
-
-    if((dx>0 && !canGoRight) || (dx<0 && !canGoLeft)){
-      displayDx=dx*.18;
-    }else{
-      const softLimit=Math.max(130,window.innerWidth*.5);
-      if(Math.abs(displayDx)>softLimit){
-        const extra=Math.abs(displayDx)-softLimit;
-        displayDx=Math.sign(displayDx)*(softLimit+extra*.12);
-      }
-    }
-
-    const now=performance.now();
-    const dt=Math.max(8,now-gesture.lastTime);
-    const instantV=(t.clientX-gesture.lastX)/dt;
-
-    gesture.velocityX=gesture.velocityX*.7 + instantV*.3;
-    gesture.lastX=t.clientX;
-    gesture.lastTime=now;
-
-    const el=contentEl();
-    if(el){
-      el.classList.remove('uiSwipeSnap','uiSwipeExit','uiSwipeEnter');
-      el.classList.add('uiSwipeTracking');
-      el.style.transform=`translate3d(${displayDx}px,0,0)`;
-
-      const progress=Math.min(1,Math.abs(displayDx)/(window.innerWidth*.72));
-      el.style.opacity=String(1-progress*.10);
-    }
-
-    // Only prevent scrolling AFTER strong horizontal intent is confirmed.
-    e.preventDefault();
-  },{passive:false});
-
-  document.addEventListener('touchend',e=>{
-    if(animationLocked) return;
-
-    if(
-      !gesture.tracking ||
-      !gesture.horizontal ||
-      e.changedTouches.length!==1
-    ){
-      resetGesture();
-      return;
-    }
-
-    const t=e.changedTouches[0];
-    const dx=t.clientX-gesture.startX;
-
-    const direction=dx<0 ? -1 : 1;
-    const nextIndex=direction<0 ? gesture.index+1 : gesture.index-1;
-    const canMove=nextIndex>=0 && nextIndex<panelOrder.length;
-
-    const distanceThreshold=Math.min(
-      112,
-      Math.max(80,window.innerWidth*.25)
-    );
-
-    const enoughDistance=Math.abs(dx)>=distanceThreshold;
-
-    const signedVelocity=gesture.velocityX;
-    const enoughVelocity=
-      Math.abs(dx)>=48 &&
-      (
-        (direction<0 && signedVelocity<-.52) ||
-        (direction>0 && signedVelocity>.52)
-      );
-
-    const nextPanel=canMove ? panelOrder[nextIndex] : null;
-
-    resetGesture();
-
-    if(canMove && (enoughDistance||enoughVelocity)){
-      commitSwipe(direction,nextPanel);
-    }else{
-      snapBack();
-    }
-  },{passive:true});
-
-  document.addEventListener('touchcancel',()=>{
-    if(animationLocked) return;
-    const wasHorizontal=gesture.horizontal;
-    resetGesture();
-    if(wasHorizontal) snapBack();
-  },{passive:true});
+  // R9: No custom touchstart / touchmove / touchend handlers.
+  // Native browser scrolling is left completely untouched.
 
   document.addEventListener('click',e=>{
     const target=e.target.closest('button,a,summary,[role="button"]');
