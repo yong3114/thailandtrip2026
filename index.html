@@ -4299,6 +4299,31 @@ body:not([data-theme="dark"]){
 }
 </style>
 
+
+<style id="roadTripV512AndroidNavImportUX">
+html.is-android .mobileBar{
+  bottom:8px !important;
+  left:10px !important;
+  right:10px !important;
+}
+
+html.is-android .wrap{
+  padding-bottom:112px !important;
+}
+
+html.is-android body::after{
+  height:1px !important;
+}
+
+html.is-ios .mobileBar{
+  bottom:max(8px,env(safe-area-inset-bottom)) !important;
+}
+
+#fullPlanImportCard.hide{
+  display:none !important;
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -4381,7 +4406,7 @@ body:not([data-theme="dark"]){
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.1 · ANDROID FIX</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.2 · MOBILE UX FIX</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -4468,7 +4493,7 @@ body:not([data-theme="dark"]){
             </div>
           </details>
 
-          <div class="card fullPlanImportCard">
+          <div class="card fullPlanImportCard" id="fullPlanImportCard">
             <div class="fullPlanImportTop">
               <div>
                 <div class="todayEyebrow">RESEARCHED 21 AUG 2026</div>
@@ -4892,6 +4917,11 @@ const configured =
   !SUPABASE_PUBLISHABLE_KEY.includes('PASTE_');
 
 const $ = id => document.getElementById(id);
+
+const IS_ANDROID=/Android/i.test(navigator.userAgent||'');
+const IS_IOS=/iPhone|iPad|iPod/i.test(navigator.userAgent||'');
+document.documentElement.classList.toggle('is-android',IS_ANDROID);
+document.documentElement.classList.toggle('is-ios',IS_IOS);
 const setupView=$('setupView'), authView=$('authView'), homeView=$('homeView'), tripView=$('tripView');
 let sb=null, user=null, authMode='login';
 let currentTrip=null, members=[], items=[], votes=[], expenses=[], shares=[], trips=[];
@@ -5862,13 +5892,29 @@ async function toggleMyChecklistTick(checklistId,checked){
 
 function renderFullPlanImportStatus(){
   const el=$('fullPlanImportStatus');
-  if(!el || !currentTrip) return;
-  const marker='[RT9D8N-2026-V1]';
-  const imported=items.filter(i=>String(i.note||'').includes(marker)).length;
+  const card=$('fullPlanImportCard');
+  if(!el || !card || !currentTrip) return;
+
+  const existingKeys=new Set(
+    items.map(i=>`${Number(i.day_no)}::${String(i.name||'').trim().toLowerCase()}`)
+  );
+
   const total=ROADTRIP_9D8N_ITEMS.length;
-  el.textContent=imported
-    ? `已导入 ${imported}/${total} 个模板项目 · 再按可补齐缺少项目，不会重复。`
-    : `完整模板共 ${total} 个 Trip Info / 固定路线 / 候选地点；导入后直接开始4人投票。`;
+  const covered=ROADTRIP_9D8N_ITEMS.filter(t=>
+    existingKeys.has(`${Number(t.day_no)}::${String(t.name||'').trim().toLowerCase()}`)
+  ).length;
+
+  const missing=Math.max(0,total-covered);
+
+  if(missing===0){
+    card.classList.add('hide');
+    return;
+  }
+
+  card.classList.remove('hide');
+  el.textContent=covered
+    ? `当前 Trip 已有 ${covered}/${total} 个模板项目 · 还差 ${missing} 个，按一下只补齐缺少项目。`
+    : `这是一个新的 / 未导入完整模板的 Trip。完整模板共 ${total} 个项目，可直接导入。`;
 }
 
 async function importFull9D8NPlan(){
