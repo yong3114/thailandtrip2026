@@ -4403,6 +4403,21 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 }
 </style>
 
+
+<style id="roadTripV521StableState">
+/* V5.2.1 state/UI stability */
+body[data-theme="dark"]{
+  color-scheme:dark;
+}
+body:not([data-theme="dark"]){
+  color-scheme:light;
+}
+.fullPlanImportBtn{
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -4485,7 +4500,7 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.2 · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.2.1 · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -5466,8 +5481,18 @@ async function init(){
     });
   });
 
+  // V5.2.1 migration:
+  // You asked for Dark Mode as the app default. Older builds may have left
+  // 'light' inside localStorage, so reset that legacy value to dark ONCE.
+  const darkMigrationKey='roadtrip-v521-dark-default-applied';
+  if(!localStorage.getItem(darkMigrationKey)){
+    localStorage.setItem('roadtrip-theme','dark');
+    localStorage.setItem(darkMigrationKey,'1');
+  }
+
   const savedTheme=localStorage.getItem('roadtrip-theme') || 'dark';
   applyTheme(savedTheme);
+
   document.querySelectorAll('.themeToggle').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const next=document.body.dataset.theme==='dark'?'light':'dark';
@@ -6055,15 +6080,78 @@ async function toggleMyChecklistTick(checklistId,checked){
   await refreshTrip();
 }
 
+function getFullPlanImportProgress(){
+  const marker='[RT9D8N-2026-V1]';
+
+  // Old detection used only the hidden marker in note.
+  // V5.2.1 also compares Day + exact template name, so already-imported
+  // database rows are recognised even if the marker is missing.
+  const markerIds=new Set(
+    items
+      .filter(i=>String(i.note||'').includes(marker))
+      .map(i=>i.id)
+  );
+
+  const actualKeys=new Set(
+    items.map(i=>
+      `${Number(i.day_no)}::${String(i.name||'').trim().toLowerCase()}`
+    )
+  );
+
+  let matchedByTemplate=0;
+  ROADTRIP_9D8N_ITEMS.forEach(t=>{
+    const key=`${Number(t.day_no)}::${String(t.name||'').trim().toLowerCase()}`;
+    if(actualKeys.has(key)) matchedByTemplate++;
+  });
+
+  const markerCount=markerIds.size;
+  const matched=Math.max(markerCount,matchedByTemplate);
+  const total=ROADTRIP_9D8N_ITEMS.length;
+  const percent=total ? Math.round(matched/total*100) : 0;
+
+  return {matched,total,percent,markerCount,matchedByTemplate};
+}
+
 function renderFullPlanImportStatus(){
   const el=$('fullPlanImportStatus');
+  const btn=$('importFull9D8NBtn');
   if(!el || !currentTrip) return;
-  const marker='[RT9D8N-2026-V1]';
-  const imported=items.filter(i=>String(i.note||'').includes(marker)).length;
-  const total=ROADTRIP_9D8N_ITEMS.length;
-  el.textContent=imported
-    ? `已导入 ${imported}/${total} 个模板项目 · 再按可补齐缺少项目，不会重复。`
-    : `完整模板共 ${total} 个 Trip Info / 固定路线 / 候选地点；导入后直接开始4人投票。`;
+
+  const progress=getFullPlanImportProgress();
+  const {matched,total,percent}=progress;
+
+  if(matched>=total && total>0){
+    el.textContent=`✅ 已导入完整 9D8N 模板 · ${matched}/${total} 项都在你的 Trip 里。`;
+    if(btn) btn.textContent='✅ 已导入 · 检查 / 补齐';
+    return;
+  }
+
+  if(matched>0){
+    el.textContent=`已识别 ${matched}/${total} 个模板项目（${percent}%）· 你的旧资料还在；按下面只会补缺少的项目。`;
+    if(btn) btn.textContent='补齐缺少的 9D8N 项目';
+    return;
+  }
+
+  // Extra safety: if the Trip already clearly uses the 9-day route but none
+  // of the old hidden markers survived, don't claim data was "lost".
+  const routeText=(routes()||[]).join(' ').toLowerCase();
+  const looksLikeNineDayTrip=
+    Number(currentTrip.days)===9 &&
+    (
+      routeText.includes('ipoh') ||
+      routeText.includes('hat yai') ||
+      routeText.includes('krabi') ||
+      routeText.includes('cameron')
+    ) &&
+    items.length>=20;
+
+  if(looksLikeNineDayTrip){
+    el.textContent=`ℹ️ 已检测到你的 9天 Thailand Trip 和 ${items.length} 个现有项目。旧模板标记可能已丢失，但资料仍在。`;
+    if(btn) btn.textContent='检查 / 补齐 9D8N 模板';
+  }else{
+    el.textContent=`完整模板共 ${total} 个 Trip Info / 固定路线 / 候选地点；导入后直接开始4人投票。`;
+    if(btn) btn.textContent='导入 / 补齐完整 9D8N 行程';
+  }
 }
 
 async function importFull9D8NPlan(){
@@ -6148,7 +6236,9 @@ async function importFull9D8NPlan(){
     console.error(err);
     toast('导入失败：'+(err.message||String(err)),'err');
   }finally{
-    if(btn){btn.disabled=false;btn.textContent='导入 / 补齐完整 9D8N 行程';}
+    if(btn) btn.disabled=false;
+    // Never blindly reset to "not imported"; derive state from actual DB rows.
+    renderFullPlanImportStatus();
   }
 }
 
