@@ -2630,6 +2630,204 @@ button,.btn,.ghost,.iconbtn,.voteBtn,.mobileTab,.filterChip,.tab{
 }
 </style>
 
+
+<style id="roadTripV45NativeSheetUX">
+/* =========================================================
+   V4.5 — Native iPhone sheet UX
+   ========================================================= */
+
+/* Never allow form sheets to create page-level horizontal overflow */
+dialog,
+dialog .modal,
+dialog .modal form,
+dialog .formGrid,
+dialog .formGrid > *,
+dialog .scheduleFields,
+dialog .uploadBox,
+dialog label,
+dialog .modalActions{
+  box-sizing:border-box;
+  min-width:0 !important;
+  max-width:100% !important;
+}
+
+dialog{
+  overflow:hidden !important;
+}
+
+dialog .modal{
+  width:100% !important;
+  overflow-x:hidden !important;
+  overscroll-behavior-x:none;
+}
+
+dialog .formGrid{
+  width:100%;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+}
+
+dialog input:not([type="checkbox"]):not([type="radio"]),
+dialog select,
+dialog textarea{
+  display:block;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+
+dialog input[type="file"]{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+dialog select{
+  text-overflow:ellipsis;
+}
+
+dialog textarea{
+  resize:vertical;
+}
+
+dialog .plannerHelp,
+dialog .help,
+dialog .footerMini,
+dialog label{
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+
+/* Drag handle */
+.sheetDragHandle{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:28px;
+  margin:-9px 0 2px;
+  cursor:grab;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+.sheetDragHandle::before{
+  content:"";
+  width:42px;
+  height:5px;
+  border-radius:999px;
+  background:#64748b;
+  opacity:.62;
+}
+
+.sheetDragHandle:active{cursor:grabbing}
+
+.sheetDragHint{
+  position:sticky;
+  top:0;
+  z-index:15;
+  width:max-content;
+  max-width:calc(100% - 24px);
+  margin:0 auto -28px;
+  transform:translateY(-42px);
+  opacity:0;
+  pointer-events:none;
+  padding:6px 10px;
+  border-radius:999px;
+  background:#18263a;
+  border:1px solid #475569;
+  color:#dbe7f5;
+  font-size:11px;
+  font-weight:850;
+  transition:opacity .12s ease, transform .12s ease;
+}
+
+.sheetDragHint.visible{
+  opacity:1;
+  transform:translateY(3px);
+}
+
+dialog.sheetDragging .modal{
+  transition:none !important;
+  will-change:transform;
+}
+
+dialog.sheetSnapBack .modal{
+  transition:transform .22s cubic-bezier(.22,.75,.2,1) !important;
+}
+
+dialog.sheetDismissing .modal{
+  transition:transform .20s ease-in !important;
+}
+
+/* Better iPhone form layout */
+@media(max-width:640px){
+  dialog .formGrid{
+    grid-template-columns:minmax(0,1fr) !important;
+    gap:13px !important;
+  }
+
+  dialog .formGrid .full,
+  dialog .scheduleFields,
+  dialog .uploadBox{
+    grid-column:1 / -1 !important;
+  }
+
+  dialog .scheduleFields .formGrid{
+    grid-template-columns:minmax(0,1fr) !important;
+  }
+
+  dialog .modal{
+    padding-left:max(14px,env(safe-area-inset-left)) !important;
+    padding-right:max(14px,env(safe-area-inset-right)) !important;
+    overflow-x:hidden !important;
+  }
+
+  dialog h3{
+    margin-top:4px;
+    padding-right:2px;
+    overflow-wrap:anywhere;
+  }
+
+  dialog input:not([type="checkbox"]):not([type="radio"]),
+  dialog select,
+  dialog textarea{
+    font-size:16px !important;
+  }
+
+  dialog .modalActions{
+    width:auto !important;
+    max-width:none !important;
+  }
+
+  dialog .modalActions button{
+    flex:1 1 0;
+    min-width:0;
+  }
+}
+
+/* Very narrow iPhones / zoomed display */
+@media(max-width:390px){
+  dialog .modal{
+    padding-left:12px !important;
+    padding-right:12px !important;
+  }
+
+  dialog .modalActions{
+    gap:8px !important;
+  }
+
+  dialog .modalActions button{
+    padding-left:10px !important;
+    padding-right:10px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -3087,7 +3285,176 @@ if(!configured){
 }else{
   setupView.classList.add('hide');
   sb=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-  init();
+  
+// ============================================================
+// V4.5 Native pull-down-to-cancel bottom sheets
+// ============================================================
+function installNativeSheet(dialogId){
+  const dialog=$(dialogId);
+  if(!dialog || dialog.dataset.nativeSheetReady==='1') return;
+
+  const sheet=dialog.querySelector('.modal');
+  if(!sheet) return;
+
+  dialog.dataset.nativeSheetReady='1';
+
+  const handle=document.createElement('div');
+  handle.className='sheetDragHandle';
+  handle.setAttribute('aria-label','往下拉即可取消');
+  handle.setAttribute('role','presentation');
+
+  const hint=document.createElement('div');
+  hint.className='sheetDragHint';
+  hint.textContent='↓ 再拉一点即可取消';
+
+  sheet.insertBefore(hint,sheet.firstChild);
+  sheet.insertBefore(handle,sheet.firstChild);
+
+  let tracking=false;
+  let dragging=false;
+  let startY=0;
+  let lastY=0;
+  let lastT=0;
+  let velocity=0;
+  let startedOnHandle=false;
+
+  const interactiveSelector='input,textarea,select,button,a,[contenteditable="true"],summary';
+
+  function resetSheet(immediate=false){
+    tracking=false;
+    dragging=false;
+    startedOnHandle=false;
+    velocity=0;
+    hint.classList.remove('visible');
+    dialog.classList.remove('sheetDragging','sheetDismissing');
+
+    if(immediate){
+      dialog.classList.remove('sheetSnapBack');
+      sheet.style.transform='';
+      return;
+    }
+
+    dialog.classList.add('sheetSnapBack');
+    sheet.style.transform='translateY(0px)';
+    setTimeout(()=>{
+      dialog.classList.remove('sheetSnapBack');
+      if(!dialog.open) sheet.style.transform='';
+      else sheet.style.transform='';
+    },240);
+  }
+
+  function dismissSheet(distance){
+    tracking=false;
+    dragging=false;
+    hint.classList.remove('visible');
+    dialog.classList.remove('sheetDragging','sheetSnapBack');
+    dialog.classList.add('sheetDismissing');
+
+    const travel=Math.max(window.innerHeight*0.72,distance+180);
+    sheet.style.transform=`translateY(${travel}px)`;
+
+    setTimeout(()=>{
+      if(dialog.open) dialog.close();
+      dialog.classList.remove('sheetDismissing');
+      sheet.style.transform='';
+    },190);
+  }
+
+  function canStartGesture(target){
+    // Handle always works.
+    if(target.closest('.sheetDragHandle')) return true;
+
+    // Avoid stealing gestures from actual form controls.
+    if(target.closest(interactiveSelector)) return false;
+
+    // "Pull whole sheet down" only when sheet content is already at its top.
+    return sheet.scrollTop<=1;
+  }
+
+  sheet.addEventListener('touchstart',(e)=>{
+    if(e.touches.length!==1) return;
+    const target=e.target;
+    if(!canStartGesture(target)) return;
+
+    tracking=true;
+    dragging=false;
+    startedOnHandle=!!target.closest('.sheetDragHandle');
+    startY=e.touches[0].clientY;
+    lastY=startY;
+    lastT=performance.now();
+    velocity=0;
+  },{passive:true});
+
+  sheet.addEventListener('touchmove',(e)=>{
+    if(!tracking || e.touches.length!==1) return;
+
+    const y=e.touches[0].clientY;
+    const dy=y-startY;
+
+    // Upward movement is normal scrolling, not dismiss.
+    if(dy<=0){
+      if(dragging) resetSheet(false);
+      else tracking=false;
+      return;
+    }
+
+    // If user started on content and sheet is no longer at top, let scrolling win.
+    if(!startedOnHandle && sheet.scrollTop>1){
+      tracking=false;
+      return;
+    }
+
+    // Tiny movements shouldn't steal a normal tap.
+    if(!dragging && dy<7) return;
+
+    dragging=true;
+    dialog.classList.add('sheetDragging');
+    dialog.classList.remove('sheetSnapBack');
+
+    // Resistance makes it feel closer to an iOS sheet.
+    const resisted=dy<=180 ? dy : 180+(dy-180)*0.42;
+    sheet.style.transform=`translateY(${Math.max(0,resisted)}px)`;
+
+    const now=performance.now();
+    const dt=Math.max(1,now-lastT);
+    velocity=(y-lastY)/dt;
+    lastY=y;
+    lastT=now;
+
+    hint.textContent=dy>=105 ? '松手取消' : '↓ 再拉一点即可取消';
+    hint.classList.toggle('visible',dy>=38);
+
+    // Stop Safari page rubber-banding while we are actively dragging the sheet.
+    e.preventDefault();
+  },{passive:false});
+
+  sheet.addEventListener('touchend',(e)=>{
+    if(!tracking && !dragging) return;
+
+    const changed=e.changedTouches?.[0];
+    const endY=changed ? changed.clientY : lastY;
+    const dy=Math.max(0,endY-startY);
+
+    // Distance OR a clear fast downward flick closes the sheet.
+    const shouldDismiss=dy>=105 || (dy>=58 && velocity>0.62);
+
+    if(shouldDismiss){
+      dismissSheet(dy);
+    }else{
+      resetSheet(false);
+    }
+  },{passive:true});
+
+  sheet.addEventListener('touchcancel',()=>resetSheet(false),{passive:true});
+
+  dialog.addEventListener('close',()=>resetSheet(true));
+}
+
+// Apply the native interaction to all add/edit sheets.
+['itemDialog','expenseDialog','quickAddDialog'].forEach(installNativeSheet);
+
+
+init();
 }
 
 function show(view){[authView,homeView,tripView].forEach(v=>v.classList.add('hide'));view.classList.remove('hide')}
