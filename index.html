@@ -5359,6 +5359,225 @@ body[data-theme="dark"] .mobileTab.active{
 }
 </style>
 
+
+<style id="roadTripSunnyDialogCornerFix">
+/* Fix white corners showing around edit/add bottom sheets */
+dialog{
+  background:transparent !important;
+}
+
+dialog .modal{
+  background:var(--rt-surface) !important;
+  border-radius:24px !important;
+  overflow:hidden;
+}
+
+body[data-theme="dark"] dialog .modal{
+  background:var(--rt-surface) !important;
+}
+
+@media(max-width:640px){
+  dialog{
+    background:transparent !important;
+    border-radius:24px 24px 0 0 !important;
+    overflow:hidden !important;
+  }
+
+  dialog .modal{
+    border-radius:24px 24px 0 0 !important;
+    background:var(--rt-surface) !important;
+    overflow:hidden;
+  }
+
+  /* Keep inner content scrollable while corners stay clean */
+  dialog .modal > *{
+    position:relative;
+    z-index:1;
+  }
+}
+</style>
+
+
+<style id="roadTripQuickAddV2">
+.quickAddModal{
+  width:min(520px,100%) !important;
+  padding:18px !important;
+}
+
+.quickAddHead{
+  padding:2px 2px 12px;
+}
+
+.quickAddEyebrow{
+  color:var(--travel-sea,#22B8B5);
+  font-size:9px;
+  font-weight:950;
+  letter-spacing:.14em;
+  margin-bottom:4px;
+}
+
+.quickAddHead h3{
+  margin:0 !important;
+  font-size:21px;
+  line-height:1.2;
+  color:var(--rt-text);
+}
+
+.quickAddHead .footerMini{
+  margin-top:5px !important;
+}
+
+.quickAddSheetV2{
+  display:grid;
+  gap:9px;
+  margin-top:2px;
+}
+
+.quickAddChoice{
+  width:100%;
+  display:grid;
+  grid-template-columns:46px minmax(0,1fr) 24px;
+  align-items:center;
+  gap:11px;
+  min-height:72px;
+  padding:11px 12px;
+  text-align:left;
+  border:1px solid var(--rt-border);
+  border-radius:17px;
+  background:var(--rt-surface);
+  color:var(--rt-text);
+  box-shadow:0 4px 12px rgba(37,91,125,.04);
+}
+
+.quickAddChoice:active{
+  transform:scale(.985) !important;
+}
+
+.quickAddIconWrap{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  font-size:19px;
+  border:1px solid transparent;
+}
+
+.quickAddChoicePlace .quickAddIconWrap{
+  background:#EDF7FF;
+  border-color:#D8EBFB;
+}
+
+.quickAddChoiceExpense .quickAddIconWrap{
+  background:#FFF7DF;
+  border-color:#F8E7B8;
+}
+
+.quickAddChoiceChecklist .quickAddIconWrap{
+  background:#EAF9F4;
+  border-color:#CFEFE3;
+}
+
+body[data-theme="dark"] .quickAddChoicePlace .quickAddIconWrap,
+body[data-theme="dark"] .quickAddChoiceExpense .quickAddIconWrap,
+body[data-theme="dark"] .quickAddChoiceChecklist .quickAddIconWrap{
+  background:var(--rt-surface-3);
+  border-color:var(--rt-border);
+}
+
+.quickAddCopy{
+  min-width:0;
+  display:block;
+}
+
+.quickAddTitle{
+  display:block;
+  color:var(--rt-text);
+  font-size:14px;
+  font-weight:900;
+  line-height:1.25;
+}
+
+.quickAddSub{
+  display:block;
+  margin-top:3px;
+  color:var(--rt-muted);
+  font-size:10.5px;
+  line-height:1.42;
+  overflow-wrap:anywhere;
+}
+
+.quickAddArrow{
+  justify-self:end;
+  color:var(--rt-muted);
+  font-size:24px;
+  font-weight:700;
+  line-height:1;
+}
+
+.quickAddCancel{
+  width:100%;
+  min-height:46px;
+  margin-top:13px;
+  border:1px solid var(--rt-border);
+  border-radius:15px;
+  background:var(--rt-surface-2);
+  color:var(--rt-text-2);
+  font-weight:850;
+  box-shadow:none;
+}
+
+.quickAddCancel:active{
+  transform:scale(.99) !important;
+}
+
+@media(max-width:640px){
+  .quickAddModal{
+    padding:15px 14px calc(14px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .quickAddHead{
+    padding:0 1px 10px;
+  }
+
+  .quickAddHead h3{
+    font-size:19px;
+  }
+
+  .quickAddSheetV2{
+    gap:8px;
+  }
+
+  .quickAddChoice{
+    grid-template-columns:42px minmax(0,1fr) 20px;
+    min-height:66px;
+    padding:10px 11px;
+    border-radius:15px;
+  }
+
+  .quickAddIconWrap{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    font-size:17px;
+  }
+
+  .quickAddTitle{
+    font-size:13.5px;
+  }
+
+  .quickAddSub{
+    font-size:10px;
+  }
+
+  .quickAddCancel{
+    min-height:44px;
+    margin-top:11px;
+    border-radius:14px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -5441,7 +5660,7 @@ body[data-theme="dark"] .mobileTab.active{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.5 FINAL · SUNNY UI · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.5 FINAL · QUICK ADD · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -5956,29 +6175,43 @@ body[data-theme="dark"] .mobileTab.active{
 
 
 <dialog id="quickAddDialog">
-  <div class="modal">
-    <h3>＋ 要添加什么？</h3>
-    <div class="quickAddSheet">
-      <button id="quickAddPlace" class="quickAddChoice" type="button">
-        <span class="quickAddIcon">📍</span>
-        <span>
-          <span class="quickAddTitle">添加地点 / 美食</span>
-          <span class="quickAddSub">景点、餐厅、酒店、购物、按摩等</span>
+  <div class="modal quickAddModal">
+    <div class="quickAddHead">
+      <div class="quickAddEyebrow">QUICK ADD</div>
+      <h3>想添加什么？</h3>
+      <div class="footerMini">选择一个操作，马上开始。</div>
+    </div>
+
+    <div class="quickAddSheet quickAddSheetV2">
+      <button id="quickAddPlace" class="quickAddChoice quickAddChoicePlace" type="button">
+        <span class="quickAddIconWrap">📍</span>
+        <span class="quickAddCopy">
+          <span class="quickAddTitle">地点 / 美食</span>
+          <span class="quickAddSub">景点、餐厅、酒店、购物、按摩</span>
         </span>
         <span class="quickAddArrow">›</span>
       </button>
-      <button id="quickAddExpense" class="quickAddChoice" type="button">
-        <span class="quickAddIcon">💸</span>
-        <span>
-          <span class="quickAddTitle">添加 Expense</span>
-          <span class="quickAddSub">记录实际开销、付款人、RM / THB 和分摊</span>
+
+      <button id="quickAddExpense" class="quickAddChoice quickAddChoiceExpense" type="button">
+        <span class="quickAddIconWrap">💸</span>
+        <span class="quickAddCopy">
+          <span class="quickAddTitle">Expense</span>
+          <span class="quickAddSub">记录实际开销、付款人与分摊</span>
+        </span>
+        <span class="quickAddArrow">›</span>
+      </button>
+
+      <button id="quickAddChecklist" class="quickAddChoice quickAddChoiceChecklist" type="button">
+        <span class="quickAddIconWrap">✅</span>
+        <span class="quickAddCopy">
+          <span class="quickAddTitle">Shared Checklist</span>
+          <span class="quickAddSub">新增准备事项，可设4人分别 Tick</span>
         </span>
         <span class="quickAddArrow">›</span>
       </button>
     </div>
-    <div class="modalActions">
-      <button class="iconbtn" type="button" id="cancelQuickAdd">取消</button>
-    </div>
+
+    <button class="quickAddCancel" type="button" id="cancelQuickAdd">取消</button>
   </div>
 </dialog>
 
@@ -6504,6 +6737,10 @@ async function init(){
     $('quickAddDialog').close();
     openExpenseDialog(null);
   });
+  $('quickAddChecklist')?.addEventListener('click',()=>{
+    $('quickAddDialog').close();
+    openChecklistDialog();
+  });
   $('cancelQuickAdd')?.addEventListener('click',()=>$('quickAddDialog').close());
   $('expenseLinkedDay')?.addEventListener('change',()=>{
     populateExpenseItemsForDay(Number($('expenseLinkedDay').value||0));
@@ -6855,7 +7092,7 @@ function switchPanel(panel,options={}){
 
   if(mobileAddBtn){
     mobileAddBtn.textContent='＋';
-    mobileAddBtn.setAttribute('aria-label','快速新增：地点或 Expense');
+    mobileAddBtn.setAttribute('aria-label','快速新增：地点、Expense 或 Checklist');
   }
 
   updateMobilePanelChrome(panel);
