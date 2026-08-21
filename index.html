@@ -4293,15 +4293,6 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 
 </head>
 <body>
-<div id="buildMarkerV513" style="
-  position:fixed;right:8px;bottom:8px;z-index:99999;
-  padding:4px 7px;border-radius:8px;
-  font-size:9px;font-weight:900;letter-spacing:.04em;
-  background:#111827;color:#c4b5fd;border:1px solid #4c1d95;
-  opacity:.72;pointer-events:none">
-  V5.1.3 FULL RESET
-</div>
-
 <div class="wrap">
   <section id="setupView" class="card authWrap">
     <h2>🔧 还差一步</h2>
@@ -4382,7 +4373,7 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.3 · FULL RESET · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.4 · CLEAN OVERVIEW · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -4468,7 +4459,7 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
             </div>
           </details>
 
-          <div class="card fullPlanImportCard">
+          <div class="card fullPlanImportCard" id="fullPlanImportCard">
             <div class="fullPlanImportTop">
               <div>
                 <div class="todayEyebrow">RESEARCHED 21 AUG 2026</div>
@@ -5877,6 +5868,7 @@ async function toggleMyChecklistTick(checklistId,checked){
 
 function renderFullPlanImportStatus(){
   const el=$('fullPlanImportStatus');
+  const card=$('fullPlanImportCard');
   if(!el || !currentTrip) return;
 
   const normalizeName=value=>
@@ -5897,8 +5889,14 @@ function renderFullPlanImportStatus(){
   const missing=Math.max(0,total-matched);
 
   if(matched===total){
+    if(card) card.classList.add('hide');
     el.textContent=`完整 9D8N 模板已齐全：${total}/${total} 个项目 ✅`;
-  }else if(matched>0){
+    return;
+  }
+
+  if(card) card.classList.remove('hide');
+
+  if(matched>0){
     el.textContent=`目前匹配 ${matched}/${total} 个模板项目 · 还差 ${missing} 个，可按下方按钮补齐。`;
   }else{
     el.textContent=`完整模板共 ${total} 个项目；按下方按钮导入。`;
