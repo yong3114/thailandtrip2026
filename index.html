@@ -4340,6 +4340,65 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 }
 </style>
 
+
+<style id="roadTripV515R2SafeChecklistFilter">
+/* Safe checklist filter: display-layer only */
+.safeChecklistFilterRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:8px 0 10px;
+  padding:0;
+}
+.safeChecklistFilter{
+  flex:1 1 auto;
+  min-width:0;
+  max-width:260px;
+  min-height:40px;
+  margin:0 !important;
+}
+.safeChecklistFilterCount{
+  flex:0 0 auto;
+  color:var(--rt-muted);
+  font-size:10.5px;
+  font-weight:850;
+  white-space:nowrap;
+}
+
+/* Remove the little empty space at the top after opening checklist dropdowns */
+.overviewChecklistBody{
+  padding-top:0 !important;
+}
+.overviewChecklistBody > .overviewChecklistProgress:first-child{
+  margin-top:10px !important;
+}
+.sharedChecklistBody{
+  padding-top:0 !important;
+}
+.sharedChecklistBody > .checklistProgress:first-child{
+  margin-top:10px !important;
+}
+
+/* hidden cards are display-only; data remains untouched */
+.checklistItem.safeChecklistHidden{
+  display:none !important;
+}
+
+@media(max-width:640px){
+  .safeChecklistFilterRow{
+    margin:7px 0 9px;
+  }
+  .safeChecklistFilter{
+    max-width:none;
+    min-height:42px;
+  }
+  .safeChecklistFilterCount{
+    font-size:10px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -4422,7 +4481,7 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.5R · SAFE ROLLBACK · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.5R2 · SAFE CHECKLIST FILTER · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -4497,6 +4556,18 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
             <div class="overviewChecklistBody">
               <div class="overviewChecklistProgress">
                 <div id="overviewChecklistProgressBar" style="width:0%"></div>
+              </div>
+
+              <div class="safeChecklistFilterRow">
+                <select id="overviewChecklistFilter" class="safeChecklistFilter" aria-label="Checklist 分类">
+                  <option value="all">全部</option>
+                  <option value="👤 Personal">👤 Personal</option>
+                  <option value="🚗 Car">🚗 Car</option>
+                  <option value="🇹🇭 Border">🇹🇭 Border</option>
+                  <option value="🏨 Booking">🏨 Booking</option>
+                  <option value="🧳 Other">🧳 Other</option>
+                </select>
+                <span id="overviewChecklistFilterCount" class="safeChecklistFilterCount"></span>
               </div>
               <div class="checklistDisabledNotice hide" id="overviewChecklistDisabledNotice">
                 Checklist 尚未启用，请先运行 V4.9 / V5.0 SQL。
@@ -4715,6 +4786,18 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
             <div class="sharedChecklistBody">
               <div class="checklistProgress">
                 <div id="checklistProgressBar" style="width:0%"></div>
+              </div>
+
+              <div class="safeChecklistFilterRow">
+                <select id="sharedChecklistFilter" class="safeChecklistFilter" aria-label="Checklist 分类">
+                  <option value="all">全部</option>
+                  <option value="👤 Personal">👤 Personal</option>
+                  <option value="🚗 Car">🚗 Car</option>
+                  <option value="🇹🇭 Border">🇹🇭 Border</option>
+                  <option value="🏨 Booking">🏨 Booking</option>
+                  <option value="🧳 Other">🧳 Other</option>
+                </select>
+                <span id="sharedChecklistFilterCount" class="safeChecklistFilterCount"></span>
               </div>
 
               <div class="checklistDisabledNotice hide" id="checklistDisabledNotice">
@@ -5157,6 +5240,91 @@ function installNativeSheet(dialogId){
 
 // Apply the native interaction to all add/edit sheets.
 ['itemDialog','expenseDialog','quickAddDialog','todayDialog','checklistDialog'].forEach(installNativeSheet);
+
+
+
+// ============================================================
+// V5.1.5R2 SAFE CHECKLIST FILTER
+// Display-layer only. Does not change checklist data or render logic.
+// ============================================================
+let safeChecklistFilterValue='all';
+
+function safeChecklistCategoryFromCard(card){
+  const meta=card?.querySelector('.checklistItemMeta');
+  const text=String(meta?.textContent||'').trim();
+
+  if(text.includes('👤 Personal')) return '👤 Personal';
+  if(text.includes('🚗 Car')) return '🚗 Car';
+  if(text.includes('🇹🇭 Border')) return '🇹🇭 Border';
+  if(text.includes('🏨 Booking')) return '🏨 Booking';
+  if(text.includes('🧳 Other')) return '🧳 Other';
+
+  return '🧳 Other';
+}
+
+function applySafeChecklistFilter(){
+  const overviewSelect=$('overviewChecklistFilter');
+  const sharedSelect=$('sharedChecklistFilter');
+
+  if(overviewSelect && overviewSelect.value!==safeChecklistFilterValue){
+    overviewSelect.value=safeChecklistFilterValue;
+  }
+  if(sharedSelect && sharedSelect.value!==safeChecklistFilterValue){
+    sharedSelect.value=safeChecklistFilterValue;
+  }
+
+  const applyTo=(containerId,countId)=>{
+    const container=$(containerId);
+    const countEl=$(countId);
+    if(!container) return;
+
+    const cards=[...container.querySelectorAll('.checklistItem')];
+    let visible=0;
+
+    cards.forEach(card=>{
+      const category=safeChecklistCategoryFromCard(card);
+      const show=safeChecklistFilterValue==='all' || category===safeChecklistFilterValue;
+      card.classList.toggle('safeChecklistHidden',!show);
+      if(show) visible++;
+    });
+
+    if(countEl){
+      countEl.textContent=safeChecklistFilterValue==='all'
+        ? `${cards.length} 项`
+        : `${visible} 项`;
+    }
+  };
+
+  applyTo('overviewChecklistList','overviewChecklistFilterCount');
+  applyTo('checklistList','sharedChecklistFilterCount');
+}
+
+function setSafeChecklistFilter(value){
+  safeChecklistFilterValue=value||'all';
+  applySafeChecklistFilter();
+}
+
+$('overviewChecklistFilter')?.addEventListener('change',e=>{
+  setSafeChecklistFilter(e.target.value);
+});
+$('sharedChecklistFilter')?.addEventListener('change',e=>{
+  setSafeChecklistFilter(e.target.value);
+});
+
+// Watch only the rendered checklist containers.
+// Whenever existing renderChecklist() redraws cards, re-apply the visual filter.
+['overviewChecklistList','checklistList'].forEach(id=>{
+  const node=$(id);
+  if(!node) return;
+
+  const observer=new MutationObserver(()=>{
+    requestAnimationFrame(applySafeChecklistFilter);
+  });
+  observer.observe(node,{childList:true,subtree:false});
+});
+
+// First pass after startup.
+setTimeout(applySafeChecklistFilter,300);
 
 
 init();
