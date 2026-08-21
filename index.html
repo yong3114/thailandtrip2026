@@ -4291,6 +4291,55 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 }
 </style>
 
+
+<style id="roadTripV515BudgetFilter">
+.budgetFilterBar{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:12px;
+  margin:0 0 14px;
+  padding:11px 12px;
+  border:1px solid var(--rt-border);
+  border-radius:16px;
+  background:var(--rt-surface-2);
+}
+.budgetFilterLabel{
+  flex:1;
+  min-width:0;
+  margin:0;
+  font-size:10.5px;
+  color:var(--rt-muted) !important;
+}
+#budgetCategoryFilter{
+  margin-top:5px;
+  width:100%;
+  max-width:310px;
+  min-height:42px;
+}
+.budgetFilterResult{
+  flex:0 0 auto;
+  color:var(--rt-muted);
+  font-size:10.5px;
+  font-weight:800;
+  white-space:nowrap;
+  padding-bottom:10px;
+}
+@media(max-width:640px){
+  .budgetFilterBar{
+    align-items:stretch;
+    flex-direction:column;
+    gap:7px;
+    padding:10px;
+  }
+  #budgetCategoryFilter{max-width:none}
+  .budgetFilterResult{
+    padding:0 2px 2px;
+    white-space:normal;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -4373,7 +4422,7 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.4 · CLEAN OVERVIEW · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.5 · BUDGET FILTER · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -4575,6 +4624,25 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
             </summary>
             <div class="budgetHubBody">
               <div class="footerMini budgetHubHelp">共同资金、酒店预算、油费、过路费、门票等都集中在这里。点卡片即可编辑。</div>
+
+              <div class="budgetFilterBar">
+                <label class="budgetFilterLabel">查看项目
+                  <select id="budgetCategoryFilter">
+                    <option value="all">全部</option>
+                    <option value="hotel">🏨 酒店</option>
+                    <option value="attraction">🎟 景点 / 门票</option>
+                    <option value="food">🍜 美食</option>
+                    <option value="transport">🚗 交通 / 油费 / Toll</option>
+                    <option value="shopping">🛍 Shopping</option>
+                    <option value="massage">💆 Massage</option>
+                    <option value="border">🇹🇭 Border / Insurance</option>
+                    <option value="general">💰 共同预算 / General</option>
+                    <option value="other">🧳 其他</option>
+                  </select>
+                </label>
+                <div class="budgetFilterResult" id="budgetFilterResult">显示全部</div>
+              </div>
+
               <div class="budgetHubStats" id="budgetHubStats"></div>
               <div class="budgetInfoGrid" id="budgetInfoList"></div>
             </div>
@@ -4914,6 +4982,7 @@ let currentTrip=null, members=[], items=[], votes=[], expenses=[], shares=[], tr
 let checklist=[], checklistTicks=[], checklistAvailable=false, checklistTicksAvailable=false;
 let activeDay=1, todayDay=1, editingItem=null, editingExpense=null, channel=null;
 let itemSearch='', itemCategoryFilter='全部', itemSortMode='default', itineraryMode='timeline';
+let budgetCategoryFilter='all';
 const mobileBar=$('mobileBar'), mobileAddBtn=$('mobileAddBtn');
 
 if(!configured){
@@ -5156,6 +5225,12 @@ async function init(){
   $('cancelItemBtn').addEventListener('click',()=>$('itemDialog').close());
   $('itemForm').addEventListener('submit',saveItem);
   $('addExpenseBtn').addEventListener('click',()=>openExpenseDialog(null));
+  $('budgetCategoryFilter')?.addEventListener('change',()=>{
+    budgetCategoryFilter=$('budgetCategoryFilter').value || 'all';
+    const actual=expenses.reduce((s,e)=>s+rmValue(e.amount,e.currency),0);
+    const remain=Number(currentTrip?.budget_target||0)-actual;
+    renderBudgetHub(actual,remain);
+  });
   $('cancelExpenseBtn').addEventListener('click',()=>$('expenseDialog').close());
   $('expenseForm').addEventListener('submit',saveExpense);
   $('settingsForm').addEventListener('submit',saveSettings);
@@ -6232,6 +6307,35 @@ function renderSettlementSafe(){
   }
 }
 
+function budgetItemGroup(item){
+  const text=[item?.name,item?.category,item?.location,item?.note].join(' ').toLowerCase();
+
+  if(/hotel|住宿|room|check[- ]?in|check[- ]?out|resort|hostel|accommodation/.test(text)) return 'hotel';
+  if(/景点|门票|ticket|attraction|tour|island|temple|beach|海边|海岛|museum|park|cave|viewpoint/.test(text)) return 'attraction';
+  if(/food|餐|吃|美食|breakfast|lunch|dinner|coffee|cafe|restaurant|meal/.test(text)) return 'food';
+  if(/fuel|petrol|diesel|油费|toll|parking|交通|transport|car|vehicle|highway|高速|rfid|touch n go/.test(text)) return 'transport';
+  if(/shopping|shop|购物|mall|market|souvenir/.test(text)) return 'shopping';
+  if(/massage|按摩|spa/.test(text)) return 'massage';
+  if(/border|insurance|tdac|customs|immigration|保险|入境|出境/.test(text)) return 'border';
+  if(/共同预算|budget|fund|buffer|emergency|whole trip|全程/.test(text)) return 'general';
+  return 'other';
+}
+
+function budgetGroupLabel(group){
+  return ({
+    all:'全部',
+    hotel:'🏨 酒店',
+    attraction:'🎟 景点 / 门票',
+    food:'🍜 美食',
+    transport:'🚗 交通 / 油费 / Toll',
+    shopping:'🛍 Shopping',
+    massage:'💆 Massage',
+    border:'🇹🇭 Border / Insurance',
+    general:'💰 共同预算 / General',
+    other:'🧳 其他'
+  })[group] || '其他';
+}
+
 function renderBudgetHub(actual,remain){
   const budgetItems=items
     .filter(isBudgetItem)
@@ -6241,13 +6345,28 @@ function renderBudgetHub(actual,remain){
       return (a.name||'').localeCompare(b.name||'');
     });
 
+  const visibleBudgetItems=budgetCategoryFilter==='all'
+    ? budgetItems
+    : budgetItems.filter(item=>budgetItemGroup(item)===budgetCategoryFilter);
+
   const budgetItemsTotal=budgetItems.reduce((sum,item)=>sum+Number(item.cost||0),0);
   const tripTarget=Number(currentTrip?.budget_target||0);
-  const avgTarget=currentTrip?.people ? tripTarget/Number(currentTrip.people) : 0;
 
   const collapsedMeta=$('budgetCollapsedMeta');
   if(collapsedMeta){
     collapsedMeta.textContent=`${budgetItems.length} 项 · Budget ${money(budgetItemsTotal)} · 实际 ${money(actual)} · ${remain>=0?'剩余':'超出'} ${money(Math.abs(remain))}`;
+  }
+
+  const filterSelect=$('budgetCategoryFilter');
+  if(filterSelect && filterSelect.value!==budgetCategoryFilter){
+    filterSelect.value=budgetCategoryFilter;
+  }
+
+  const resultText=$('budgetFilterResult');
+  if(resultText){
+    resultText.textContent=budgetCategoryFilter==='all'
+      ? `显示全部 ${budgetItems.length} 项`
+      : `${budgetGroupLabel(budgetCategoryFilter)} · ${visibleBudgetItems.length} 项`;
   }
 
   $('budgetHubStats').innerHTML=`
@@ -6268,12 +6387,14 @@ function renderBudgetHub(actual,remain){
       <span>${remain>=0?'预算剩余':'已超出预算'}</span>
     </div>`;
 
-  $('budgetInfoList').innerHTML=budgetItems.length
-    ? budgetItems.map(item=>{
+  $('budgetInfoList').innerHTML=visibleBudgetItems.length
+    ? visibleBudgetItems.map(item=>{
         const displayName=(item.name||'').replace(/^\[Budget\]\s*/,'');
         const location=(item.location||'').trim();
         const wholeTrip=/whole trip/i.test(location);
         const dayLabel=wholeTrip ? 'Whole Trip' : `Day ${item.day_no}`;
+        const group=budgetItemGroup(item);
+
         return `
           <button class="budgetHubCard" type="button" data-budget-hub-edit="${item.id}">
             <div class="budgetHubCardTop">
@@ -6281,14 +6402,14 @@ function renderBudgetHub(actual,remain){
               <div class="budgetHubAmount">${Number(item.cost||0)>0?money(item.cost):'—'}</div>
             </div>
             <div class="budgetHubMeta">
-              <span class="pill">${escapeHtml(item.category||'💰 Budget')}</span>
+              <span class="pill">${escapeHtml(budgetGroupLabel(group))}</span>
               <span class="pill">📅 ${escapeHtml(dayLabel)}</span>
               ${location && !wholeTrip?`<span class="pill">📍 ${escapeHtml(location)}</span>`:''}
             </div>
             ${item.note?`<div class="budgetHubNote">${escapeHtml(item.note)}</div>`:''}
           </button>`;
       }).join('')
-    : `<div class="emptyBudget">还没有 Budget / Trip Info。你可以用「添加地点 / 美食」建立名称以 <b>[Budget]</b> 开头的项目。</div>`;
+    : `<div class="emptyBudget">这个类别目前没有 Budget / Trip Info 项目。</div>`;
 
   document.querySelectorAll('[data-budget-hub-edit]').forEach(btn=>{
     btn.addEventListener('click',()=>openItemDialog(btn.dataset.budgetHubEdit));
