@@ -4340,6 +4340,56 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 }
 </style>
 
+
+<style id="roadTripV516ChecklistFilter">
+.checklistFilterBar{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:12px;
+  margin:12px 0;
+  padding:10px 11px;
+  border:1px solid var(--rt-border);
+  border-radius:15px;
+  background:var(--rt-surface-2);
+}
+.checklistFilterLabel{
+  flex:1;
+  min-width:0;
+  margin:0;
+  font-size:10.5px;
+  color:var(--rt-muted) !important;
+}
+.checklistCategoryFilter{
+  width:100%;
+  max-width:260px;
+  margin-top:5px;
+  min-height:42px;
+}
+.checklistFilterResult{
+  flex:0 0 auto;
+  color:var(--rt-muted);
+  font-size:10.5px;
+  font-weight:800;
+  white-space:nowrap;
+  padding-bottom:10px;
+}
+@media(max-width:640px){
+  .checklistFilterBar{
+    flex-direction:column;
+    align-items:stretch;
+    gap:7px;
+  }
+  .checklistCategoryFilter{
+    max-width:none;
+  }
+  .checklistFilterResult{
+    padding:0 2px 2px;
+    white-space:normal;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -4422,7 +4472,7 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.5 · BUDGET FILTER · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.6 · CHECKLIST FILTER · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -4498,6 +4548,21 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
               <div class="overviewChecklistProgress">
                 <div id="overviewChecklistProgressBar" style="width:0%"></div>
               </div>
+
+              <div class="checklistFilterBar">
+                <label class="checklistFilterLabel">查看类别
+                  <select class="checklistCategoryFilter" id="overviewChecklistCategoryFilter">
+                    <option value="all">全部</option>
+                    <option value="👤 Personal">👤 Personal</option>
+                    <option value="🚗 Car">🚗 Car</option>
+                    <option value="🇹🇭 Border">🇹🇭 Border</option>
+                    <option value="🏨 Booking">🏨 Booking</option>
+                    <option value="🧳 Other">🧳 Other</option>
+                  </select>
+                </label>
+                <div class="checklistFilterResult" id="overviewChecklistFilterResult">显示全部</div>
+              </div>
+
               <div class="checklistDisabledNotice hide" id="overviewChecklistDisabledNotice">
                 Checklist 尚未启用，请先运行 V4.9 / V5.0 SQL。
               </div>
@@ -4715,6 +4780,20 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
             <div class="sharedChecklistBody">
               <div class="checklistProgress">
                 <div id="checklistProgressBar" style="width:0%"></div>
+              </div>
+
+              <div class="checklistFilterBar">
+                <label class="checklistFilterLabel">查看类别
+                  <select class="checklistCategoryFilter" id="sharedChecklistCategoryFilter">
+                    <option value="all">全部</option>
+                    <option value="👤 Personal">👤 Personal</option>
+                    <option value="🚗 Car">🚗 Car</option>
+                    <option value="🇹🇭 Border">🇹🇭 Border</option>
+                    <option value="🏨 Booking">🏨 Booking</option>
+                    <option value="🧳 Other">🧳 Other</option>
+                  </select>
+                </label>
+                <div class="checklistFilterResult" id="sharedChecklistFilterResult">显示全部</div>
               </div>
 
               <div class="checklistDisabledNotice hide" id="checklistDisabledNotice">
@@ -4983,6 +5062,7 @@ let checklist=[], checklistTicks=[], checklistAvailable=false, checklistTicksAva
 let activeDay=1, todayDay=1, editingItem=null, editingExpense=null, channel=null;
 let itemSearch='', itemCategoryFilter='全部', itemSortMode='default', itineraryMode='timeline';
 let budgetCategoryFilter='all';
+let checklistCategoryFilter='all';
 const mobileBar=$('mobileBar'), mobileAddBtn=$('mobileAddBtn');
 
 if(!configured){
@@ -5253,6 +5333,14 @@ async function init(){
 
   $('openChecklistBtn')?.addEventListener('click',openChecklistDialog);
   $('openChecklistOverviewBtn')?.addEventListener('click',openChecklistDialog);
+  $('overviewChecklistCategoryFilter')?.addEventListener('change',()=>{
+    checklistCategoryFilter=$('overviewChecklistCategoryFilter').value || 'all';
+    renderChecklist();
+  });
+  $('sharedChecklistCategoryFilter')?.addEventListener('change',()=>{
+    checklistCategoryFilter=$('sharedChecklistCategoryFilter').value || 'all';
+    renderChecklist();
+  });
   $('cancelChecklistBtn')?.addEventListener('click',()=>$('checklistDialog').close());
 
   $('checklistForm')?.addEventListener('submit',async(e)=>{
@@ -6100,82 +6188,111 @@ function renderChecklist(){
       : 'Checklist 尚未启用';
   }
 
+  const filteredStates=checklistCategoryFilter==='all'
+    ? states
+    : states.filter(x=>String(x.row.category||'🧳 Other')===checklistCategoryFilter);
+
+  const overviewSelect=$('overviewChecklistCategoryFilter');
+  const sharedSelect=$('sharedChecklistCategoryFilter');
+
+  if(overviewSelect && overviewSelect.value!==checklistCategoryFilter){
+    overviewSelect.value=checklistCategoryFilter;
+  }
+  if(sharedSelect && sharedSelect.value!==checklistCategoryFilter){
+    sharedSelect.value=checklistCategoryFilter;
+  }
+
+  const resultText=checklistCategoryFilter==='all'
+    ? `显示全部 ${states.length} 项`
+    : `${checklistCategoryFilter} · ${filteredStates.length} 项`;
+
+  if($('overviewChecklistFilterResult')){
+    $('overviewChecklistFilterResult').textContent=resultText;
+  }
+  if($('sharedChecklistFilterResult')){
+    $('sharedChecklistFilterResult').textContent=resultText;
+  }
+
   if(!checklistAvailable){
-    list.innerHTML=''; overviewList.innerHTML=''; return;
-  }
-  if(!total){
-    const empty=`<div class="checklistEmpty">还没有清单。按「＋ 添加 Checklist」开始。</div>`;
-    list.innerHTML=empty; overviewList.innerHTML=empty; return;
+    list.innerHTML='';
+    overviewList.innerHTML='';
+    return;
   }
 
-  const rowHtml=(row,compact=false)=>{
-    const st=checklistState(row);
-    const doneBy=members.find(m=>m.user_id===row.done_by)?.display_name||'';
-    const isAll=st.mode==='all_members';
+  if(!filteredStates.length){
+    const empty=`<div class="checklistEmpty">这个类别目前没有 Checklist 项目。</div>`;
+    list.innerHTML=empty;
+    overviewList.innerHTML=empty;
+    return;
+  }
 
-    let memberHtml='';
-    if(isAll){
-      const chips=members.map(m=>{
-        const checked=st.checkedIds?.has(m.user_id);
-        const mine=m.user_id===user.id;
-        return `<button type="button" class="memberTick ${checked?'done':''} ${mine?'mine':''}"
-          data-personal-checklist="${row.id}" data-personal-checked="${checked?'1':'0'}"
-          ${mine?'':'disabled'}>${checked?'✓':'○'} ${escapeHtml(m.display_name)}</button>`;
-      }).join('');
-      const missing=Math.max(0,st.required-st.joined);
-      memberHtml=`<div class="checklistMemberProgress">${chips}</div>`+
-        (st.complete
-          ? `<span class="checklistAllDone">✓ 全部 ${st.required} 人完成</span>`
-          : `<span class="checklistWaiting">${st.doneCount}/${st.required} 完成${missing?` · 还等 ${missing} 人加入 Trip`:''}</span>`);
-    }
+  const rowHtml=({row,state},compact=false)=>{
+    const mode=row.completion_mode||'shared';
+
+    const memberTicks=members.map(m=>{
+      const checked=checklistTicks.some(t=>
+        t.checklist_id===row.id &&
+        t.user_id===m.user_id &&
+        t.done
+      );
+      return `
+        <button type="button"
+          class="memberTickBtn ${checked?'done':''}"
+          data-checklist-member="${row.id}"
+          data-checklist-user="${m.user_id}">
+          ${checked?'✓':'○'} ${escapeHtml(m.display_name)}
+        </button>`;
+    }).join('');
 
     return `
-      <div class="checklistItem ${st.complete?'done':''}">
-        ${isAll
-          ? `<span class="checklistGroupIcon">👥</span>`
-          : `<input class="checklistCheck" type="checkbox" data-checklist-toggle="${row.id}" ${row.done?'checked':''} aria-label="${escapeHtml(row.text)}">`
-        }
-        <div class="checklistTextWrap">
+      <div class="checklistItem ${state.complete?'done':''}">
+        <div class="checklistItemMain">
           <div class="checklistItemText">${escapeHtml(row.text)}</div>
           <div class="checklistItemMeta">
             ${escapeHtml(row.category||'🧳 Other')}
-            ${!isAll && row.done && doneBy?` · ✓ ${escapeHtml(doneBy)}`:''}
-            ${isAll?' · 👥 每个人分别 Tick':''}
+            · ${mode==='all_members'?'👥 每个人分别 Tick':'✅ Shared Done'}
           </div>
-          ${row.details?`<div class="checklistItemDetails">${escapeHtml(row.details)}</div>`:''}
-          ${memberHtml}
+
+          ${row.details?`<div class="checklistDetails">${escapeHtml(row.details)}</div>`:''}
+
+          ${mode==='all_members'
+            ? `<div class="memberTickGrid">${memberTicks}</div>
+               <div class="checklistCompletionText">
+                 ${state.tickCount}/${state.requiredCount} 完成
+               </div>`
+            : `<label class="sharedChecklistToggle">
+                 <input class="checklistCheck" type="checkbox"
+                   data-checklist-toggle="${row.id}" ${row.done?'checked':''}>
+                 <span>${row.done?'已完成':'标记完成'}</span>
+               </label>`
+          }
         </div>
-        ${compact ? '' : `<button class="checklistDelete" type="button" data-checklist-delete="${row.id}" aria-label="删除">⌫</button>`}
+
+        ${compact
+          ? ''
+          : `<button class="checklistDelete" type="button"
+              data-checklist-delete="${row.id}" aria-label="删除">⌫</button>`
+        }
       </div>`;
   };
 
-  list.innerHTML=checklist.map(row=>rowHtml(row,false)).join('');
-  overviewList.innerHTML=checklist.map(row=>rowHtml(row,true)).join('');
+  list.innerHTML=filteredStates.map(x=>rowHtml(x,false)).join('');
+  overviewList.innerHTML=filteredStates.map(x=>rowHtml(x,true)).join('');
 
   document.querySelectorAll('[data-checklist-toggle]').forEach(el=>{
     el.addEventListener('change',()=>toggleChecklist(el.dataset.checklistToggle,el.checked));
   });
-  document.querySelectorAll('[data-personal-checklist]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const checked=btn.dataset.personalChecked==='1';
-      toggleMyChecklistTick(btn.dataset.personalChecklist,!checked);
-    });
+
+  document.querySelectorAll('[data-checklist-member]').forEach(btn=>{
+    btn.addEventListener('click',()=>toggleChecklistMember(
+      btn.dataset.checklistMember,
+      btn.dataset.checklistUser
+    ));
   });
+
   document.querySelectorAll('[data-checklist-delete]').forEach(btn=>{
     btn.addEventListener('click',()=>deleteChecklist(btn.dataset.checklistDelete));
   });
-}
-
-function openChecklistDialog(){
-  if(!checklistAvailable){
-    toast('Checklist 尚未启用，请先运行 Supabase SQL','err'); return;
-  }
-  $('checklistCategory').value='👤 Personal';
-  $('checklistText').value='';
-  $('checklistMode').value='shared';
-  $('checklistDetails').value='';
-  $('checklistDialog').showModal();
-  setTimeout(()=>$('checklistText')?.focus(),100);
 }
 
 async function addChecklist(text,category,mode='shared',details=''){
