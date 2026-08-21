@@ -4979,102 +4979,37 @@ html,body{
 </style>
 
 
-<style id="roadTripV515R10NativePager">
+<style id="roadTripV515R11HeaderSwipe">
 @media(max-width:760px){
-  html,body{
-    width:100%;
-    max-width:100%;
-    overflow:hidden !important;
-    overscroll-behavior:none;
+  [data-header-swipe="1"]{
+    position:relative;
+    touch-action:pan-y;
   }
 
-  #tripView{
-    height:100dvh;
-    overflow:hidden !important;
-    display:flex;
-    flex-direction:column;
+  [data-header-swipe="1"]::after{
+    content:"左右滑标题切换页面";
+    position:absolute;
+    right:10px;
+    bottom:7px;
+    font-size:8px;
+    font-weight:700;
+    color:rgba(255,255,255,.38);
+    pointer-events:none;
   }
 
-  #tripView.hide{display:none !important}
-
-  #tripView .hero,
-  #tripView .mobileCompactHeader{
-    flex:0 0 auto;
+  .mobileCompactHeader[data-header-swipe="1"]::after{
+    color:var(--rt-muted);
+    opacity:.55;
+    right:54px;
+    bottom:4px;
   }
 
-  #tripView .main{
-    flex:1 1 auto;
-    min-height:0;
-    margin-top:10px !important;
-    display:block !important;
-    overflow:hidden !important;
+  [data-header-swipe="1"].headerSwipeTracking{
+    transition:none !important;
   }
 
-  #tripView .sidebar{display:none !important}
-
-  #tripView .content{
-    display:flex !important;
-    flex-direction:row;
-    align-items:stretch;
-    width:100%;
-    height:100%;
-    min-height:0;
-    overflow-x:auto !important;
-    overflow-y:hidden !important;
-    scroll-snap-type:x mandatory;
-    scroll-behavior:smooth;
-    -webkit-overflow-scrolling:touch;
-    overscroll-behavior-x:contain;
-    scrollbar-width:none;
-    transform:none !important;
-    opacity:1 !important;
-    will-change:auto !important;
-  }
-
-  #tripView .content::-webkit-scrollbar{display:none}
-
-  #overviewPanel,
-  #itineraryPanel,
-  #expensesPanel,
-  #sharedPanel{
-    display:block !important;
-    flex:0 0 100%;
-    width:100%;
-    min-width:100%;
-    height:100%;
-    min-height:0;
-    overflow-y:auto !important;
-    overflow-x:hidden !important;
-    scroll-snap-align:start;
-    scroll-snap-stop:always;
-    overscroll-behavior-y:contain;
-    -webkit-overflow-scrolling:touch;
-    box-sizing:border-box;
-    padding-bottom:calc(112px + env(safe-area-inset-bottom));
-  }
-
-  #tripView.pagerSubpage .hero{display:none !important}
-  #tripView:not(.pagerSubpage) .mobileCompactHeader{display:none !important}
-  #tripView.pagerSubpage .mobileCompactHeader{display:flex !important}
-
-  .uiSwipeHint{display:none !important}
-  .mobileBar{z-index:40 !important}
-
-  .tabs,
-  .mobileQuick,
-  .dayRouteStrip,
-  .filterRow,
-  .expensePeopleOverview,
-  .memberTickGrid{
-    overscroll-behavior-x:contain;
-  }
-}
-
-@media(min-width:761px){
-  #tripView{
-    height:auto !important;
-    overflow:visible !important;
-    display:block !important;
+  [data-header-swipe="1"].headerSwipeSnap{
+    transition:transform .20s cubic-bezier(.22,.76,.25,1) !important;
   }
 }
 </style>
@@ -5089,7 +5024,7 @@ html,body{
 
   <section id="authView" class="hide">
     <div class="authWrap">
-      <div class="hero">
+      <div class="hero" data-header-swipe="1">
         <h1>🇲🇾🚗🇹🇭 Thailand Road Trip V4</h1>
         <div class="sub">更漂亮的共享行程 · 更适合手机 · 投票 · Expenses · 图片上传</div>
       </div>
@@ -5161,7 +5096,7 @@ html,body{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.5R10 · NATIVE PAGER · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.5R11 · HEADER SWIPE · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -5179,7 +5114,7 @@ html,body{
       </div>
     </div>
 
-    <div class="mobileCompactHeader hide" id="mobileCompactHeader">
+    <div class="mobileCompactHeader hide" id="mobileCompactHeader" data-header-swipe="1">
       <button class="mobileCompactBack" type="button" id="mobileCompactHomeBtn" aria-label="回到首页">‹</button>
       <div class="mobileCompactText">
         <div class="mobileCompactTrip" id="mobileCompactTrip"></div>
@@ -6053,9 +5988,125 @@ setTimeout(applySafeChecklistFilter,300);
 // No trip/item/expense/checklist data logic is changed.
 // ============================================================
 (function setupUiPolish(){
-  // R9: No custom touchstart / touchmove / touchend handlers.
-  // Native browser scrolling is left completely untouched.
+  const panelOrder=['overview','itinerary','expenses','shared'];
 
+  let startX=0,startY=0,startPanel='overview',headerTarget=null;
+  let tracking=false;
+
+  const currentPanel=()=>currentVisiblePanel||'overview';
+
+  const snapHeaderBack=()=>{
+    if(!headerTarget) return;
+    headerTarget.classList.remove('headerSwipeTracking');
+    headerTarget.classList.add('headerSwipeSnap');
+    headerTarget.style.transform='translate3d(0,0,0)';
+
+    setTimeout(()=>{
+      if(!headerTarget) return;
+      headerTarget.classList.remove('headerSwipeSnap');
+      headerTarget.style.transform='';
+      headerTarget=null;
+    },220);
+  };
+
+  document.querySelectorAll('[data-header-swipe="1"]').forEach(header=>{
+    header.addEventListener('touchstart',e=>{
+      if(e.touches.length!==1 || !currentTrip) return;
+
+      const t=e.touches[0];
+      startX=t.clientX;
+      startY=t.clientY;
+      startPanel=currentPanel();
+      headerTarget=header;
+      tracking=true;
+    },{passive:true});
+
+    header.addEventListener('touchmove',e=>{
+      if(!tracking || e.touches.length!==1 || !headerTarget) return;
+
+      const t=e.touches[0];
+      const dx=t.clientX-startX;
+      const dy=t.clientY-startY;
+
+      // If vertical movement is stronger, leave native scrolling alone.
+      if(Math.abs(dy)>Math.abs(dx)*.85){
+        tracking=false;
+        snapHeaderBack();
+        return;
+      }
+
+      if(Math.abs(dx)<12) return;
+
+      const index=panelOrder.indexOf(startPanel);
+      const canGoRight=index>0;
+      const canGoLeft=index<panelOrder.length-1;
+
+      let displayDx=dx;
+      if((dx>0&&!canGoRight)||(dx<0&&!canGoLeft)){
+        displayDx=dx*.2;
+      }else{
+        displayDx=Math.max(-90,Math.min(90,dx*.55));
+      }
+
+      headerTarget.classList.add('headerSwipeTracking');
+      headerTarget.style.transform=`translate3d(${displayDx}px,0,0)`;
+    },{passive:true});
+
+    header.addEventListener('touchend',e=>{
+      if(!headerTarget || e.changedTouches.length!==1){
+        tracking=false;
+        snapHeaderBack();
+        return;
+      }
+
+      const t=e.changedTouches[0];
+      const dx=t.clientX-startX;
+      const dy=t.clientY-startY;
+
+      const index=panelOrder.indexOf(startPanel);
+      const direction=dx<0?-1:1;
+      const nextIndex=direction<0?index+1:index-1;
+
+      const horizontalEnough=
+        Math.abs(dx)>=58 &&
+        Math.abs(dx)>Math.abs(dy)*1.15;
+
+      tracking=false;
+
+      if(
+        horizontalEnough &&
+        nextIndex>=0 &&
+        nextIndex<panelOrder.length
+      ){
+        const nextPanel=panelOrder[nextIndex];
+
+        if(headerTarget){
+          headerTarget.classList.remove('headerSwipeTracking');
+          headerTarget.classList.add('headerSwipeSnap');
+          headerTarget.style.transform=`translate3d(${direction<0?-70:70}px,0,0)`;
+        }
+
+        setTimeout(()=>{
+          switchPanel(nextPanel);
+
+          if(headerTarget){
+            headerTarget.classList.remove('headerSwipeSnap');
+            headerTarget.style.transform='';
+            headerTarget=null;
+          }
+        },120);
+      }else{
+        snapHeaderBack();
+      }
+    },{passive:true});
+
+    header.addEventListener('touchcancel',()=>{
+      tracking=false;
+      snapHeaderBack();
+    },{passive:true});
+  });
+
+  // Existing tap feedback
   document.addEventListener('click',e=>{
     const target=e.target.closest('button,a,summary,[role="button"]');
     if(!target || target.disabled) return;
@@ -6170,7 +6221,6 @@ async function init(){
   $('copyShareBtn').addEventListener('click',copyInvite);
   $('copyShareBtn2').addEventListener('click',copyInvite);
 
-  setupNativePager();
   $('mobileCompactHomeBtn')?.addEventListener('click',()=>switchPanel('overview'));
   $('mobileCompactMoreBtn')?.addEventListener('click',()=>{
     // Reuse existing Shared page as the mobile "more/settings" destination.
@@ -6533,54 +6583,26 @@ function cleanupChannel(){ if(channel && sb){ sb.removeChannel(channel); channel
 
 const mobilePanelScroll={overview:0,itinerary:0,expenses:0,shared:0};
 let currentVisiblePanel='overview';
-let pagerScrollTimer=null;
-
-function panelLabel(panel){
-  return ({
-    overview:'Overview',
-    itinerary:'Itinerary',
-    expenses:'Budget & Expenses',
-    shared:'Shared'
-  })[panel] || 'RoadTrip';
-}
 
 function updateMobilePanelChrome(panel){
   const tripViewEl=$('tripView');
   if(!tripViewEl) return;
 
   const mobile=window.matchMedia('(max-width:760px)').matches;
-  tripViewEl.classList.toggle('pagerSubpage',mobile && panel!=='overview');
+  tripViewEl.classList.toggle('mobileSubpage',mobile && panel!=='overview');
+
+  const labels={
+    overview:'Overview',
+    itinerary:'Itinerary',
+    expenses:'Budget & Expenses',
+    shared:'Shared'
+  };
 
   if($('mobileCompactTrip')){
     $('mobileCompactTrip').textContent=currentTrip?.title||'RoadTrip';
   }
   if($('mobileCompactPanel')){
-    $('mobileCompactPanel').textContent=panelLabel(panel);
-  }
-}
-
-function pagerIndexForPanel(panel){
-  return ['overview','itinerary','expenses','shared'].indexOf(panel);
-}
-
-function panelForPagerIndex(index){
-  return ['overview','itinerary','expenses','shared'][index] || 'overview';
-}
-
-function syncPagerNav(panel){
-  currentVisiblePanel=panel;
-
-  document.querySelectorAll('.navbtn').forEach(b=>
-    b.classList.toggle('active',b.dataset.panel===panel)
-  );
-  document.querySelectorAll('.mobileTab').forEach(b=>
-    b.classList.toggle('active',b.dataset.panel===panel)
-  );
-
-  updateMobilePanelChrome(panel);
-
-  if(mobileBar){
-    mobileBar.classList.toggle('hide',!currentTrip);
+    $('mobileCompactPanel').textContent=labels[panel]||'RoadTrip';
   }
 }
 
@@ -6589,39 +6611,19 @@ function switchPanel(panel,options={}){
   if(!valid.includes(panel)) return;
 
   const isMobile=window.matchMedia('(max-width:760px)').matches;
+  const preserveScroll=!!options.preserveScroll;
 
-  if(isMobile){
-    const content=document.querySelector('#tripView .content');
-    const index=pagerIndexForPanel(panel);
-
-    syncPagerNav(panel);
-
-    if(content && index>=0){
-      const left=index*content.clientWidth;
-      content.scrollTo({
-        left,
-        behavior:options.instant ? 'auto' : 'smooth'
-      });
-    }
-    return;
+  if(isMobile && preserveScroll && currentVisiblePanel){
+    mobilePanelScroll[currentVisiblePanel]=window.scrollY||0;
   }
 
   currentVisiblePanel=panel;
 
-  document.querySelectorAll('.navbtn').forEach(b=>
-    b.classList.toggle('active',b.dataset.panel===panel)
-  );
-  document.querySelectorAll('.mobileTab').forEach(b=>
-    b.classList.toggle('active',b.dataset.panel===panel)
-  );
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active', b.dataset.panel===panel));
+  document.querySelectorAll('.mobileTab').forEach(b=>b.classList.toggle('active', b.dataset.panel===panel));
+  valid.forEach(p=>$(p+'Panel').classList.toggle('hide', p!==panel));
 
-  valid.forEach(p=>
-    $(p+'Panel').classList.toggle('hide',p!==panel)
-  );
-
-  if(mobileBar){
-    mobileBar.classList.toggle('hide',!currentTrip);
-  }
+  if(mobileBar) mobileBar.classList.toggle('hide', !currentTrip);
 
   if(mobileAddBtn){
     mobileAddBtn.textContent='＋';
@@ -6629,43 +6631,14 @@ function switchPanel(panel,options={}){
   }
 
   updateMobilePanelChrome(panel);
-  window.scrollTo({top:0,behavior:'auto'});
-}
 
-function setupNativePager(){
-  const content=document.querySelector('#tripView .content');
-  if(!content || content.dataset.pagerReady==='1') return;
-
-  content.dataset.pagerReady='1';
-
-  content.addEventListener('scroll',()=>{
-    if(!window.matchMedia('(max-width:760px)').matches) return;
-
-    clearTimeout(pagerScrollTimer);
-    pagerScrollTimer=setTimeout(()=>{
-      const width=Math.max(1,content.clientWidth);
-      const index=Math.max(0,Math.min(3,Math.round(content.scrollLeft/width)));
-      const panel=panelForPagerIndex(index);
-
-      if(panel!==currentVisiblePanel){
-        syncPagerNav(panel);
-      }
-    },90);
-  },{passive:true});
-
-  window.addEventListener('resize',()=>{
-    if(!window.matchMedia('(max-width:760px)').matches) return;
-
-    const index=pagerIndexForPanel(currentVisiblePanel);
-    if(index<0) return;
-
-    requestAnimationFrame(()=>{
-      content.scrollTo({
-        left:index*content.clientWidth,
-        behavior:'auto'
-      });
-    });
-  },{passive:true});
+  requestAnimationFrame(()=>{
+    if(isMobile && preserveScroll){
+      window.scrollTo({top:mobilePanelScroll[panel]||0,behavior:'auto'});
+    }else{
+      window.scrollTo({top:0,behavior:'auto'});
+    }
+  });
 }
 
 function itemVoteCount(itemId){ return votes.filter(v=>v.item_id===itemId).length; }
