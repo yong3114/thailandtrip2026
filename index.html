@@ -4983,6 +4983,28 @@ dialog .modal{
 }
 </style>
 
+
+<style id="roadTripV515R8ScrollSafe">
+@media(max-width:760px){
+  html,body,#tripView,.main,.content{
+    touch-action:auto !important;
+  }
+
+  body{
+    overflow-y:auto !important;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  #tripView .content{
+    overscroll-behavior-y:auto;
+  }
+
+  body.uiSwipeActive{
+    overflow-y:auto !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -5065,7 +5087,7 @@ dialog .modal{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.5R7 · SWIPE ENGINE · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.5R8 · SCROLL SAFE · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -5962,7 +5984,7 @@ setTimeout(applySafeChecklistFilter,300);
   let gesture={
     tracking:false,
     horizontal:false,
-    locked:false,
+    decided:false,
     startX:0,
     startY:0,
     startTime:0,
@@ -6008,7 +6030,7 @@ setTimeout(applySafeChecklistFilter,300);
   const resetGesture=()=>{
     gesture.tracking=false;
     gesture.horizontal=false;
-    gesture.locked=false;
+    gesture.decided=false;
     gesture.target=null;
     gesture.velocityX=0;
   };
@@ -6044,8 +6066,7 @@ setTimeout(applySafeChecklistFilter,300);
     el.classList.add('uiSwipeSnap');
     el.style.transform='translate3d(0,0,0)';
     el.style.opacity='1';
-
-    animationTimer=setTimeout(cleanMotion,280);
+    animationTimer=setTimeout(cleanMotion,260);
   };
 
   const commitSwipe=(direction,nextPanel)=>{
@@ -6093,11 +6114,10 @@ setTimeout(applySafeChecklistFilter,300);
           nextEl.classList.add('uiSwipeSnap');
           nextEl.style.transform='translate3d(0,0,0)';
           nextEl.style.opacity='1';
-
-          animationTimer=setTimeout(cleanMotion,300);
+          animationTimer=setTimeout(cleanMotion,290);
         });
       });
-    },210);
+    },205);
   };
 
   document.addEventListener('touchstart',e=>{
@@ -6113,7 +6133,6 @@ setTimeout(applySafeChecklistFilter,300);
     const t=e.touches[0];
     const edgeGuard=28;
 
-    // Leave the extreme edges to iPhone/Safari system gestures.
     if(t.clientX<=edgeGuard || t.clientX>=window.innerWidth-edgeGuard){
       resetGesture();
       return;
@@ -6136,7 +6155,7 @@ setTimeout(applySafeChecklistFilter,300);
     gesture={
       tracking:true,
       horizontal:false,
-      locked:false,
+      decided:false,
       startX:t.clientX,
       startY:t.clientY,
       startTime:now,
@@ -6162,18 +6181,27 @@ setTimeout(applySafeChecklistFilter,300);
     const t=e.touches[0];
     const dx=t.clientX-gesture.startX;
     const dy=t.clientY-gesture.startY;
+    const absX=Math.abs(dx);
+    const absY=Math.abs(dy);
 
-    if(!gesture.locked){
-      if(Math.abs(dx)<9 && Math.abs(dy)<9) return;
+    // Do not decide too early. Small natural finger wobble should remain normal scrolling.
+    if(!gesture.decided){
+      if(absX<16 && absY<16) return;
 
-      // Vertical intention wins immediately.
-      if(Math.abs(dy)>Math.abs(dx)*.78){
-        gesture.locked=true;
+      // Vertical scroll wins unless horizontal intent is VERY clear.
+      if(absY>=absX*.72){
+        gesture.decided=true;
+        gesture.horizontal=false;
         gesture.tracking=false;
         return;
       }
 
-      gesture.locked=true;
+      // Require strong horizontal dominance before taking over.
+      if(absX < 22 || absX < absY*1.38){
+        return;
+      }
+
+      gesture.decided=true;
       gesture.horizontal=true;
       document.body.classList.add('uiSwipeActive');
     }
@@ -6199,7 +6227,7 @@ setTimeout(applySafeChecklistFilter,300);
     const dt=Math.max(8,now-gesture.lastTime);
     const instantV=(t.clientX-gesture.lastX)/dt;
 
-    gesture.velocityX=gesture.velocityX*.68 + instantV*.32;
+    gesture.velocityX=gesture.velocityX*.7 + instantV*.3;
     gesture.lastX=t.clientX;
     gesture.lastTime=now;
 
@@ -6210,9 +6238,10 @@ setTimeout(applySafeChecklistFilter,300);
       el.style.transform=`translate3d(${displayDx}px,0,0)`;
 
       const progress=Math.min(1,Math.abs(displayDx)/(window.innerWidth*.72));
-      el.style.opacity=String(1-progress*.11);
+      el.style.opacity=String(1-progress*.10);
     }
 
+    // Only prevent scrolling AFTER strong horizontal intent is confirmed.
     e.preventDefault();
   },{passive:false});
 
@@ -6233,22 +6262,21 @@ setTimeout(applySafeChecklistFilter,300);
 
     const direction=dx<0 ? -1 : 1;
     const nextIndex=direction<0 ? gesture.index+1 : gesture.index-1;
-
     const canMove=nextIndex>=0 && nextIndex<panelOrder.length;
 
     const distanceThreshold=Math.min(
-      108,
-      Math.max(76,window.innerWidth*.24)
+      112,
+      Math.max(80,window.innerWidth*.25)
     );
 
     const enoughDistance=Math.abs(dx)>=distanceThreshold;
 
     const signedVelocity=gesture.velocityX;
     const enoughVelocity=
-      Math.abs(dx)>=42 &&
+      Math.abs(dx)>=48 &&
       (
-        (direction<0 && signedVelocity<-.48) ||
-        (direction>0 && signedVelocity>.48)
+        (direction<0 && signedVelocity<-.52) ||
+        (direction>0 && signedVelocity>.52)
       );
 
     const nextPanel=canMove ? panelOrder[nextIndex] : null;
