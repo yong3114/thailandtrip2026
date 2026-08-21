@@ -4595,9 +4595,7 @@ dialog .modal{
   padding:10px 0 max(2px,env(safe-area-inset-bottom));
   background:linear-gradient(180deg,transparent,var(--rt-surface) 24%);
 }
-.uiSwipeHint{
-  display:none;
-}
+
 .uiTapFlash{
   animation:uiTapFlash .22s ease;
 }
@@ -4614,16 +4612,7 @@ dialog .modal{
   .content{
     touch-action:pan-y;
   }
-  .uiSwipeHint{
-    display:block;
-    text-align:center;
-    color:var(--rt-muted);
-    font-size:9.5px;
-    margin:2px 0 8px;
-    opacity:.72;
-    user-select:none;
-    pointer-events:none;
-  }
+  
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{
@@ -4756,11 +4745,7 @@ dialog .modal{
   }
 
   /* The swipe instruction should not consume space forever */
-  .uiSwipeHint{
-    margin:0 0 5px !important;
-    font-size:8.5px !important;
-    opacity:.55 !important;
-  }
+  
 }
 
 @media(min-width:761px){
@@ -4967,49 +4952,61 @@ html,body{
     will-change:auto !important;
   }
 
-  body.uiSwipeActive{
-    overflow-y:auto !important;
-    overflow-x:hidden !important;
-  }
+  
 
-  .uiSwipeHint{
-    display:none !important;
-  }
+  
 }
 </style>
 
 
-<style id="roadTripV515R11HeaderSwipe">
+<style id="roadTripFinalStable">
+/* =========================================================
+   FINAL STABLE — native mobile behavior
+   ========================================================= */
+html{
+  scroll-behavior:smooth;
+}
+
+html,body{
+  max-width:100%;
+  overflow-x:hidden;
+}
+
 @media(max-width:760px){
-  [data-header-swipe="1"]{
-    position:relative;
-    touch-action:pan-y;
+  html,body,
+  #tripView,
+  #tripView .main,
+  #tripView .content,
+  #overviewPanel,
+  #itineraryPanel,
+  #expensesPanel,
+  #sharedPanel{
+    touch-action:auto !important;
   }
 
-  [data-header-swipe="1"]::after{
-    content:"左右滑标题切换页面";
-    position:absolute;
-    right:10px;
-    bottom:7px;
-    font-size:8px;
-    font-weight:700;
-    color:rgba(255,255,255,.38);
-    pointer-events:none;
+  html,body{
+    overflow-y:auto !important;
+    overscroll-behavior-y:auto;
+    -webkit-overflow-scrolling:touch;
   }
 
-  .mobileCompactHeader[data-header-swipe="1"]::after{
-    color:var(--rt-muted);
-    opacity:.55;
-    right:54px;
-    bottom:4px;
+  #tripView,
+  #tripView .main,
+  #tripView .content{
+    height:auto !important;
+    max-height:none !important;
+    overflow-y:visible !important;
+    transform:none !important;
+    opacity:1 !important;
+    will-change:auto !important;
   }
 
-  [data-header-swipe="1"].headerSwipeTracking{
-    transition:none !important;
+  .mobileBar{
+    bottom:max(8px,env(safe-area-inset-bottom)) !important;
   }
 
-  [data-header-swipe="1"].headerSwipeSnap{
-    transition:transform .20s cubic-bezier(.22,.76,.25,1) !important;
+  .wrap{
+    padding-bottom:calc(116px + env(safe-area-inset-bottom)) !important;
   }
 }
 </style>
@@ -5024,7 +5021,7 @@ html,body{
 
   <section id="authView" class="hide">
     <div class="authWrap">
-      <div class="hero" data-header-swipe="1">
+      <div class="hero">
         <h1>🇲🇾🚗🇹🇭 Thailand Road Trip V4</h1>
         <div class="sub">更漂亮的共享行程 · 更适合手机 · 投票 · Expenses · 图片上传</div>
       </div>
@@ -5096,7 +5093,7 @@ html,body{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.5R11 · HEADER SWIPE · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.5 FINAL · STABLE · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -5114,7 +5111,7 @@ html,body{
       </div>
     </div>
 
-    <div class="mobileCompactHeader hide" id="mobileCompactHeader" data-header-swipe="1">
+    <div class="mobileCompactHeader hide" id="mobileCompactHeader">
       <button class="mobileCompactBack" type="button" id="mobileCompactHomeBtn" aria-label="回到首页">‹</button>
       <div class="mobileCompactText">
         <div class="mobileCompactTrip" id="mobileCompactTrip"></div>
@@ -5134,8 +5131,7 @@ html,body{
       </aside>
 
       <section class="content">
-        <div class="uiSwipeHint">← 左右滑动切换：首页 · 行程 · 预算 · 共享 →</div>
-        <div id="overviewPanel">
+<div id="overviewPanel">
 
           <div class="travelUxGrid">
             <div class="card todayLaunchCard">
@@ -5988,125 +5984,9 @@ setTimeout(applySafeChecklistFilter,300);
 // No trip/item/expense/checklist data logic is changed.
 // ============================================================
 (function setupUiPolish(){
-  const panelOrder=['overview','itinerary','expenses','shared'];
+  // Final stable UI feedback only.
+  // No custom swipe / touch interception.
 
-  let startX=0,startY=0,startPanel='overview',headerTarget=null;
-  let tracking=false;
-
-  const currentPanel=()=>currentVisiblePanel||'overview';
-
-  const snapHeaderBack=()=>{
-    if(!headerTarget) return;
-    headerTarget.classList.remove('headerSwipeTracking');
-    headerTarget.classList.add('headerSwipeSnap');
-    headerTarget.style.transform='translate3d(0,0,0)';
-
-    setTimeout(()=>{
-      if(!headerTarget) return;
-      headerTarget.classList.remove('headerSwipeSnap');
-      headerTarget.style.transform='';
-      headerTarget=null;
-    },220);
-  };
-
-  document.querySelectorAll('[data-header-swipe="1"]').forEach(header=>{
-    header.addEventListener('touchstart',e=>{
-      if(e.touches.length!==1 || !currentTrip) return;
-
-      const t=e.touches[0];
-      startX=t.clientX;
-      startY=t.clientY;
-      startPanel=currentPanel();
-      headerTarget=header;
-      tracking=true;
-    },{passive:true});
-
-    header.addEventListener('touchmove',e=>{
-      if(!tracking || e.touches.length!==1 || !headerTarget) return;
-
-      const t=e.touches[0];
-      const dx=t.clientX-startX;
-      const dy=t.clientY-startY;
-
-      // If vertical movement is stronger, leave native scrolling alone.
-      if(Math.abs(dy)>Math.abs(dx)*.85){
-        tracking=false;
-        snapHeaderBack();
-        return;
-      }
-
-      if(Math.abs(dx)<12) return;
-
-      const index=panelOrder.indexOf(startPanel);
-      const canGoRight=index>0;
-      const canGoLeft=index<panelOrder.length-1;
-
-      let displayDx=dx;
-      if((dx>0&&!canGoRight)||(dx<0&&!canGoLeft)){
-        displayDx=dx*.2;
-      }else{
-        displayDx=Math.max(-90,Math.min(90,dx*.55));
-      }
-
-      headerTarget.classList.add('headerSwipeTracking');
-      headerTarget.style.transform=`translate3d(${displayDx}px,0,0)`;
-    },{passive:true});
-
-    header.addEventListener('touchend',e=>{
-      if(!headerTarget || e.changedTouches.length!==1){
-        tracking=false;
-        snapHeaderBack();
-        return;
-      }
-
-      const t=e.changedTouches[0];
-      const dx=t.clientX-startX;
-      const dy=t.clientY-startY;
-
-      const index=panelOrder.indexOf(startPanel);
-      const direction=dx<0?-1:1;
-      const nextIndex=direction<0?index+1:index-1;
-
-      const horizontalEnough=
-        Math.abs(dx)>=58 &&
-        Math.abs(dx)>Math.abs(dy)*1.15;
-
-      tracking=false;
-
-      if(
-        horizontalEnough &&
-        nextIndex>=0 &&
-        nextIndex<panelOrder.length
-      ){
-        const nextPanel=panelOrder[nextIndex];
-
-        if(headerTarget){
-          headerTarget.classList.remove('headerSwipeTracking');
-          headerTarget.classList.add('headerSwipeSnap');
-          headerTarget.style.transform=`translate3d(${direction<0?-70:70}px,0,0)`;
-        }
-
-        setTimeout(()=>{
-          switchPanel(nextPanel);
-
-          if(headerTarget){
-            headerTarget.classList.remove('headerSwipeSnap');
-            headerTarget.style.transform='';
-            headerTarget=null;
-          }
-        },120);
-      }else{
-        snapHeaderBack();
-      }
-    },{passive:true});
-
-    header.addEventListener('touchcancel',()=>{
-      tracking=false;
-      snapHeaderBack();
-    },{passive:true});
-  });
-
-  // Existing tap feedback
   document.addEventListener('click',e=>{
     const target=e.target.closest('button,a,summary,[role="button"]');
     if(!target || target.disabled) return;
