@@ -6126,6 +6126,43 @@ dialog .modalActions > .btn.primary{
 }
 </style>
 
+
+<style id="roadTripV5163HomeTitleFix">
+/* Keep My Road Trips title on one clean line */
+.homeHero .top > div:first-child{
+  min-width:0;
+  flex:1 1 auto;
+}
+
+.homeHero h1{
+  white-space:nowrap !important;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:100%;
+}
+
+@media(max-width:640px){
+  .homeHero .top{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) auto !important;
+    align-items:start !important;
+    gap:10px !important;
+  }
+
+  .homeHero h1{
+    font-size:21px !important;
+    line-height:1.15 !important;
+    letter-spacing:-.025em !important;
+  }
+
+  .homeTopActions{
+    width:auto !important;
+    flex:0 0 auto !important;
+    white-space:nowrap;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -6224,7 +6261,7 @@ dialog .modalActions > .btn.primary{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.6.2 · HOME THEME + MODAL ACTIONS · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.6.3 · HOME TITLE FIX · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
