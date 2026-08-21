@@ -3459,6 +3459,471 @@ button:disabled,
 }
 </style>
 
+
+<style id="roadTripV49TravelUX">
+/* =========================================================
+   V4.9 — Today Mode / Attention / Shared Checklist
+   ========================================================= */
+
+.travelUxGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-bottom:14px;
+}
+.todayLaunchCard{
+  background:
+    radial-gradient(circle at top right,rgba(109,40,217,.18),transparent 38%),
+    var(--rt-surface) !important;
+  border-color:color-mix(in srgb,var(--rt-purple) 42%,var(--rt-border)) !important;
+}
+.todayLaunchTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+.todayEyebrow{
+  color:var(--rt-purple);
+  font-size:9px;
+  font-weight:950;
+  letter-spacing:.14em;
+  margin-bottom:4px;
+}
+.todayLaunchCard h3,
+.attentionCard h3{
+  margin:0 0 4px;
+}
+.todayDayBubble{
+  flex:0 0 auto;
+  min-width:50px;
+  height:50px;
+  border-radius:17px;
+  display:grid;
+  place-items:center;
+  background:var(--rt-purple-soft);
+  border:1px solid color-mix(in srgb,var(--rt-purple) 42%,var(--rt-border));
+  color:var(--rt-purple);
+  font-weight:950;
+  font-size:16px;
+}
+.todayLaunchBtn{
+  width:100%;
+  margin-top:15px;
+  min-height:48px;
+}
+
+.attentionTitleRow{
+  margin-bottom:9px;
+}
+.attentionCount{
+  min-width:34px;
+  height:34px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:var(--rt-amber-soft);
+  border:1px solid color-mix(in srgb,var(--rt-amber) 50%,var(--rt-border));
+  color:var(--rt-amber);
+  font-weight:950;
+}
+.attentionList{
+  display:grid;
+  gap:8px;
+}
+.attentionItem{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  text-align:left;
+  border:1px solid var(--rt-border);
+  background:var(--rt-surface-2);
+  color:var(--rt-text-2);
+  border-radius:14px;
+  padding:9px 10px;
+  min-height:44px;
+}
+.attentionItemIcon{
+  flex:0 0 auto;
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border-radius:9px;
+  background:var(--rt-amber-soft);
+}
+.attentionItemText{
+  min-width:0;
+  flex:1;
+}
+.attentionItemText b{
+  display:block;
+  color:var(--rt-text);
+  font-size:11.5px;
+  overflow-wrap:anywhere;
+}
+.attentionItemText span{
+  display:block;
+  margin-top:2px;
+  color:var(--rt-muted);
+  font-size:10px;
+}
+.attentionArrow{
+  color:var(--rt-muted);
+  font-weight:900;
+}
+.attentionClear{
+  min-height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  border:1px dashed color-mix(in srgb,var(--rt-green) 45%,var(--rt-border));
+  border-radius:15px;
+  background:var(--rt-green-soft);
+  color:var(--rt-green);
+  font-size:11.5px;
+  font-weight:850;
+}
+
+/* Today Mode */
+.todayModeSheet{
+  width:min(680px,100%);
+}
+.todayModeHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:15px;
+}
+.todayModeHead h3{margin:0 0 4px}
+#todayDaySelect{
+  width:auto !important;
+  min-width:104px !important;
+  flex:0 0 auto;
+}
+.todayProgressRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+  color:var(--rt-muted);
+  font-size:11px;
+}
+.todayProgress{
+  height:8px;
+  background:var(--rt-surface-3);
+  border-radius:999px;
+  overflow:hidden;
+  margin-bottom:15px;
+}
+.todayProgress > div{
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#6d28d9,#2563eb);
+}
+.todayCurrentCard{
+  border:1px solid color-mix(in srgb,var(--rt-purple) 45%,var(--rt-border));
+  background:
+    radial-gradient(circle at top right,rgba(109,40,217,.14),transparent 44%),
+    var(--rt-surface-2);
+  border-radius:22px;
+  padding:16px;
+}
+.todayCardLabel{
+  color:var(--rt-purple);
+  font-size:9.5px;
+  letter-spacing:.12em;
+  font-weight:950;
+  margin-bottom:7px;
+}
+.todayPlaceName{
+  color:var(--rt-text);
+  font-size:21px;
+  font-weight:950;
+  line-height:1.25;
+  overflow-wrap:anywhere;
+}
+.todayPlaceMeta{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.todayMetaPill{
+  display:inline-flex;
+  align-items:center;
+  min-height:31px;
+  padding:6px 9px;
+  border-radius:999px;
+  background:var(--rt-surface-3);
+  border:1px solid var(--rt-border);
+  color:var(--rt-text-2);
+  font-size:10.5px;
+  font-weight:800;
+}
+.todayPrimaryActions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:14px;
+}
+.todayPrimaryActions a,
+.todayPrimaryActions button{
+  min-height:48px;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  font-weight:900;
+}
+.todayNavBtn{
+  border:1px solid #2563eb;
+  background:#173b76;
+  color:#eff6ff !important;
+}
+.todayDoneBtn{
+  border:1px solid #15803d;
+  background:#14532d;
+  color:#f0fdf4;
+}
+.todayNextCard{
+  margin-top:11px;
+  border:1px solid var(--rt-border);
+  background:var(--rt-surface);
+  border-radius:18px;
+  padding:13px 14px;
+}
+.todayNextTop{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+.todayNextName{
+  color:var(--rt-text);
+  font-weight:900;
+  overflow-wrap:anywhere;
+}
+.todayNextTime{
+  color:var(--rt-purple);
+  font-size:11px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.todayRemaining{
+  margin-top:15px;
+}
+.todayRemainingTitle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+  font-size:12px;
+  font-weight:900;
+  color:var(--rt-text);
+}
+.todayRemainingList{
+  display:grid;
+  gap:7px;
+}
+.todayRemainingItem{
+  display:grid;
+  grid-template-columns:60px 1fr auto;
+  align-items:center;
+  gap:8px;
+  min-height:43px;
+  padding:8px 10px;
+  border:1px solid var(--rt-border);
+  border-radius:13px;
+  background:var(--rt-surface-2);
+}
+.todayRemainingItem.done{
+  opacity:.58;
+}
+.todayRemainingTime{
+  color:var(--rt-purple);
+  font-size:10.5px;
+  font-weight:900;
+}
+.todayRemainingName{
+  min-width:0;
+  color:var(--rt-text-2);
+  font-size:11px;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+.todayRestoreBtn{
+  border:0;
+  background:transparent;
+  color:var(--rt-muted);
+  font-size:10px;
+  font-weight:850;
+}
+.todayEmpty{
+  padding:26px 14px;
+  border:1px dashed var(--rt-border);
+  border-radius:18px;
+  text-align:center;
+  color:var(--rt-muted);
+  line-height:1.55;
+}
+
+/* Checklist */
+.checklistCard{
+  border-color:color-mix(in srgb,var(--rt-green) 28%,var(--rt-border)) !important;
+}
+.checklistHead{margin-bottom:10px}
+.checklistProgressText{
+  color:var(--rt-green);
+  font-weight:950;
+  font-size:12px;
+}
+.checklistProgress{
+  height:8px;
+  border-radius:999px;
+  background:var(--rt-surface-3);
+  overflow:hidden;
+  margin-bottom:13px;
+}
+.checklistProgress > div{
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#16a34a,#22c55e);
+}
+.checklistAddRow{
+  display:grid;
+  grid-template-columns:150px 1fr 48px;
+  gap:8px;
+  align-items:end;
+}
+.checklistAddRow button{
+  min-height:48px;
+  padding:0;
+}
+.checklistToolbar{
+  margin:10px 0 12px;
+}
+.checklistToolbar button{
+  min-height:40px;
+}
+.checklistList{
+  display:grid;
+  gap:9px;
+}
+.checklistItem{
+  display:grid;
+  grid-template-columns:34px 1fr auto;
+  gap:9px;
+  align-items:center;
+  border:1px solid var(--rt-border);
+  background:var(--rt-surface-2);
+  border-radius:15px;
+  padding:9px 10px;
+}
+.checklistItem.done{
+  background:var(--rt-green-soft);
+  border-color:color-mix(in srgb,var(--rt-green) 35%,var(--rt-border));
+}
+.checklistCheck{
+  width:28px;
+  height:28px;
+  margin:0;
+  accent-color:#16a34a;
+}
+.checklistTextWrap{
+  min-width:0;
+}
+.checklistItemText{
+  color:var(--rt-text);
+  font-size:12px;
+  font-weight:850;
+  overflow-wrap:anywhere;
+}
+.checklistItem.done .checklistItemText{
+  text-decoration:line-through;
+  color:var(--rt-muted);
+}
+.checklistItemMeta{
+  margin-top:3px;
+  color:var(--rt-muted);
+  font-size:9.5px;
+  line-height:1.4;
+}
+.checklistDelete{
+  width:36px;
+  height:36px;
+  border-radius:11px;
+  border:1px solid var(--rt-border);
+  background:var(--rt-surface);
+  color:var(--rt-red);
+}
+.checklistDisabledNotice{
+  padding:11px 12px;
+  margin-bottom:11px;
+  border:1px solid color-mix(in srgb,var(--rt-amber) 45%,var(--rt-border));
+  border-radius:14px;
+  background:var(--rt-amber-soft);
+  color:var(--rt-amber);
+  font-size:11px;
+  line-height:1.5;
+}
+.checklistEmpty{
+  text-align:center;
+  padding:18px 12px;
+  border:1px dashed var(--rt-border);
+  border-radius:14px;
+  color:var(--rt-muted);
+  font-size:11px;
+}
+
+@media(max-width:700px){
+  .travelUxGrid{
+    grid-template-columns:1fr;
+    gap:11px;
+  }
+  .checklistAddRow{
+    grid-template-columns:1fr 52px;
+  }
+  #checklistCategory{
+    grid-column:1/-1;
+  }
+}
+
+@media(max-width:640px){
+  .todayLaunchCard,.attentionCard{
+    padding:15px !important;
+  }
+  .todayModeHead{
+    align-items:center;
+  }
+  .todayModeHead h3{
+    font-size:19px !important;
+  }
+  #todayDaySelect{
+    min-width:94px !important;
+    max-width:112px !important;
+  }
+  .todayPlaceName{
+    font-size:19px;
+  }
+  .todayPrimaryActions{
+    grid-template-columns:1fr 1fr;
+  }
+  .todayRemainingItem{
+    grid-template-columns:52px 1fr auto;
+  }
+  .todayModeActions{
+    grid-template-columns:1fr 1fr;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -3541,7 +4006,7 @@ button:disabled,
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V4.8 · VISUAL POLISH</div>
+          <div class="appV2Badge">✦ ROADTRIP V4.9 · TRAVEL UX</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -3571,6 +4036,33 @@ button:disabled,
 
       <section class="content">
         <div id="overviewPanel">
+
+          <div class="travelUxGrid">
+            <div class="card todayLaunchCard">
+              <div class="todayLaunchTop">
+                <div>
+                  <div class="todayEyebrow">TRAVEL DAY</div>
+                  <h3>🚗 Today Mode</h3>
+                  <div class="footerMini" id="todayLaunchSummary">专注看当前 Day、下一站和导航。</div>
+                </div>
+                <div class="todayDayBubble" id="todayDayBubble">D1</div>
+              </div>
+              <button class="btn primary todayLaunchBtn" type="button" id="openTodayModeBtn">
+                打开 Today Mode
+              </button>
+            </div>
+
+            <div class="card attentionCard">
+              <div class="sectionTitle attentionTitleRow">
+                <div>
+                  <div class="todayEyebrow">CHECK BEFORE GO</div>
+                  <h3>⚠️ 需要处理</h3>
+                </div>
+                <span class="attentionCount" id="attentionCount">0</span>
+              </div>
+              <div id="attentionList" class="attentionList"></div>
+            </div>
+          </div>
 
           <div class="card dayOverviewCard">
             <div class="sectionTitle">
@@ -3728,6 +4220,42 @@ button:disabled,
             </div>
           </div>
 
+          <div class="card checklistCard" style="margin-top:14px">
+            <div class="sectionTitle checklistHead">
+              <div>
+                <h3>✅ Shared Checklist</h3>
+                <div class="footerMini">4个人一起勾。Passport、车辆、Border、Booking 都放这里。</div>
+              </div>
+              <div class="checklistProgressText" id="checklistProgressText">0 / 0</div>
+            </div>
+
+            <div class="checklistProgress">
+              <div id="checklistProgressBar" style="width:0%"></div>
+            </div>
+
+            <div class="checklistDisabledNotice hide" id="checklistDisabledNotice">
+              Checklist 还没启用。请先运行 V4.9 ZIP 里的 Supabase SQL，然后重新打开 Trip。
+            </div>
+
+            <form id="checklistForm" class="checklistAddRow">
+              <select id="checklistCategory" aria-label="Checklist 类别">
+                <option>👤 Personal</option>
+                <option>🚗 Car</option>
+                <option>🇹🇭 Border</option>
+                <option>🏨 Booking</option>
+                <option>🧳 Other</option>
+              </select>
+              <input id="checklistText" maxlength="120" required placeholder="例如：Thailand car insurance">
+              <button class="btn primary" type="submit">＋</button>
+            </form>
+
+            <div class="checklistToolbar">
+              <button class="ghost" type="button" id="seedChecklistBtn">✨ 加入常用旅行清单</button>
+            </div>
+
+            <div id="checklistList" class="checklistList"></div>
+          </div>
+
           <div class="card" style="margin-top:12px">
             <h3>旅行设置</h3>
             <form id="settingsForm" class="formGrid">
@@ -3756,6 +4284,26 @@ button:disabled,
     </div>
   </div>
 
+
+<dialog id="todayDialog">
+  <div class="modal todayModeSheet">
+    <div class="todayModeHead">
+      <div>
+        <div class="todayEyebrow">FOCUS MODE</div>
+        <h3>🚗 Today Mode</h3>
+        <div class="footerMini">旅行当天只看真正需要的东西。</div>
+      </div>
+      <select id="todayDaySelect" aria-label="选择 Day"></select>
+    </div>
+
+    <div id="todayModeContent"></div>
+
+    <div class="modalActions todayModeActions">
+      <button class="iconbtn" type="button" id="closeTodayModeBtn">关闭</button>
+      <button class="btn primary" type="button" id="todayFullItineraryBtn">📅 完整行程</button>
+    </div>
+  </div>
+</dialog>
 
 <dialog id="itemDialog">
   <form id="itemForm" class="modal">
@@ -3907,7 +4455,8 @@ const $ = id => document.getElementById(id);
 const setupView=$('setupView'), authView=$('authView'), homeView=$('homeView'), tripView=$('tripView');
 let sb=null, user=null, authMode='login';
 let currentTrip=null, members=[], items=[], votes=[], expenses=[], shares=[], trips=[];
-let activeDay=1, editingItem=null, editingExpense=null, channel=null;
+let checklist=[], checklistAvailable=false;
+let activeDay=1, todayDay=1, editingItem=null, editingExpense=null, channel=null;
 let itemSearch='', itemCategoryFilter='全部', itemSortMode='default', itineraryMode='timeline';
 const mobileBar=$('mobileBar'), mobileAddBtn=$('mobileAddBtn');
 
@@ -4082,7 +4631,7 @@ function installNativeSheet(dialogId){
 }
 
 // Apply the native interaction to all add/edit sheets.
-['itemDialog','expenseDialog','quickAddDialog'].forEach(installNativeSheet);
+['itemDialog','expenseDialog','quickAddDialog','todayDialog'].forEach(installNativeSheet);
 
 
 init();
@@ -4156,6 +4705,31 @@ async function init(){
   $('settingsForm').addEventListener('submit',saveSettings);
   $('copyShareBtn').addEventListener('click',copyInvite);
   $('copyShareBtn2').addEventListener('click',copyInvite);
+
+  $('openTodayModeBtn')?.addEventListener('click',()=>openTodayMode(activeDay));
+  $('closeTodayModeBtn')?.addEventListener('click',()=>$('todayDialog').close());
+  $('todayDaySelect')?.addEventListener('change',()=>{
+    todayDay=Number($('todayDaySelect').value||activeDay||1);
+    renderTodayMode();
+  });
+  $('todayFullItineraryBtn')?.addEventListener('click',()=>{
+    activeDay=todayDay;
+    itineraryMode='timeline';
+    $('todayDialog').close();
+    switchPanel('itinerary');
+    renderTrip();
+  });
+
+  $('checklistForm')?.addEventListener('submit',async(e)=>{
+    e.preventDefault();
+    const text=$('checklistText').value.trim();
+    const category=$('checklistCategory').value;
+    if(await addChecklist(text,category)){
+      $('checklistText').value='';
+      $('checklistText').focus();
+    }
+  });
+  $('seedChecklistBtn')?.addEventListener('click',seedTravelChecklist);
   document.querySelectorAll('.mobileTab').forEach(btn=>{
     btn.addEventListener('click',()=>switchPanel(btn.dataset.panel));
   });
@@ -4423,35 +4997,55 @@ async function openTrip(id){
 
 async function refreshTrip(){
   if(!currentTrip) return;
-  const [tripRes, membersRes, itemsRes, votesRes, expensesRes, sharesRes] = await Promise.all([
+
+  const [tripRes, membersRes, itemsRes, votesRes, expensesRes, sharesRes, checklistRes] = await Promise.all([
     sb.from('trips').select('*').eq('id',currentTrip.id).single(),
     sb.from('trip_members').select('*').eq('trip_id',currentTrip.id).order('joined_at'),
     sb.from('items').select('*').eq('trip_id',currentTrip.id).order('created_at',{ascending:false}),
     sb.from('item_votes').select('item_id,user_id,created_at'),
     sb.from('expenses').select('*').eq('trip_id',currentTrip.id).order('spent_at',{ascending:false}),
-    sb.from('expense_shares').select('expense_id,user_id')
+    sb.from('expense_shares').select('expense_id,user_id'),
+    // Optional V4.9 table. If SQL has not been run, core Trip still continues normally.
+    sb.from('trip_checklist').select('*').eq('trip_id',currentTrip.id).order('created_at',{ascending:true})
   ]);
+
   if(tripRes.data) currentTrip=tripRes.data;
   members=(membersRes.data||[]);
   items=(itemsRes.data||[]);
+
   const itemIds = new Set(items.map(i=>i.id));
   votes=(votesRes.data||[]).filter(v=>itemIds.has(v.item_id));
+
   const expenseIds = new Set((expensesRes.data||[]).map(e=>e.id));
   expenses=(expensesRes.data||[]);
   shares=(sharesRes.data||[]).filter(s=>expenseIds.has(s.expense_id));
+
+  checklistAvailable=!checklistRes.error;
+  checklist=(checklistRes.data||[]);
+
   renderTrip();
 }
 
 function subscribeTrip(){
   cleanupChannel();
-  channel=sb.channel('trip-v4-'+currentTrip.id)
+
+  let ch=sb.channel('trip-v49-'+currentTrip.id)
     .on('postgres_changes',{event:'*',schema:'public',table:'trips',filter:`id=eq.${currentTrip.id}`},()=>refreshTrip())
     .on('postgres_changes',{event:'*',schema:'public',table:'trip_members',filter:`trip_id=eq.${currentTrip.id}`},()=>refreshTrip())
     .on('postgres_changes',{event:'*',schema:'public',table:'items',filter:`trip_id=eq.${currentTrip.id}`},()=>refreshTrip())
     .on('postgres_changes',{event:'*',schema:'public',table:'item_votes'},()=>refreshTrip())
     .on('postgres_changes',{event:'*',schema:'public',table:'expenses',filter:`trip_id=eq.${currentTrip.id}`},()=>refreshTrip())
-    .on('postgres_changes',{event:'*',schema:'public',table:'expense_shares'},()=>refreshTrip())
-    .subscribe();
+    .on('postgres_changes',{event:'*',schema:'public',table:'expense_shares'},()=>refreshTrip());
+
+  if(checklistAvailable){
+    ch=ch.on(
+      'postgres_changes',
+      {event:'*',schema:'public',table:'trip_checklist',filter:`trip_id=eq.${currentTrip.id}`},
+      ()=>refreshTrip()
+    );
+  }
+
+  channel=ch.subscribe();
 }
 function cleanupChannel(){ if(channel && sb){ sb.removeChannel(channel); channel=null; } }
 
@@ -4478,6 +5072,444 @@ function topVotedItems(limit=5){
 }
 
 
+
+
+// ============================================================
+// V4.9 — Today Mode / Attention / Checklist
+// ============================================================
+function navigationUrlForItem(item){
+  if(item?.link) return item.link;
+  const q=String(item?.location||item?.name||'').trim();
+  if(!q) return '';
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+}
+
+function getTravelAttention(){
+  const issues=[];
+
+  for(let day=1;day<=Number(currentTrip?.days||0);day++){
+    const dayRealItems=items.filter(i=>
+      Number(i.day_no)===day &&
+      !isBudgetItem(i) &&
+      normalizePlanStatus(i.plan_status)!=='skipped'
+    );
+
+    if(dayRealItems.length===0){
+      issues.push({
+        type:'empty',
+        day,
+        icon:'📭',
+        title:`Day ${day} 还没有行程`,
+        detail:'这一天目前完全没有地点',
+        mode:'candidates'
+      });
+    }
+
+    const schedule=getDaySchedule(day);
+
+    schedule.unscheduled.forEach(item=>{
+      issues.push({
+        type:'unscheduled',
+        day,
+        itemId:item.id,
+        icon:'🕒',
+        title:`${item.name} 还没排时间`,
+        detail:`Day ${day} · 已确认`,
+        mode:'timeline'
+      });
+    });
+
+    schedule.conflicts.forEach(conflict=>{
+      const cur=items.find(i=>i.id===conflict.currentId);
+      const next=items.find(i=>i.id===conflict.nextId);
+      issues.push({
+        type:'conflict',
+        day,
+        itemId:conflict.currentId,
+        icon:'⚠️',
+        title:`Day ${day} 时间冲突 ${conflict.overlap} min`,
+        detail:`${cur?.name||'上一站'} → ${next?.name||'下一站'}`,
+        mode:'timeline'
+      });
+    });
+
+    schedule.confirmed.forEach(item=>{
+      if(!String(item.location||'').trim() && !String(item.link||'').trim()){
+        issues.push({
+          type:'location',
+          day,
+          itemId:item.id,
+          icon:'📍',
+          title:`${item.name} 没有地点 / 地图`,
+          detail:`Day ${day} · 出发前建议补上`,
+          mode:'timeline'
+        });
+      }
+    });
+  }
+
+  return issues;
+}
+
+function renderTravelUX(){
+  if(!currentTrip) return;
+
+  const bubble=$('todayDayBubble');
+  const launch=$('todayLaunchSummary');
+  if(bubble) bubble.textContent=`D${activeDay}`;
+
+  const activeSchedule=getDaySchedule(activeDay);
+  const unfinished=activeSchedule.confirmed.filter(i=>!i.done);
+
+  if(launch){
+    if(activeSchedule.confirmed.length===0){
+      launch.textContent=`Day ${activeDay} 还没有已确认行程。`;
+    }else{
+      launch.textContent=
+        `Day ${activeDay} · ${activeSchedule.confirmed.length} 站 · ${unfinished.length} 站未完成`;
+    }
+  }
+
+  const issues=getTravelAttention();
+  if($('attentionCount')) $('attentionCount').textContent=String(issues.length);
+
+  if($('attentionList')){
+    $('attentionList').innerHTML=issues.length
+      ? issues.slice(0,4).map(issue=>`
+        <button type="button" class="attentionItem"
+          data-attention-day="${issue.day}"
+          data-attention-mode="${issue.mode||'timeline'}"
+          ${issue.itemId?`data-attention-item="${issue.itemId}"`:''}>
+          <span class="attentionItemIcon">${issue.icon}</span>
+          <span class="attentionItemText">
+            <b>${escapeHtml(issue.title)}</b>
+            <span>${escapeHtml(issue.detail)}</span>
+          </span>
+          <span class="attentionArrow">›</span>
+        </button>`).join('')
+      : `<div class="attentionClear">✅ 看起来很完整，可以安心出发</div>`;
+
+    document.querySelectorAll('[data-attention-day]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        activeDay=Number(btn.dataset.attentionDay||1);
+        itineraryMode=btn.dataset.attentionMode||'timeline';
+        switchPanel('itinerary');
+        renderTrip();
+
+        const itemId=btn.dataset.attentionItem;
+        if(itemId){
+          setTimeout(()=>{
+            const item=items.find(i=>i.id===itemId);
+            if(item && (item.start_time==null || !item.location)){
+              openItemDialog(itemId);
+            }
+          },150);
+        }
+      });
+    });
+  }
+
+  renderChecklist();
+}
+
+function openTodayMode(dayNo=activeDay){
+  todayDay=Math.min(
+    Math.max(Number(dayNo||activeDay||1),1),
+    Number(currentTrip?.days||1)
+  );
+
+  const select=$('todayDaySelect');
+  select.innerHTML=Array.from({length:Number(currentTrip?.days||1)},(_,i)=>{
+    const day=i+1;
+    const route=routes()[i]||'';
+    return `<option value="${day}">Day ${day}${route?` · ${escapeHtml(route)}`:''}</option>`;
+  }).join('');
+  select.value=String(todayDay);
+
+  renderTodayMode();
+  $('todayDialog').showModal();
+}
+
+function renderTodayMode(){
+  const box=$('todayModeContent');
+  if(!box || !currentTrip) return;
+
+  const schedule=getDaySchedule(todayDay);
+  const ordered=[
+    ...schedule.scheduled,
+    ...schedule.unscheduled
+  ];
+
+  const total=ordered.length;
+  const completed=ordered.filter(i=>i.done).length;
+  const remaining=ordered.filter(i=>!i.done);
+  const current=remaining[0]||null;
+  const next=remaining[1]||null;
+  const pct=total ? Math.round(completed/total*100) : 0;
+
+  let out=`
+    <div class="todayProgressRow">
+      <span>Day ${todayDay} · ${escapeHtml(routes()[todayDay-1]||'')}</span>
+      <b>${completed}/${total} 完成</b>
+    </div>
+    <div class="todayProgress"><div style="width:${pct}%"></div></div>`;
+
+  if(!total){
+    out+=`
+      <div class="todayEmpty">
+        <b>Day ${todayDay} 还没有已确认的行程。</b><br>
+        先到 Itinerary 把想去的地点确认下来。
+      </div>`;
+    box.innerHTML=out;
+    return;
+  }
+
+  if(!current){
+    out+=`
+      <div class="todayEmpty">
+        🎉 <b>Day ${todayDay} 全部完成！</b><br>
+        今天的 ${total} 个地点都已经打勾。
+      </div>`;
+  }else{
+    const navUrl=navigationUrlForItem(current);
+    const currentTime=current.start_time
+      ? String(current.start_time).slice(0,5)
+      : '未排时间';
+
+    out+=`
+      <div class="todayCurrentCard">
+        <div class="todayCardLabel">现在 / 下一步</div>
+        <div class="todayPlaceName">${escapeHtml((current.category||'📍').split(' ')[0])} ${escapeHtml(current.name)}</div>
+
+        ${current.location?`<div class="placeLocation" style="margin-top:7px">📍 ${escapeHtml(current.location)}</div>`:''}
+
+        <div class="todayPlaceMeta">
+          <span class="todayMetaPill">🕒 ${escapeHtml(currentTime)}</span>
+          <span class="todayMetaPill">⏱ ${Number(current.duration_minutes||60)} min</span>
+          ${Number(current.cost||0)>0?`<span class="todayMetaPill">💰 ${money(current.cost)}</span>`:''}
+        </div>
+
+        <div class="todayPrimaryActions">
+          ${navUrl
+            ? `<a class="todayNavBtn" href="${escapeHtml(navUrl)}" target="_blank" rel="noopener">🗺 导航</a>`
+            : `<button class="todayNavBtn" type="button" disabled>无地图</button>`
+          }
+          <button class="todayDoneBtn" type="button" data-today-done="${current.id}">✓ 完成这一站</button>
+        </div>
+      </div>`;
+
+    if(next){
+      out+=`
+        <div class="todayNextCard">
+          <div class="todayCardLabel">NEXT</div>
+          <div class="todayNextTop">
+            <div class="todayNextName">${escapeHtml((next.category||'📍').split(' ')[0])} ${escapeHtml(next.name)}</div>
+            <div class="todayNextTime">${next.start_time?escapeHtml(String(next.start_time).slice(0,5)):'待排'}</div>
+          </div>
+          ${next.location?`<div class="placeLocation" style="margin-top:5px">📍 ${escapeHtml(next.location)}</div>`:''}
+        </div>`;
+    }
+  }
+
+  out+=`
+    <div class="todayRemaining">
+      <div class="todayRemainingTitle">
+        <span>今天全部行程</span>
+        <span>${total} 站</span>
+      </div>
+      <div class="todayRemainingList">
+        ${ordered.map(item=>`
+          <div class="todayRemainingItem ${item.done?'done':''}">
+            <span class="todayRemainingTime">${item.start_time?escapeHtml(String(item.start_time).slice(0,5)):'待排'}</span>
+            <span class="todayRemainingName">${item.done?'✓ ':''}${escapeHtml(item.name)}</span>
+            ${item.done
+              ? `<button class="todayRestoreBtn" type="button" data-today-restore="${item.id}">恢复</button>`
+              : `<span></span>`
+            }
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  box.innerHTML=out;
+
+  document.querySelectorAll('[data-today-done]').forEach(btn=>{
+    btn.addEventListener('click',()=>setTodayItemDone(btn.dataset.todayDone,true));
+  });
+  document.querySelectorAll('[data-today-restore]').forEach(btn=>{
+    btn.addEventListener('click',()=>setTodayItemDone(btn.dataset.todayRestore,false));
+  });
+}
+
+async function setTodayItemDone(itemId,done){
+  const item=items.find(i=>i.id===itemId);
+  if(!item) return;
+
+  const {error}=await sb.from('items').update({done}).eq('id',itemId);
+  if(error){
+    toast(error.message,'err');
+    return;
+  }
+
+  item.done=done;
+  renderTrip();
+  renderTodayMode();
+  toast(done?'这一站完成 ✓':'已恢复到未完成');
+}
+
+function renderChecklist(){
+  const list=$('checklistList');
+  const disabled=$('checklistDisabledNotice');
+  const form=$('checklistForm');
+  const seed=$('seedChecklistBtn');
+
+  if(!list || !disabled || !form) return;
+
+  disabled.classList.toggle('hide',checklistAvailable);
+  [...form.elements].forEach(el=>el.disabled=!checklistAvailable);
+  if(seed) seed.disabled=!checklistAvailable;
+
+  const total=checklist.length;
+  const done=checklist.filter(x=>x.done).length;
+  const pct=total ? Math.round(done/total*100) : 0;
+
+  if($('checklistProgressText')) $('checklistProgressText').textContent=`${done} / ${total}`;
+  if($('checklistProgressBar')) $('checklistProgressBar').style.width=`${pct}%`;
+
+  if(!checklistAvailable){
+    list.innerHTML='';
+    return;
+  }
+
+  if(!total){
+    list.innerHTML=`<div class="checklistEmpty">还没有清单。可以自己添加，或按「加入常用旅行清单」。</div>`;
+    return;
+  }
+
+  list.innerHTML=checklist.map(row=>{
+    const doneBy=members.find(m=>m.user_id===row.done_by)?.display_name||'';
+    return `
+      <div class="checklistItem ${row.done?'done':''}">
+        <input class="checklistCheck" type="checkbox"
+          data-checklist-toggle="${row.id}" ${row.done?'checked':''}
+          aria-label="${escapeHtml(row.text)}">
+        <div class="checklistTextWrap">
+          <div class="checklistItemText">${escapeHtml(row.text)}</div>
+          <div class="checklistItemMeta">
+            ${escapeHtml(row.category||'🧳 Other')}
+            ${row.done && doneBy?` · ✓ ${escapeHtml(doneBy)}`:''}
+          </div>
+        </div>
+        <button class="checklistDelete" type="button"
+          data-checklist-delete="${row.id}" aria-label="删除">⌫</button>
+      </div>`;
+  }).join('');
+
+  document.querySelectorAll('[data-checklist-toggle]').forEach(el=>{
+    el.addEventListener('change',()=>toggleChecklist(el.dataset.checklistToggle,el.checked));
+  });
+  document.querySelectorAll('[data-checklist-delete]').forEach(btn=>{
+    btn.addEventListener('click',()=>deleteChecklist(btn.dataset.checklistDelete));
+  });
+}
+
+async function addChecklist(text,category){
+  if(!checklistAvailable) return false;
+
+  const value=String(text||'').trim();
+  if(!value) return false;
+
+  const {error}=await sb.from('trip_checklist').insert({
+    trip_id:currentTrip.id,
+    text:value,
+    category:category||'🧳 Other',
+    created_by:user.id
+  });
+
+  if(error){
+    toast('Checklist 保存失败：'+error.message,'err');
+    return false;
+  }
+  await refreshTrip();
+  return true;
+}
+
+async function toggleChecklist(id,done){
+  const {error}=await sb.from('trip_checklist')
+    .update({
+      done,
+      done_by:done?user.id:null,
+      updated_at:new Date().toISOString()
+    })
+    .eq('id',id);
+
+  if(error){
+    toast('Checklist 更新失败：'+error.message,'err');
+    await refreshTrip();
+    return;
+  }
+
+  const local=checklist.find(x=>x.id===id);
+  if(local){
+    local.done=done;
+    local.done_by=done?user.id:null;
+  }
+  renderChecklist();
+}
+
+async function deleteChecklist(id){
+  const row=checklist.find(x=>x.id===id);
+  if(!row) return;
+  if(!confirm(`删除「${row.text}」？`)) return;
+
+  const {error}=await sb.from('trip_checklist').delete().eq('id',id);
+  if(error){
+    toast('删除失败：'+error.message,'err');
+    return;
+  }
+
+  checklist=checklist.filter(x=>x.id!==id);
+  renderChecklist();
+}
+
+async function seedTravelChecklist(){
+  if(!checklistAvailable) return;
+
+  const starter=[
+    ['👤 Personal','Passport'],
+    ['👤 Personal','Driving Licence'],
+    ['🚗 Car','检查 tyre pressure / 车辆状态'],
+    ['🇹🇭 Border','Thailand car insurance'],
+    ['🇹🇭 Border','准备车辆 / 入境所需文件'],
+    ['👤 Personal','THB cash / Card'],
+    ['👤 Personal','SIM / Roaming'],
+    ['🏨 Booking','确认 Hotel booking'],
+    ['🧳 Other','Powerbank / Charging cable']
+  ];
+
+  const existing=new Set(checklist.map(x=>String(x.text||'').trim().toLowerCase()));
+  const rows=starter
+    .filter(([,text])=>!existing.has(text.toLowerCase()))
+    .map(([category,text])=>({
+      trip_id:currentTrip.id,
+      category,
+      text,
+      created_by:user.id
+    }));
+
+  if(!rows.length){
+    toast('常用清单已经加过了');
+    return;
+  }
+
+  const {error}=await sb.from('trip_checklist').insert(rows);
+  if(error){
+    toast('加入清单失败：'+error.message,'err');
+    return;
+  }
+
+  await refreshTrip();
+  toast(`已加入 ${rows.length} 项常用清单 ✅`);
+}
 
 function renderExpenseSummaryBasics(actual,remain){
   const budget=Number(currentTrip?.budget_target||0);
@@ -4735,7 +5767,7 @@ function renderTrip(){
   $('setRate').value=currentTrip.thb_rate || 0.13;
   $('setCurrentRoute').value=r[activeDay-1] || '';
 
-
+  renderTravelUX();
 }
 
 
