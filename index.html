@@ -2,17 +2,14 @@
 <html lang="zh-Hans">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="RoadTrip">
-<link rel="manifest" href="manifest.webmanifest?v=522">
-<link rel="icon" href="app-icon.svg?v=522" type="image/svg+xml">
-<link rel="apple-touch-icon" href="app-icon.svg?v=522">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="app-icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="app-icon.svg">
 <title>RoadTrip · Shared Travel Planner</title>
 <style>
 :root{
@@ -4164,285 +4161,6 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 }
 </style>
 
-
-<style id="roadTripV51FullPlan">
-.fullPlanImportCard{
-  margin-bottom:12px;
-  border-color:color-mix(in srgb,var(--rt-blue) 34%,var(--rt-border)) !important;
-  background:
-    radial-gradient(circle at top right,rgba(37,99,235,.12),transparent 34%),
-    var(--rt-surface) !important;
-}
-.fullPlanImportTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.fullPlanImportTop h3{margin:0 0 5px}
-.fullPlanBadge{
-  flex:0 0 auto;padding:7px 9px;border-radius:11px;
-  background:var(--rt-purple-soft);color:var(--rt-purple);
-  border:1px solid color-mix(in srgb,var(--rt-purple) 40%,var(--rt-border));
-  font-size:9.5px;font-weight:950;white-space:nowrap;
-}
-.fullPlanRouteMini{
-  margin-top:12px;padding:10px 11px;border-radius:13px;
-  background:var(--rt-surface-2);border:1px solid var(--rt-border);
-  color:var(--rt-text-2);font-size:11px;font-weight:800;line-height:1.45;
-}
-.fullPlanImportBtn{width:100%;margin-top:11px;min-height:46px}
-.fullPlanImportBtn:disabled{opacity:.65;cursor:wait}
-
-.checklistMemberProgress{
-  display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;
-}
-.memberTick{
-  min-height:31px;padding:5px 8px;border-radius:999px;
-  border:1px solid var(--rt-border);background:var(--rt-surface);
-  color:var(--rt-muted);font-size:9.5px;font-weight:850;
-}
-.memberTick.mine{cursor:pointer;border-color:color-mix(in srgb,var(--rt-blue) 40%,var(--rt-border))}
-.memberTick.done{
-  background:var(--rt-green-soft);border-color:color-mix(in srgb,var(--rt-green) 45%,var(--rt-border));
-  color:var(--rt-green);
-}
-.memberTick:disabled{opacity:.78!important;cursor:default}
-.checklistGroupIcon{
-  width:28px;height:28px;display:grid;place-items:center;
-  border-radius:9px;background:var(--rt-purple-soft);color:var(--rt-purple);
-  border:1px solid color-mix(in srgb,var(--rt-purple) 38%,var(--rt-border));
-  font-size:13px;font-weight:900;
-}
-.checklistItemDetails{
-  margin-top:5px;color:var(--rt-muted);font-size:9.5px;line-height:1.45;
-  overflow-wrap:anywhere;
-}
-.checklistAllDone{
-  display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;
-  background:var(--rt-green-soft);color:var(--rt-green);font-size:9px;font-weight:900;
-}
-.checklistWaiting{
-  display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;
-  background:var(--rt-amber-soft);color:var(--rt-amber);font-size:9px;font-weight:900;
-}
-@media(max-width:640px){
- .fullPlanImportTop{gap:8px}
- .fullPlanBadge{font-size:8.5px;padding:6px 7px}
- .memberTick{font-size:9px;padding:5px 7px}
-}
-</style>
-
-
-<style id="roadTripV52ExpensesPro">
-/* =========================================================
-   V5.2 — Expenses Pro
-   ========================================================= */
-.expensePeopleCard,
-.expenseCategoryCard{
-  margin:0 0 16px;
-}
-.expensePeopleGrid{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:10px;
-}
-.expensePersonCard{
-  min-width:0;
-  text-align:left;
-  border:1px solid var(--rt-border);
-  background:var(--rt-surface-2);
-  border-radius:18px;
-  padding:13px;
-  color:var(--rt-text);
-  transition:.15s ease;
-}
-.expensePersonCard.active{
-  border-color:var(--rt-purple);
-  background:var(--rt-purple-soft);
-}
-.expensePersonName{
-  font-weight:950;
-  color:var(--rt-text);
-  overflow-wrap:anywhere;
-}
-.expensePersonMetrics{
-  display:grid;
-  gap:7px;
-  margin-top:10px;
-}
-.expensePersonMetrics > div{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  padding-top:6px;
-  border-top:1px solid var(--rt-border);
-}
-.expensePersonMetrics span{
-  color:var(--rt-muted);
-  font-size:9.5px;
-  font-weight:800;
-}
-.expensePersonMetrics b{
-  color:var(--rt-text);
-  font-size:11.5px;
-  white-space:nowrap;
-}
-.expensePersonMetrics .netPositive b,
-.expensePersonMetrics .netPositive span{
-  color:var(--rt-green) !important;
-}
-.expensePersonMetrics .netNegative b,
-.expensePersonMetrics .netNegative span{
-  color:var(--rt-red) !important;
-}
-
-.expenseCategorySummary{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-.expenseCategoryChip{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  min-height:38px;
-  padding:7px 10px;
-  border-radius:14px;
-  border:1px solid var(--rt-border);
-  background:var(--rt-surface-2);
-  color:var(--rt-text-2);
-}
-.expenseCategoryChip b{
-  color:var(--rt-text);
-  font-size:11px;
-}
-.expenseCategoryChip.active{
-  background:var(--rt-purple-soft);
-  color:var(--rt-purple);
-  border-color:var(--rt-purple);
-}
-
-.expenseRecordsHeading{
-  align-items:center !important;
-}
-.expenseExportBtn{
-  flex:0 0 auto;
-  min-height:42px;
-}
-.expenseFilterBar{
-  display:grid;
-  grid-template-columns:minmax(180px,1.4fr) repeat(5,minmax(120px,.8fr)) auto;
-  gap:8px;
-  margin:0 0 10px;
-}
-.expenseFilterBar > *{
-  min-width:0;
-}
-.expenseClearFilter{
-  white-space:nowrap;
-}
-.expenseFilterResult{
-  color:var(--rt-muted);
-  font-size:10.5px;
-  font-weight:800;
-  margin:0 2px 10px;
-}
-
-@media(max-width:980px){
-  .expensePeopleGrid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-  .expenseFilterBar{
-    grid-template-columns:repeat(3,minmax(0,1fr));
-  }
-  #expenseSearchFilter{
-    grid-column:1/-1;
-  }
-}
-
-@media(max-width:640px){
-  .expensePeopleGrid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:8px;
-  }
-  .expensePersonCard{
-    padding:11px;
-    border-radius:16px;
-  }
-  .expensePersonName{
-    font-size:12px;
-  }
-  .expensePersonMetrics b{
-    font-size:10.5px;
-  }
-
-  .expenseFilterBar{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-  }
-  #expenseSearchFilter{
-    grid-column:1/-1;
-  }
-  .expenseClearFilter{
-    grid-column:1/-1;
-  }
-
-  .expenseRecordsHeading{
-    align-items:flex-start !important;
-  }
-  .expenseExportBtn{
-    min-height:40px;
-    padding:8px 10px !important;
-    font-size:11px;
-  }
-
-  .expenseCategorySummary{
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    padding-bottom:4px;
-    -webkit-overflow-scrolling:touch;
-  }
-  .expenseCategoryChip{
-    flex:0 0 auto;
-  }
-}
-</style>
-
-
-<style id="roadTripV521StableState">
-/* V5.2.1 state/UI stability */
-body[data-theme="dark"]{
-  color-scheme:dark;
-}
-body:not([data-theme="dark"]){
-  color-scheme:light;
-}
-.fullPlanImportBtn{
-  min-width:0;
-  overflow-wrap:anywhere;
-}
-</style>
-
-
-<style id="roadTripV522CacheStateFix">
-.buildVerifyBar{
-  width:max-content;
-  max-width:100%;
-  margin:10px 0 0;
-  padding:6px 9px;
-  border-radius:999px;
-  border:1px solid #2563eb;
-  background:#172554;
-  color:#bfdbfe;
-  font-size:10px;
-  font-weight:900;
-  letter-spacing:.03em;
-}
-body:not([data-theme="dark"]) .buildVerifyBar{
-  background:#eff6ff;
-  color:#1d4ed8;
-  border-color:#93c5fd;
-}
-</style>
-
 </head>
 <body>
 <div class="wrap">
@@ -4515,8 +4233,7 @@ body:not([data-theme="dark"]) .buildVerifyBar{
       </div>
     </div>
 
-    <div class="buildVerifyBar">Build V5.2.2 · Cache-busted</div>
-    <div class="card glass" style="margin-top:10px">
+    <div class="card glass" style="margin-top:14px">
       <div class="sectionTitle"><h2>你的旅行</h2></div>
       <div id="tripList"></div>
     </div>
@@ -4526,7 +4243,7 @@ body:not([data-theme="dark"]) .buildVerifyBar{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.2.2 · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.0 · UX CLEANUP</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -4612,20 +4329,6 @@ body:not([data-theme="dark"]) .buildVerifyBar{
               </div>
             </div>
           </details>
-
-          <div class="card fullPlanImportCard">
-            <div class="fullPlanImportTop">
-              <div>
-                <div class="todayEyebrow">RESEARCHED 21 AUG 2026</div>
-                <h3>🧭 JB → Ipoh → Thailand → Cameron · 9D8N</h3>
-                <div class="footerMini" id="fullPlanImportStatus">完整模板：9天路线 + 大量候选地点 + Border/Weather Tips + 4人 Checklist。</div>
-              </div>
-              <span class="fullPlanBadge">11–19 NOV</span>
-            </div>
-            <div class="fullPlanRouteMini">JB → Ipoh → Hat Yai/Songkhla → Krabi → Hat Yai → Cameron Highlands → JB</div>
-            <button class="btn primary fullPlanImportBtn" type="button" id="importFull9D8NBtn">导入 / 补齐完整 9D8N 行程</button>
-            <div class="footerMini" style="margin-top:8px">不会删除你现有资料；只补同 Day 同名不存在的地点。现有投票 / Expenses / 照片都会保留。</div>
-          </div>
 
           <div class="card dayOverviewCard">
             <div class="sectionTitle">
@@ -4744,26 +4447,6 @@ body:not([data-theme="dark"]) .buildVerifyBar{
 
             <div class="expenseInsights" id="expenseInsights"></div>
 
-            <div class="card expensePeopleCard">
-              <div class="sectionTitle expensePeopleHead">
-                <div>
-                  <h3>👥 4人花费总览</h3>
-                  <div class="footerMini">Paid = 实际先付 · Share = 自己应该承担 · Net = 最后应收 / 应付</div>
-                </div>
-              </div>
-              <div id="expensePeopleOverview" class="expensePeopleGrid"></div>
-            </div>
-
-            <div class="card expenseCategoryCard">
-              <div class="sectionTitle">
-                <div>
-                  <h3>📊 Category Spending</h3>
-                  <div class="footerMini">快速看 Food、Hotel、Fuel、Shopping 等分别花了多少。</div>
-                </div>
-              </div>
-              <div id="expenseCategorySummary" class="expenseCategorySummary"></div>
-            </div>
-
             <div class="expenseSummaryGrid">
               <div class="card expenseSummaryCard">
                 <h3>Expense Summary</h3>
@@ -4780,40 +4463,10 @@ body:not([data-theme="dark"]) .buildVerifyBar{
             </div>
 
             <div class="expenseListSection">
-              <div class="expenseListHeading expenseRecordsHeading">
-                <div>
-                  <h3>🧾 Expense Records</h3>
-                  <div class="footerMini">可按成员 / Day / Category / Currency 筛选，并导出 CSV。</div>
-                </div>
-                <button class="ghost expenseExportBtn" type="button" id="exportExpensesCsv">⇩ Export CSV</button>
+              <div class="expenseListHeading">
+                <h3>🧾 Expense Records</h3>
+                <div class="footerMini">每一笔记录都会自动参与总预算和结算。</div>
               </div>
-
-              <div class="expenseFilterBar">
-                <input id="expenseSearchFilter" placeholder="🔎 Search expense…" aria-label="Search expense">
-                <select id="expensePersonFilter" aria-label="Filter by person">
-                  <option value="">全部成员</option>
-                </select>
-                <select id="expenseDayFilter" aria-label="Filter by day">
-                  <option value="">全部 Day</option>
-                </select>
-                <select id="expenseCategoryFilter" aria-label="Filter by category">
-                  <option value="">全部 Category</option>
-                </select>
-                <select id="expenseCurrencyFilter" aria-label="Filter by currency">
-                  <option value="">RM + THB</option>
-                  <option value="RM">RM</option>
-                  <option value="THB">THB</option>
-                </select>
-                <select id="expenseSortFilter" aria-label="Sort expenses">
-                  <option value="newest">最新</option>
-                  <option value="oldest">最旧</option>
-                  <option value="high">金额高 → 低</option>
-                  <option value="low">金额低 → 高</option>
-                </select>
-                <button class="iconbtn expenseClearFilter" type="button" id="clearExpenseFilters">清除筛选</button>
-              </div>
-
-              <div class="expenseFilterResult" id="expenseFilterResult"></div>
               <div id="expenseList"></div>
             </div>
           </div>
@@ -4902,15 +4555,6 @@ body:not([data-theme="dark"]) .buildVerifyBar{
       </label>
       <label class="full">内容
         <input id="checklistText" maxlength="120" required placeholder="例如：Thailand car insurance">
-      </label>
-      <label class="full">完成方式
-        <select id="checklistMode">
-          <option value="shared">✅ 一个人 Tick 就算 Done</option>
-          <option value="all_members">👥 每个人都要分别 Tick</option>
-        </select>
-      </label>
-      <label class="full">说明 / 注意事项
-        <textarea id="checklistDetails" placeholder="可写准备细节、期限、注意事项"></textarea>
       </label>
     </div>
     <div class="modalActions">
@@ -5050,19 +4694,6 @@ body:not([data-theme="dark"]) .buildVerifyBar{
         <div id="expenseLinkedPreview" class="linkedPreview"></div>
       </div>
       <label class="full">标题<input id="expenseTitle" required placeholder="例如：Mookata 晚餐"></label>
-      <label>Category
-        <select id="expenseCategory">
-          <option>🍜 Food</option>
-          <option>🏨 Hotel</option>
-          <option>⛽ Fuel</option>
-          <option>🛣 Toll</option>
-          <option>💆 Massage</option>
-          <option>🎟 Ticket</option>
-          <option>🛍 Shopping</option>
-          <option>🚗 Parking</option>
-          <option>🧳 Other</option>
-        </select>
-      </label>
       <label>金额<input id="expenseAmount" type="number" min="0" step="0.01" required></label>
       <label>货币
         <select id="expenseCurrency"><option>RM</option><option>THB</option></select>
@@ -5088,21 +4719,6 @@ body:not([data-theme="dark"]) .buildVerifyBar{
 
 <script src="config.js"></script>
 <script type="module">
-// ============================================================
-// V5.2.2 cache-busting bootstrap
-// Forces a unique document URL once so iPhone/Safari/GitHub Pages
-// cannot silently keep serving an older HTML build.
-// ============================================================
-const ROADTRIP_BUILD='5.2.2';
-try{
-  const currentUrl=new URL(window.location.href);
-  if(currentUrl.searchParams.get('appv')!==ROADTRIP_BUILD){
-    currentUrl.searchParams.set('appv',ROADTRIP_BUILD);
-    window.location.replace(currentUrl.toString());
-  }
-}catch(_){}
-
-
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
 const SUPABASE_URL = window.ROADTRIP_CONFIG?.SUPABASE_URL || '';
@@ -5118,10 +4734,9 @@ const $ = id => document.getElementById(id);
 const setupView=$('setupView'), authView=$('authView'), homeView=$('homeView'), tripView=$('tripView');
 let sb=null, user=null, authMode='login';
 let currentTrip=null, members=[], items=[], votes=[], expenses=[], shares=[], trips=[];
-let checklist=[], checklistTicks=[], checklistAvailable=false, checklistTicksAvailable=false;
+let checklist=[], checklistAvailable=false;
 let activeDay=1, todayDay=1, editingItem=null, editingExpense=null, channel=null;
 let itemSearch='', itemCategoryFilter='全部', itemSortMode='default', itineraryMode='timeline';
-let expenseSearch='', expensePerson='', expenseDay='', expenseCategory='', expenseCurrency='', expenseSort='newest';
 const mobileBar=$('mobileBar'), mobileAddBtn=$('mobileAddBtn');
 
 if(!configured){
@@ -5392,15 +5007,12 @@ async function init(){
     e.preventDefault();
     const text=$('checklistText').value.trim();
     const category=$('checklistCategory').value;
-    const mode=$('checklistMode').value;
-    const details=$('checklistDetails').value.trim();
-    if(await addChecklist(text,category,mode,details)){
+    if(await addChecklist(text,category)){
       $('checklistText').value='';
       $('checklistDialog').close();
       toast('Checklist 已添加 ✅');
     }
   });
-  $('importFull9D8NBtn')?.addEventListener('click',importFull9D8NPlan);
 
   $('seedChecklistBtn')?.addEventListener('click',seedTravelChecklist);
   $('seedChecklistOverviewBtn')?.addEventListener('click',seedTravelChecklist);
@@ -5424,41 +5036,6 @@ async function init(){
   $('expenseLinkedDay')?.addEventListener('change',()=>{
     populateExpenseItemsForDay(Number($('expenseLinkedDay').value||0));
   });
-
-  $('expenseSearchFilter')?.addEventListener('input',e=>{
-    expenseSearch=e.target.value.trim();
-    renderExpenses();
-  });
-  $('expensePersonFilter')?.addEventListener('change',e=>{
-    expensePerson=e.target.value;
-    renderExpenses();
-  });
-  $('expenseDayFilter')?.addEventListener('change',e=>{
-    expenseDay=e.target.value;
-    renderExpenses();
-  });
-  $('expenseCategoryFilter')?.addEventListener('change',e=>{
-    expenseCategory=e.target.value;
-    renderExpenses();
-  });
-  $('expenseCurrencyFilter')?.addEventListener('change',e=>{
-    expenseCurrency=e.target.value;
-    renderExpenses();
-  });
-  $('expenseSortFilter')?.addEventListener('change',e=>{
-    expenseSort=e.target.value;
-    renderExpenses();
-  });
-  $('clearExpenseFilters')?.addEventListener('click',()=>{
-    expenseSearch='';
-    expensePerson='';
-    expenseDay='';
-    expenseCategory='';
-    expenseCurrency='';
-    expenseSort='newest';
-    renderExpenses();
-  });
-  $('exportExpensesCsv')?.addEventListener('click',exportExpensesCsv);
 
   $('expenseLinkedItem')?.addEventListener('change',()=>{
     const itemId=$('expenseLinkedItem').value;
@@ -5522,19 +5099,8 @@ async function init(){
     });
   });
 
-  // V5.2.1 migration:
-  // You asked for Dark Mode as the app default. Older builds may have left
-  // 'light' inside localStorage, so reset that legacy value to dark ONCE.
-  const darkMigrationKey='roadtrip-v522-dark-default-applied';
-  if(!localStorage.getItem(darkMigrationKey)){
-    // Force the requested default exactly once for this new build.
-    localStorage.setItem('roadtrip-theme','dark');
-    localStorage.setItem(darkMigrationKey,'1');
-  }
-
   const savedTheme=localStorage.getItem('roadtrip-theme') || 'dark';
   applyTheme(savedTheme);
-
   document.querySelectorAll('.themeToggle').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const next=document.body.dataset.theme==='dark'?'light':'dark';
@@ -5718,15 +5284,15 @@ async function openTrip(id){
 async function refreshTrip(){
   if(!currentTrip) return;
 
-  const [tripRes, membersRes, itemsRes, votesRes, expensesRes, sharesRes, checklistRes, ticksRes] = await Promise.all([
+  const [tripRes, membersRes, itemsRes, votesRes, expensesRes, sharesRes, checklistRes] = await Promise.all([
     sb.from('trips').select('*').eq('id',currentTrip.id).single(),
     sb.from('trip_members').select('*').eq('trip_id',currentTrip.id).order('joined_at'),
     sb.from('items').select('*').eq('trip_id',currentTrip.id).order('created_at',{ascending:false}),
     sb.from('item_votes').select('item_id,user_id,created_at'),
     sb.from('expenses').select('*').eq('trip_id',currentTrip.id).order('spent_at',{ascending:false}),
     sb.from('expense_shares').select('expense_id,user_id'),
-    sb.from('trip_checklist').select('*').eq('trip_id',currentTrip.id).order('created_at',{ascending:true}),
-    sb.from('trip_checklist_ticks').select('*')
+    // Optional V4.9 table. If SQL has not been run, core Trip still continues normally.
+    sb.from('trip_checklist').select('*').eq('trip_id',currentTrip.id).order('created_at',{ascending:true})
   ]);
 
   if(tripRes.data) currentTrip=tripRes.data;
@@ -5742,9 +5308,6 @@ async function refreshTrip(){
 
   checklistAvailable=!checklistRes.error;
   checklist=(checklistRes.data||[]);
-  const checklistIds=new Set(checklist.map(x=>x.id));
-  checklistTicksAvailable=!ticksRes.error;
-  checklistTicks=(ticksRes.data||[]).filter(t=>checklistIds.has(t.checklist_id));
 
   renderTrip();
 }
@@ -5752,7 +5315,7 @@ async function refreshTrip(){
 function subscribeTrip(){
   cleanupChannel();
 
-  let ch=sb.channel('trip-v51-'+currentTrip.id)
+  let ch=sb.channel('trip-v49-'+currentTrip.id)
     .on('postgres_changes',{event:'*',schema:'public',table:'trips',filter:`id=eq.${currentTrip.id}`},()=>refreshTrip())
     .on('postgres_changes',{event:'*',schema:'public',table:'trip_members',filter:`trip_id=eq.${currentTrip.id}`},()=>refreshTrip())
     .on('postgres_changes',{event:'*',schema:'public',table:'items',filter:`trip_id=eq.${currentTrip.id}`},()=>refreshTrip())
@@ -5761,10 +5324,11 @@ function subscribeTrip(){
     .on('postgres_changes',{event:'*',schema:'public',table:'expense_shares'},()=>refreshTrip());
 
   if(checklistAvailable){
-    ch=ch.on('postgres_changes',{event:'*',schema:'public',table:'trip_checklist',filter:`trip_id=eq.${currentTrip.id}`},()=>refreshTrip());
-  }
-  if(checklistTicksAvailable){
-    ch=ch.on('postgres_changes',{event:'*',schema:'public',table:'trip_checklist_ticks'},()=>refreshTrip());
+    ch=ch.on(
+      'postgres_changes',
+      {event:'*',schema:'public',table:'trip_checklist',filter:`trip_id=eq.${currentTrip.id}`},
+      ()=>refreshTrip()
+    );
   }
 
   channel=ch.subscribe();
@@ -5932,7 +5496,6 @@ function renderTravelUX(){
   }
 
   renderChecklist();
-  renderFullPlanImportStatus();
 }
 
 function openTodayMode(dayNo=activeDay){
@@ -6079,214 +5642,6 @@ async function setTodayItemDone(itemId,done){
   toast(done?'这一站完成 ✓':'已恢复到未完成');
 }
 
-const ROADTRIP_9D8N_ROUTES=["Day 1 · JB → Ipoh · Old Town / Night","Day 2 · Ipoh → Bukit Kayu Hitam → Hat Yai","Day 3 · Hat Yai + Songkhla · Old Town / Beach / Floating Market","Day 4 · Hat Yai → Krabi · Khlong Thom option / Ao Nang Sunset","Day 5 · Krabi Sea Day · Vote 1 Island Plan + Night Market / Massage","Day 6 · Krabi → Hat Yai · Morning option + Monday shopping / spa","Day 7 · Hat Yai → Sadao Exit → Cameron Highlands","Day 8 · Cameron Full Day · BOH / Mossy / Farms / Tea","Day 9 · Cameron → JB · Last Buy + Safe Drive Home"];
-const ROADTRIP_9D8N_ITEMS=[{"day_no":1,"name":"[Budget] 建议日期 · 11–19 Nov 2026","category":"📝 其他","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Whole Trip","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Whole+Trip","note":"建议 2026-11-11（Wed）出发 → 11-19（Thu）回 JB。\n这样 Day 3 = Fri，可投 Khlong Hae Floating Market；Day 5 = Sun，可投 Krabi Town Night Market；Day 8 = Wed，BOH Sungai Palas 正常开放。\n路线：JB → Ipoh → Hat Yai/Songkhla → Krabi → Hat Yai → Cameron Highlands → JB。\n所有候选地点都先放 Candidate 给4个人投票；只有长途驾驶/过关节点预设 Confirmed。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"[Budget] 预算参考 · 4人 RM6,200（不含Shopping）","category":"📝 其他","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Whole Trip","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Whole+Trip","note":"建议共同预算目标：约 RM6,200 / 4人，Shopping 另外算。\n建议拆分概念：住宿约 RM1,500–1,900；Fuel/Toll/Parking RM700–900；Food RM1,200–1,500；Island/Attraction/Massage RM1,200–1,600；Border/Insurance/Buffer RM500–800。\n模板里的候选地点 cost 默认不填，避免“全部候选”一起把 Planned Budget 加爆；投票确认后再填真实预算。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"[Budget] Thailand Border · 2026 最新重点","category":"📝 其他","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Whole Trip","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Whole+Trip","note":"• 新 Bukit Kayu Hitam–Sadao 路线已于 2026-07-11 开放。当前每日 06:00–24:00（Malaysia time）/ 05:00–23:00（Thailand time）。\n• 所有非泰国籍入境者须提交 TDAC；陆路也适用。官方要求在抵达前3天内提交，可 Group Submission（最多10人）。\n• 泰国海关陆路临时进口外国车辆：准备车辆注册文件；非车主驾驶需授权书；护照；入境时做车辆临时进口/特殊申报，并在离境时交回/核销。\n• Malaysia 车辆在泰国 DLT 临时车辆许可方面属协议国家豁免类别，但 Customs 临时进口手续仍要做。\n• Thailand 比 Malaysia 慢1小时。\n• 保险/车辆表格流程可能调整，出发前一周再跟 Sadao / TAT Malaysia / 保险柜台确认。\n官方 TDAC：https://tdac.immigration.go.th\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"[Budget] November 天气 / 海岛 Backup Plan","category":"📝 其他","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Whole Trip","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Whole+Trip","note":"11月 Hat Yai/Songkhla 仍可能有强降雨；Krabi 属 Andaman side，通常进入较适合海岛季节，但浪况/雷雨仍会影响出海。\n原则：Day 5 的 Hong / 4 Islands / Phi Phi 只投一个主方案，再留 Railay DIY / land attractions 做雨天备选。\nCameron 常有雾雨、山路湿滑；傍晚后开慢一点。\n出发前 5–7 天、48 小时、当天早上各检查一次天气/海况。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"[Budget] 投票玩法 · 不要一次塞满正式行程","category":"📝 其他","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Whole Trip","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Whole+Trip","note":"模板会导入很多 Candidate，目的就是给4个人选择。\n建议：每个 Day 先各自投票 → 4/4 自动确认 → 再排时间。\nDay 5 海岛 Tour 建议只确认 1 个主 Tour；Night Market / Massage 可留2个 backup。\n长途 Day 2 / 4 / 6 / 7 / 9 不要排太多景点，避免赶路。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"🚗 JB → Ipoh · 早上出发","category":"🚗 交通 / Border","priority":"⭐ 必去","plan_status":"confirmed","start_time":"06:30","duration_minutes":390,"travel_minutes":0,"location":"Johor Bahru, Johor, Malaysia","cost":0,"link":"https://www.google.com/maps/dir/?api=1&origin=Johor+Bahru%2C+Johor%2C+Malaysia&destination=Ipoh%2C+Perak%2C+Malaysia","note":"🕒 营业/可去：道路全天\n⭐ 最理想时间：06:00–06:30 离开 JB\n⏱ 建议停留：6–7小时含休息\n💡 为什么去：第一天不要太晚到 Ipoh，下午还有吃/逛选择\n⚠️ 注意：出发前加满油；每2–2.5小时休息一次。\n🔎 资料：Route planning estimate；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"Nam Heong White Coffee 南香","category":"🍜 美食","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"2 Jalan Bandar Timah, Ipoh, Perak","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Nam+Heong+White+Coffee+Ipoh","note":"🕒 营业/可去：Daily 06:30–16:30\n⭐ 最理想时间：10:30前或14:00后\n⏱ 建议停留：45–75 min\n💡 为什么去：Ipoh 经典白咖啡/早餐午餐选择\n⚠️ 注意：中午可能排队；停车可找 Old Town 周边停车位。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"Foh San Dim Sum 富山点心","category":"🍜 美食","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"51 Jalan Leong Sin Nam, Ipoh, Perak","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Foh+San+Dim+Sum+Ipoh","note":"🕒 营业/可去：多数日 07:00–14:00；出发前确认休息日\n⭐ 最理想时间：07:30–09:30\n⏱ 建议停留：60–90 min\n💡 为什么去：如果想吃点心，这家适合 Day1 早到或 Day2 早上\n⚠️ 注意：越晚热门点心越容易卖完。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"Ipoh Traditional Style Chee Cheong Fun","category":"🍜 美食","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"47 Jalan Theatre, Taman Jubilee, Ipoh","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Ipoh+Traditional+Style+Chee+Cheong+Fun+Jalan+Theatre","note":"🕒 营业/可去：约 10:00–15:45\n⭐ 最理想时间：10:30–13:30\n⏱ 建议停留：30–45 min\n💡 为什么去：便宜、快、适合塞在 Old Town/市区行程之间\n⚠️ 注意：属于轻食候选，不建议跟太多正餐一起确认。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"Concubine Lane 二奶巷","category":"🛍️ 购物","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Concubine Lane, Ipoh Old Town, Perak","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Concubine+Lane+Ipoh","note":"🕒 营业/可去：街道全天；多数店约 09:00/10:00–17:00/18:00\n⭐ 最理想时间：15:00–17:30\n⏱ 建议停留：60–90 min\n💡 为什么去：Old Town 最容易逛、拍照、吃小吃的区域\n⚠️ 注意：中午热；傍晚店家会陆续收。\n🔎 资料：2026 local listings / visitor info；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"Ipoh Old Town Murals / Heritage Walk","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Ipoh Old Town, Perak","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Ipoh+Old+Town+murals","note":"🕒 营业/可去：户外全天\n⭐ 最理想时间：16:00–18:00\n⏱ 建议停留：60–90 min\n💡 为什么去：跟 Concubine Lane 可以步行串起来，不需要另外开很远\n⚠️ 注意：雨天石路滑；停车后用走的最舒服。\n🔎 资料：Public outdoor area；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"Gunung Lang Recreational Park","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Jalan Damai, Ipoh, Perak","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Gunung+Lang+Recreational+Park","note":"🕒 营业/可去：Daily 09:00–17:00\n⭐ 最理想时间：15:00–16:30\n⏱ 建议停留：60–90 min\n💡 为什么去：湖、石灰岩景观，适合不想一直逛街的人\n⚠️ 注意：不要压到接近17:00才到。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"Qing Xin Ling 清心岭 · 仅确认开放后","category":"📍 景点","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"22A Persiaran Pinggir Rapat 5A, Ipoh","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Qing+Xin+Ling+Leisure+Cultural+Village+Ipoh","note":"🕒 营业/可去：2026 资料互相冲突：部分 listing 显示 09:00–18:00，亦有来源标示关闭\n⭐ 最理想时间：只有当天确认开放才去；最好上午\n⏱ 建议停留：1.5–2 hr\n💡 为什么去：如果真的开放，石灰岩+复古文化村很适合拍照\n⚠️ 注意：⚠️ 这是“状态需再确认”的候选；出发前先打电话/查最新 Google listing。\n🔎 资料：2026 sources conflict; verify before visit；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"Ipoh Parade","category":"🛍️ 购物","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"105 Jalan Sultan Abdul Jalil, Ipoh","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Ipoh+Parade","note":"🕒 营业/可去：Daily 10:00–22:00\n⭐ 最理想时间：18:00–21:00\n⏱ 建议停留：1–2 hr\n💡 为什么去：下雨/太热时最好用的冷气 Mall 备选\n⚠️ 注意：如果晚上还要夜市，就不要两边都排太久。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"Gerbang Malam Ipoh","category":"🛍️ 购物","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Jalan Dato Tahwil Azar, Ipoh","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Gerbang+Malam+Ipoh","note":"🕒 营业/可去：Daily 18:00–00:00\n⭐ 最理想时间：19:30–22:30\n⏱ 建议停留：1–2 hr\n💡 为什么去：夜市、衣服、小物、小吃，第一晚很适合轻松走走\n⚠️ 注意：停车可能要绕；贵重物品不要留车内明显位置。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"Lost World Hot Springs & Night Park","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Sunway City Ipoh, Tambun, Perak","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Lost+World+Hot+Springs+Night+Park","note":"🕒 营业/可去：Hot Springs & Night Park Daily 18:00–23:00；Theme Park weekday 11:00 起，Tue 通常闭园（假日例外）\n⭐ 最理想时间：19:00–22:30\n⏱ 建议停留：2.5–3.5 hr\n💡 为什么去：长途开车后泡温泉很舒服，适合第一晚不想继续逛市区\n⚠️ 注意：要带换洗衣物；票价/入园组合先看官方。\n🔎 资料：Official Sunway Lost World site checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":1,"name":"Oriental Spa Ipoh","category":"💆 按摩","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"76 Persiaran Greenhill, Ipoh","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Oriental+Spa+Ipoh","note":"🕒 营业/可去：Mon/Fri-Sun约 11:00–23:00；Tue-Thu约12:00–23:00\n⭐ 最理想时间：20:30后\n⏱ 建议停留：60–120 min\n💡 为什么去：如果不去 Hot Springs，可以改按摩早休息\n⚠️ 注意：4人建议先 WhatsApp/电话问有没有同时空位。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":2,"name":"🚗 Ipoh → Bukit Kayu Hitam","category":"🚗 交通 / Border","priority":"⭐ 必去","plan_status":"confirmed","start_time":"07:00","duration_minutes":240,"travel_minutes":0,"location":"Ipoh, Perak, Malaysia","cost":0,"link":"https://www.google.com/maps/dir/?api=1&origin=Ipoh%2C+Perak%2C+Malaysia&destination=Bukit+Kayu+Hitam+ICQS%2C+Kedah%2C+Malaysia","note":"🕒 营业/可去：道路全天\n⭐ 最理想时间：07:00出发\n⏱ 建议停留：约4小时 + R&R\n💡 为什么去：尽量中午前后到 border，避开晚间抵达\n⚠️ 注意：Thailand 慢1小时；所有人护照/TDAC先放随手可拿位置。\n🔎 资料：Route planning estimate；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":2,"name":"Changlun Border Prep Stop","category":"🚗 交通 / Border","priority":"⭐ 必去","plan_status":"confirmed","start_time":"10:45","duration_minutes":45,"travel_minutes":0,"location":"Changlun, Kedah, Malaysia","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Changlun+Thailand+car+insurance","note":"🕒 营业/可去：多数保险/换钱店白天营业，具体店家不同\n⭐ 最理想时间：10:30–11:30\n⏱ 建议停留：30–60 min\n💡 为什么去：最后检查 Thailand insurance、复印件、THB、SIM/roaming\n⚠️ 注意：不要临时才发现授权书/车卡不在。\n🔎 资料：Practical border stop; verify chosen shop hours；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":2,"name":"🛂 Bukit Kayu Hitam → Sadao · 过关/车辆临时进口","category":"🚗 交通 / Border","priority":"⭐ 必去","plan_status":"confirmed","start_time":"11:45","duration_minutes":120,"travel_minutes":0,"location":"Bukit Kayu Hitam ICQS / Sadao CIQ","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Sadao+Customs+House+new+checkpoint","note":"🕒 营业/可去：新路线每日 06:00–24:00 Malaysia time / 05:00–23:00 Thailand time\n⭐ 最理想时间：11:30–13:30\n⏱ 建议停留：预留1.5–2.5 hr\n💡 为什么去：这是整趟最重要手续：Immigration + vehicle Customs\n⚠️ 注意：保管所有临时进口/特殊申报文件，Day7 出境要核销；周末/假期预留更多时间。\n🔎 资料：Bernama + Thai border announcement July 2026；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":2,"name":"Danok / Sadao · Lunch + Money Exchange","category":"🍜 美食","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Danok / Sadao, Songkhla, Thailand","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Danok+Sadao+Thailand+food+money+exchange","note":"🕒 营业/可去：店家各自营业；白天选择最多\n⭐ 最理想时间：过关后 13:00–14:30 Thailand time\n⏱ 建议停留：45–75 min\n💡 为什么去：刚过境先吃、换少量现金、整理电话网络，再开去 Hat Yai\n⚠️ 注意：不要一次换太多；主要用 THB，Ringgit 只当备用。\n🔎 资料：Local operating hours vary；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":2,"name":"Central Hatyai","category":"🛍️ 购物","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"1520 Kanjanavanich Rd, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Central+Hatyai","note":"🕒 营业/可去：Daily 10:00–21:00\n⭐ 最理想时间：15:00–18:00 或雨天\n⏱ 建议停留：2–3 hr\n💡 为什么去：大 Mall，冷气、吃饭、购物、补货一次解决\n⚠️ 注意：如果晚上要夜市，这里控制2小时内。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":2,"name":"ASEAN Night Bazaar Hatyai","category":"🛍️ 购物","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Chotevittayakul 4 Rd, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=ASEAN+Night+Bazaar+Hatyai","note":"🕒 营业/可去：Tue–Sun 16:30–22:00；Mon closed\n⭐ 最理想时间：18:30–21:30\n⏱ 建议停留：1.5–2 hr\n💡 为什么去：吃、衣服、小物都集中，适合第一晚体验\n⚠️ 注意：Day2 Thu 可去；Day6 Mon 不要排它。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":2,"name":"Greenway Night Market","category":"🛍️ 购物","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Kanjanavanich Rd, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Greenway+Night+Market+Hat+Yai","note":"🕒 营业/可去：Tue–Sun 17:00–22:00；Mon closed\n⭐ 最理想时间：18:30–21:30\n⏱ 建议停留：1.5–2 hr\n💡 为什么去：年轻人夜市、二手/服饰/吃的，气氛不同于 ASEAN\n⚠️ 注意：跟 ASEAN 二选一或一晚各走45分钟。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":2,"name":"Krua Pa-Yad Hatyai","category":"🍜 美食","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"272 Sripoovanart Rd, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Krua+Pa-Yad+Hatyai","note":"🕒 营业/可去：Daily 10:30–20:30\n⭐ 最理想时间：17:30–19:30\n⏱ 建议停留：60–90 min\n💡 为什么去：高评分 Thai restaurant，适合正式一点的晚餐\n⚠️ 注意：热门时段可能等位；不要排太迟。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":2,"name":"Jer Seafood Hatyai","category":"🍜 美食","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Hat Yai, Songkhla, Thailand","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Jer+Seafood+Hatyai","note":"🕒 营业/可去：Daily 12:00–22:00\n⭐ 最理想时间：18:00–20:30\n⏱ 建议停留：60–90 min\n💡 为什么去：如果4个人想吃海鲜，这是可以投票的晚餐候选\n⚠️ 注意：海鲜价格先确认再点。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":2,"name":"Asana Yoga Studio & Spa Hatyai","category":"💆 按摩","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"80 Rajyindee Soi 3, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Asana+yoga+studio+spa+Hatyai","note":"🕒 营业/可去：Daily 11:00–21:00\n⭐ 最理想时间：18:30前进场\n⏱ 建议停留：60–120 min\n💡 为什么去：环境/评分很好，适合想要比街边按摩更舒服\n⚠️ 注意：21:00关门，夜市后可能来不及。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":2,"name":"Ease Me Thai Massage","category":"💆 按摩","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Thumnoonvithi Rd, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Ease+Me+Thai+Massage+Hatyai","note":"🕒 营业/可去：Fri–Sun约11:00–00:00；Mon–Thu约11:00–22:00\n⭐ 最理想时间：20:00以后\n⏱ 建议停留：60–120 min\n💡 为什么去：位置适合市中心逛完再按，营业比 Asana 晚\n⚠️ 注意：Day2 Thu 大约22:00关。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":2,"name":"Hatyai Village","category":"🛍️ 购物","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Nuankaew Uthit, Kho Hong, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Hatyai+Village","note":"🕒 营业/可去：Daily 06:00–23:00\n⭐ 最理想时间：傍晚/晚上\n⏱ 建议停留：1–2 hr\n💡 为什么去：如果夜市太多人或下雨，可当替代逛街点\n⚠️ 注意：比较偏休闲商业区，不是必去景点。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":3,"name":"Chokdee Dim Sum","category":"🍜 美食","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"58/25 Lamaisongkrew Rd, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Chokdee+Dim+Sum+Hat+Yai","note":"🕒 营业/可去：Daily 06:00–11:30 & 17:00–20:30\n⭐ 最理想时间：06:30–08:30\n⏱ 建议停留：60–90 min\n💡 为什么去：Hat Yai 很经典的早茶选择，适合 Songkhla day 一早吃\n⚠️ 注意：越早选择越多。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":3,"name":"Kim Yong Market","category":"🛍️ 购物","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Kim Yong Market, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Kim+Yong+Market+Hat+Yai","note":"🕒 营业/可去：Daily 07:00–18:00\n⭐ 最理想时间：08:00–10:00\n⏱ 建议停留：1–1.5 hr\n💡 为什么去：零食、干货、坚果、手信最集中\n⚠️ 注意：早上比较凉、货齐；主要用 THB 付。\n🔎 资料：Google Maps + 2026 listings；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":3,"name":"Wat Hat Yai Nai · Reclining Buddha","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"2 Wathatyainai Rd, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Wat+Hat+Yai+Nai","note":"🕒 营业/可去：Daily 07:00–18:00\n⭐ 最理想时间：09:00–11:00\n⏱ 建议停留：45–60 min\n💡 为什么去：巨大卧佛，Hat Yai 经典文化点\n⚠️ 注意：进寺庙穿着不要太暴露。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":3,"name":"Hat Yai Municipal Park","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"266 Kanjanavanich Rd, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Hat+Yai+Municipal+Park","note":"🕒 营业/可去：Daily 05:00–21:00\n⭐ 最理想时间：08:00–10:00 或 17:00后\n⏱ 建议停留：1.5–2 hr\n💡 为什么去：城市高处景观、佛像、适合拍 Hat Yai 全景\n⚠️ 注意：白天较热；若要去 Songkhla，早上去更顺。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":3,"name":"Songkhla Old Town","category":"📍 景点","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Songkhla Old Town, Bo Yang, Songkhla","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Songkhla+Old+Town","note":"🕒 营业/可去：街区户外全天；店家约09:00–18:00为主\n⭐ 最理想时间：11:00–15:00 或 15:30后\n⏱ 建议停留：2–3 hr\n💡 为什么去：Sino-Portuguese 老街、壁画、咖啡店，跟 Hat Yai 完全不同感觉\n⚠️ 注意：建议停车后走路串 City Pillar + Nang Ngam + Red Mill。\n🔎 资料：2026 attraction listings；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":3,"name":"Songkhla City Pillar Shrine","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Nang Ngam, Bo Yang, Songkhla","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Songkhla+City+Pillar+Shrine","note":"🕒 营业/可去：Daily 08:00–18:00\n⭐ 最理想时间：11:00–16:00\n⏱ 建议停留：30–45 min\n💡 为什么去：Old Town 顺路的中式历史建筑/参拜点\n⚠️ 注意：安静参观，服装得体。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":3,"name":"Hub Ho Hin · Red Rice Mill","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"13 Nakhonnok St, Songkhla","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Hub+Ho+Hin+Red+Rice+Mill+Songkhla","note":"🕒 营业/可去：Daily 08:00–18:00\n⭐ 最理想时间：11:00–16:30\n⏱ 建议停留：30–45 min\n💡 为什么去：红色老米厂是 Songkhla Old Town 很标志性的拍照点\n⚠️ 注意：适合和街拍一起，不需要单独留很久。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":3,"name":"Nang Ngam Road / Street Art","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Nang Ngam Road, Songkhla","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Nang+Ngam+Road+Songkhla","note":"🕒 营业/可去：户外全天\n⭐ 最理想时间：15:00–17:00\n⏱ 建议停留：45–60 min\n💡 为什么去：老店、街景、壁画，适合慢慢走\n⚠️ 注意：中午日晒强，下午拍照更舒服。\n🔎 资料：Public old-town street；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":3,"name":"Tang Kuan Hill Lift / Khao Tang Kuan","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Tang Kuan Hill Lift Station, Songkhla","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Tang+Kuan+Hill+Lift+Station+Songkhla","note":"🕒 营业/可去：Daily 09:00–18:00\n⭐ 最理想时间：16:00–17:30\n⏱ 建议停留：60–90 min\n💡 为什么去：看 Songkhla 海岸+湖的高处视角\n⚠️ 注意：最后上山时间可能早于关门；风雨天先确认 lift 是否运行。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":3,"name":"Samila Beach · Golden Mermaid","category":"📍 景点","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Samila Beach, Songkhla","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Samila+Beach+Songkhla","note":"🕒 营业/可去：Public beach 24h\n⭐ 最理想时间：16:30–18:30\n⏱ 建议停留：1–1.5 hr\n💡 为什么去：海边、金色美人鱼、夕阳；最适合 Songkhla 行程收尾\n⚠️ 注意：雨季浪/风大时不要下水太远。\n🔎 资料：Public beach / 2026 listings；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":3,"name":"Lyn's The Shanghai Cafe","category":"🍜 美食","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Nakhonnai, Songkhla Old Town","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Lyn%27s+The+Shanghai+Cafe+Songkhla","note":"🕒 营业/可去：Daily 09:30–21:00\n⭐ 最理想时间：12:00–16:00\n⏱ 建议停留：45–75 min\n💡 为什么去：Old Town 里面有气氛的休息/午餐/咖啡候选\n⚠️ 注意：如果大家想吃更多街边小吃，就当咖啡停靠。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":3,"name":"Photograph Coffee House Songkhla","category":"🍜 美食","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Thaleluang Soi 18, Songkhla","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Photograph+Coffee+House+Songkhla","note":"🕒 营业/可去：Tue–Sun 08:30–16:30；Mon closed\n⭐ 最理想时间：13:00–15:30\n⏱ 建议停留：45–60 min\n💡 为什么去：适合喜欢咖啡/拍照的人投票\n⚠️ 注意：16:30收，别排在海边之后。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":3,"name":"Khlong Hae Floating Market","category":"🛍️ 购物","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Khlong Hae, Hat Yai District","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Khlong+Hae+Floating+Market","note":"🕒 营业/可去：Fri–Sun 15:00–21:00\n⭐ 最理想时间：18:30–20:30\n⏱ 建议停留：1.5–2 hr\n💡 为什么去：我们的建议日期让 Day3 落在 Friday，就是为了能去这个市场\n⚠️ 注意：从 Songkhla 回 Hat Yai 后再去；雨太大就改 Central / massage。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":3,"name":"Full Moon Massage & Spa Hatyai","category":"💆 按摩","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"229 Sangchan Rd, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Full+Moon+Massage+Spa+Hatyai","note":"🕒 营业/可去：Daily 10:00–23:00\n⭐ 最理想时间：20:30–22:30\n⏱ 建议停留：60–120 min\n💡 为什么去：一整天走 Old Town + 海边后很适合按摩\n⚠️ 注意：4人同时做建议先预约。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":4,"name":"Leng Kee Bak Kut Teh Hatyai","category":"🍜 美食","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"5 Kimpradit Rd, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Leng+Kee+Bak+Kut+Teh+Hat+Yai","note":"🕒 营业/可去：Daily 06:30–14:00\n⭐ 最理想时间：06:45–08:00\n⏱ 建议停留：45–60 min\n💡 为什么去：长途去 Krabi 前吃饱一点\n⚠️ 注意：吃完尽量08:30前上路。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":4,"name":"🚗 Hat Yai → Krabi / Ao Nang","category":"🚗 交通 / Border","priority":"⭐ 必去","plan_status":"confirmed","start_time":"08:30","duration_minutes":300,"travel_minutes":0,"location":"Hat Yai, Songkhla, Thailand","cost":0,"link":"https://www.google.com/maps/dir/?api=1&origin=Hat+Yai%2C+Songkhla%2C+Thailand&destination=Ao+Nang%2C+Krabi%2C+Thailand","note":"🕒 营业/可去：道路全天\n⭐ 最理想时间：08:00–08:30离开\n⏱ 建议停留：4.5–5.5 hr含休息\n💡 为什么去：Day4 核心是移动，下午才选1–2个景点\n⚠️ 注意：如果投 Emerald Pool / Hot Spring，沿 Khlong Thom 顺路 detour，别再硬塞 Tiger Cave。\n🔎 资料：Route planning estimate；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":4,"name":"Emerald Pool · Route Detour Option","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Emerald Pool, Khlong Thom, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Emerald+Pool+Krabi","note":"🕒 营业/可去：Daily 08:30–16:30\n⭐ 最理想时间：13:00–15:30\n⏱ 建议停留：2–2.5 hr\n💡 为什么去：Hat Yai→Krabi 路线可经过 Khlong Thom，顺路性比 Day5 特地开回来好\n⚠️ 注意：需要步行；雨大、水位/园区政策先确认；外国游客门票另计。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":4,"name":"Saline Hot Spring Khlong Thom","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Huai Nam Khao, Khlong Thom, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Saline+Hot+Spring+Khlong+Thom","note":"🕒 营业/可去：Daily 05:00–20:00\n⭐ 最理想时间：15:00–17:30\n⏱ 建议停留：1–1.5 hr\n💡 为什么去：长途开车中途泡一下很放松，可跟 Emerald Pool 二选一\n⚠️ 注意：泡汤后补水；如果晚到 Krabi 就跳过。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":4,"name":"Tiger Cave Temple · Wat Tham Suea","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Krabi Noi, Mueang Krabi, Thailand","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Wat+Tham+Suea+Krabi","note":"🕒 营业/可去：Daily 06:00–18:00\n⭐ 最理想时间：06:30–09:00 或 15:30后\n⏱ 建议停留：2–3 hr\n💡 为什么去：著名 1,200+ steps 山顶景观，体力型候选\n⚠️ 注意：不建议在 Day4 长途后又硬爬；可投去 Day6 早上。带水、防滑鞋。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":4,"name":"Ao Nang Beach · Sunset","category":"📍 景点","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Ao Nang Beach, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Ao+Nang+Beach+Krabi","note":"🕒 营业/可去：Public beach 24h\n⭐ 最理想时间：17:15–18:30\n⏱ 建议停留：60–90 min\n💡 为什么去：最适合第一晚看海/夕阳，海边路也很多餐厅/按摩/店\n⚠️ 注意：Ao Nang 更适合 sunset + promenade，不一定是最漂亮的游泳海滩。\n🔎 资料：TAT + Google Maps, checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":4,"name":"Nopparat Thara Beach","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Nopparat Thara Beach, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Nopparat+Thara+Beach+Krabi","note":"🕒 营业/可去：Public beach daylight / 24h access\n⭐ 最理想时间：16:30–18:30\n⏱ 建议停留：60–90 min\n💡 为什么去：比 Ao Nang 更宽更静一点，可跟 Landmark Night Market 接\n⚠️ 注意：退潮景色变化大。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":4,"name":"Ao Nang Landmark Night Market","category":"🛍️ 购物","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Ao Nang, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Ao+Nang+Landmark+Night+Market","note":"🕒 营业/可去：Daily 17:00–23:00\n⭐ 最理想时间：19:00–22:00\n⏱ 建议停留：1.5–2 hr\n💡 为什么去：Krabi 晚上最方便的吃逛组合，住 Ao Nang 很顺\n⚠️ 注意：海岛 Day 回来后也可再去，所以 Day4/5二选一即可。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":4,"name":"Family Thai Food & Seafood Ao Nang","category":"🍜 美食","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Ao Nang, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Family+Thai+Food+Seafood+Ao+Nang","note":"🕒 营业/可去：Daily 10:00–22:00\n⭐ 最理想时间：18:00–20:30\n⏱ 建议停留：60–90 min\n💡 为什么去：高评价、价位相对易接受，适合4人一起点菜\n⚠️ 注意：海鲜先问价。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":4,"name":"Royal Palm Spa Ao Nang","category":"💆 按摩","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Ao Nang, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Royal+Palm+Spa+Ao+Nang","note":"🕒 营业/可去：Daily 10:00–23:00\n⭐ 最理想时间：20:00–22:30\n⏱ 建议停留：60–120 min\n💡 为什么去：第一天到 Krabi 走完夜市后可以按\n⚠️ 注意：评分/评论很多；4人建议预约。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":5,"name":"Hong Islands Full-day Tour · 主方案A","category":"📍 景点","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Ko Hong, Krabi, Thailand","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Ko+Hong+Krabi","note":"🕒 营业/可去：Tour 时段视 operator；通常约 08:00–16:00\n⭐ 最理想时间：早上第一批出海\n⏱ 建议停留：7–8 hr\n💡 为什么去：Hong Lagoon + beach + viewpoint，景观完整，适合第一次 Krabi\n⚠️ 注意：⚠️ Day5 海岛主 Tour 建议只确认一个；国家公园费/午餐/装备看配套。天气差可取消改陆地。\n🔎 资料：2026 Krabi tour norms + island listings；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":5,"name":"4 Islands Tour · 主方案B","category":"📍 景点","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Poda / Chicken / Tup / Phra Nang, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Krabi+4+Islands+Tour+Ao+Nang","note":"🕒 营业/可去：Tour 时段视 operator；通常约 08:00–15:30/16:00\n⭐ 最理想时间：08:00前集合\n⏱ 建议停留：7–8 hr\n💡 为什么去：经典 Poda/Chicken/Tup/Phra Nang，一次看多个海滩\n⚠️ 注意：⚠️ 跟 Hong/Phi Phi 三选一主方案。确认是否含 national park fee。\n🔎 资料：2026 Krabi tour norms；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":5,"name":"Phi Phi Islands Day Tour · 主方案C","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Phi Phi Islands, Krabi, Thailand","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Phi+Phi+Islands+tour+from+Ao+Nang","note":"🕒 营业/可去：Tour 时段视 operator；通常约 07:30–16:30\n⭐ 最理想时间：最早船班\n⏱ 建议停留：8–9 hr\n💡 为什么去：想看更知名海岛可投这个，但船程/人潮通常更多\n⚠️ 注意：⚠️ 一日比较累；晕船者慎选；受海况影响最大。\n🔎 资料：2026 Krabi tour norms；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":5,"name":"Railay Beach DIY by Longtail · 雨天/轻松方案","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Railay Beach, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Railay+Beach+Krabi","note":"🕒 营业/可去：Beach daylight；longtail boat 视天气/海况\n⭐ 最理想时间：08:00–14:00 或 14:00–17:30\n⏱ 建议停留：3–6 hr\n💡 为什么去：不用整天跟 Tour，Ao Nang 坐 longtail 就能去，弹性最大\n⚠️ 注意：保管好回程船票/问清 last boat；海况差时船会调整。\n🔎 资料：Google Maps/TAT visitor info；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":5,"name":"Phra Nang Cave Beach","category":"📍 景点","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Phra Nang Cave Beach, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Phra+Nang+Cave+Beach+Krabi","note":"🕒 营业/可去：Beach daylight\n⭐ 最理想时间：09:00–15:30\n⏱ 建议停留：1.5–2.5 hr\n💡 为什么去：如果投 Railay/4 Islands，这个是最值得留时间的海滩之一\n⚠️ 注意：中午热门；带防晒、水。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":5,"name":"Ko Poda · Beach Stop","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Ko Poda, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Ko+Poda+Krabi","note":"🕒 营业/可去：Daylight / national park hours follow tour\n⭐ 最理想时间：09:00–15:00\n⏱ 建议停留：1–2 hr\n💡 为什么去：4 Islands 常见重点，白沙/海景漂亮\n⚠️ 注意：主要作为 tour stop，不建议单独另排一整天。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":5,"name":"Ao Nang Beach / Promenade","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Ao Nang Beach, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Ao+Nang+Beach+Krabi","note":"🕒 营业/可去：24h public beach/promenade\n⭐ 最理想时间：17:00–19:00\n⏱ 建议停留：1–2 hr\n💡 为什么去：如果白天 Tour 回来不太累，傍晚散步很舒服\n⚠️ 注意：水质/船只多，主要当 promenade / sunset base。\n🔎 资料：TAT + local guide；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":5,"name":"Krabi Town Night Market · Sunday","category":"🛍️ 购物","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Maharaj Rd, Krabi Town","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Krabi+Town+Night+Market","note":"🕒 营业/可去：Fri–Sun 17:00–22:00\n⭐ 最理想时间：18:30–21:00\n⏱ 建议停留：1.5–2 hr\n💡 为什么去：我们的建议日期让 Day5 落 Sunday，刚好可去 Krabi Town 周末夜市\n⚠️ 注意：Ao Nang 开车约20–30min；Tour回来很累就改 Landmark。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":5,"name":"Relax Home Massage Ao Nang","category":"💆 按摩","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Ao Nang, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Relax+home+massage+Ao+Nang","note":"🕒 营业/可去：Daily 09:00–23:00\n⭐ 最理想时间：20:00后\n⏱ 建议停留：60–120 min\n💡 为什么去：海岛回来按脚/Thai massage 很实际\n⚠️ 注意：4人一起先问空位。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":5,"name":"Royal Palm Spa · Backup","category":"💆 按摩","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Ao Nang, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Royal+Palm+Spa+Ao+Nang","note":"🕒 营业/可去：Daily 10:00–23:00\n⭐ 最理想时间：20:00后\n⏱ 建议停留：60–120 min\n💡 为什么去：按摩 backup，哪家有位去哪家\n⚠️ 注意：不要两间都确认。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":5,"name":"Ao Nang Landmark Night Market · Backup","category":"🛍️ 购物","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Ao Nang, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Ao+Nang+Landmark+Night+Market","note":"🕒 营业/可去：Daily 17:00–23:00\n⭐ 最理想时间：19:00–22:00\n⏱ 建议停留：1–2 hr\n💡 为什么去：如果不想开车去 Krabi Town，留在 Ao Nang 最方便\n⚠️ 注意：Day4 去过就可 skip。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":6,"name":"Klong Muang Beach · Quiet Morning","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Klong Muang Beach, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Klong+Muang+Beach+Krabi","note":"🕒 营业/可去：Public beach 24h\n⭐ 最理想时间：07:00–09:00\n⏱ 建议停留：1–1.5 hr\n💡 为什么去：比 Ao Nang 安静，适合最后一个 Krabi 早晨\n⚠️ 注意：如果 Day5 Tour 很累就睡迟一点，不必勉强。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":6,"name":"Tiger Cave Temple · Morning Option","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Wat Tham Suea, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Wat+Tham+Suea+Krabi","note":"🕒 营业/可去：Daily 06:00–18:00\n⭐ 最理想时间：06:00–09:00\n⏱ 建议停留：2–3 hr\n💡 为什么去：如果 Day4 没去，Day6 清早爬完再走是最合理\n⚠️ 注意：爬梯非常耗体力；天气湿滑/身体状态不好就不要。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":6,"name":"THE COFFEE CLUB Ao Nang","category":"🍜 美食","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"273 Moo 2, Ao Nang, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=THE+COFFEE+CLUB+Ao+Nang","note":"🕒 营业/可去：Daily 07:00–21:00\n⭐ 最理想时间：07:00–09:30\n⏱ 建议停留：45–60 min\n💡 为什么去：想要稳定咖啡/早餐、冷气舒服就选\n⚠️ 注意：不是 local 必吃，主要胜在方便。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":6,"name":"Emerald Pool · 如果 Day4 Skip","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Emerald Pool, Khlong Thom, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Emerald+Pool+Krabi","note":"🕒 营业/可去：Daily 08:30–16:30\n⭐ 最理想时间：08:30–11:00\n⏱ 建议停留：2–2.5 hr\n💡 为什么去：Krabi回Hat Yai路上再次经过 Khlong Thom，可作为补去机会\n⚠️ 注意：如果去这个，Hat Yai 到达会晚2–3小时。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":6,"name":"Saline Hot Spring · 如果 Day4 Skip","category":"📍 景点","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Khlong Thom, Krabi","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Saline+Hot+Spring+Khlong+Thom","note":"🕒 营业/可去：Daily 05:00–20:00\n⭐ 最理想时间：08:00–10:00\n⏱ 建议停留：1–1.5 hr\n💡 为什么去：顺路补去的放松选项\n⚠️ 注意：跟 Emerald Pool 不一定两边都去。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":6,"name":"🚗 Krabi → Hat Yai","category":"🚗 交通 / Border","priority":"⭐ 必去","plan_status":"confirmed","start_time":"10:30","duration_minutes":300,"travel_minutes":0,"location":"Ao Nang, Krabi, Thailand","cost":0,"link":"https://www.google.com/maps/dir/?api=1&origin=Ao+Nang%2C+Krabi%2C+Thailand&destination=Hat+Yai%2C+Songkhla%2C+Thailand","note":"🕒 营业/可去：道路全天\n⭐ 最理想时间：09:30–10:30离开\n⏱ 建议停留：4.5–5.5 hr含休息\n💡 为什么去：回 Hat Yai 住一晚，Day7 一早过境回 Malaysia\n⚠️ 注意：Day6 Monday：ASEAN / Greenway / Khlong Hae 都不要排，很多市场周一闭。\n🔎 资料：Route planning estimate + market hours；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":6,"name":"Central Hatyai · Monday Shopping","category":"🛍️ 购物","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"1520 Kanjanavanich Rd, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Central+Hatyai","note":"🕒 营业/可去：Daily 10:00–21:00\n⭐ 最理想时间：17:00–20:30\n⏱ 建议停留：1.5–2.5 hr\n💡 为什么去：Monday 夜市选择少，Central 是最稳的购物/吃饭点\n⚠️ 注意：最后补 Thailand 东西可以在这里。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":6,"name":"Hatyai Village · Monday Backup","category":"🛍️ 购物","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Nuankaew Uthit, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Hatyai+Village","note":"🕒 营业/可去：Daily 06:00–23:00\n⭐ 最理想时间：18:00–21:30\n⏱ 建议停留：1–2 hr\n💡 为什么去：Monday 晚上可用的休闲逛街替代\n⚠️ 注意：跟 Central 二选一即可。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":6,"name":"Krua Pa-Yad · Monday Dinner","category":"🍜 美食","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"272 Sripoovanart Rd, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Krua+Pa-Yad+Hatyai","note":"🕒 营业/可去：Daily 10:30–20:30\n⭐ 最理想时间：17:30–19:30\n⏱ 建议停留：60–90 min\n💡 为什么去：回 Hat Yai 后好好吃一顿\n⚠️ 注意：不要太晚到，20:30收。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":6,"name":"Asana Spa · Monday","category":"💆 按摩","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"80 Rajyindee Soi 3, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Asana+yoga+studio+spa+Hatyai","note":"🕒 营业/可去：Daily 11:00–21:00\n⭐ 最理想时间：18:30–20:30\n⏱ 建议停留：60–120 min\n💡 为什么去：Day7又要长途，前一晚按摩后早点睡很舒服\n⚠️ 注意：21:00关。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":6,"name":"Ease Me Massage · Monday Late Backup","category":"💆 按摩","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Thumnoonvithi Rd, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Ease+Me+Thai+Massage+Hatyai","note":"🕒 营业/可去：Mon–Thu约11:00–22:00\n⭐ 最理想时间：20:00–21:30\n⏱ 建议停留：60–90 min\n💡 为什么去：比 Asana 稍晚关，可当 backup\n⚠️ 注意：第二天过境，别按到太迟。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":7,"name":"Chokdee Dim Sum · Last Breakfast","category":"🍜 美食","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"58/25 Lamaisongkrew Rd, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Chokdee+Dim+Sum+Hat+Yai","note":"🕒 营业/可去：06:00–11:30 & 17:00–20:30\n⭐ 最理想时间：06:15–07:30\n⏱ 建议停留：45–60 min\n💡 为什么去：过境前吃完再走，时间比较好掌握\n⚠️ 注意：07:30左右离开最理想。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":7,"name":"Kim Yong Market · Last-minute Shopping","category":"🛍️ 购物","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Kim Yong Market, Hat Yai","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Kim+Yong+Market+Hat+Yai","note":"🕒 营业/可去：Daily 07:00–18:00\n⭐ 最理想时间：07:00–08:00\n⏱ 建议停留：45–60 min\n💡 为什么去：如果还有零食/手信没买，可最后补\n⚠️ 注意：去就必须早点，不然会拖到 border。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":7,"name":"🚗 Hat Yai → Sadao Border","category":"🚗 交通 / Border","priority":"⭐ 必去","plan_status":"confirmed","start_time":"08:30","duration_minutes":60,"travel_minutes":0,"location":"Hat Yai, Songkhla, Thailand","cost":0,"link":"https://www.google.com/maps/dir/?api=1&origin=Hat+Yai%2C+Songkhla%2C+Thailand&destination=Sadao+Customs+House%2C+Thailand","note":"🕒 营业/可去：道路全天\n⭐ 最理想时间：08:00–08:30离开\n⏱ 建议停留：约1 hr\n💡 为什么去：早点到 Sadao，Day7 后面还要长途去 Cameron\n⚠️ 注意：所有 Thailand 临时进口车辆文件放手边。\n🔎 资料：Route planning estimate；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":7,"name":"🛂 Thailand Exit · 核销/交回车辆临时进口文件","category":"🚗 交通 / Border","priority":"⭐ 必去","plan_status":"confirmed","start_time":"09:30","duration_minutes":90,"travel_minutes":0,"location":"Sadao CIQ / Bukit Kayu Hitam ICQS","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Sadao+Customs+House+new+checkpoint","note":"🕒 营业/可去：新口岸每日05:00–23:00 Thai time / 06:00–24:00 Malaysia time\n⭐ 最理想时间：09:00–11:00\n⏱ 建议停留：预留1–2 hr\n💡 为什么去：必须正确把车带出 Thailand、核销入境时 Customs 文件\n⚠️ 注意：不要直接过完 Immigration 就忘记 Customs vehicle document。\n🔎 资料：Thai Customs + 2026 border announcement；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":7,"name":"🚗 Bukit Kayu Hitam → Cameron Highlands","category":"🚗 交通 / Border","priority":"⭐ 必去","plan_status":"confirmed","start_time":"11:30","duration_minutes":420,"travel_minutes":0,"location":"Bukit Kayu Hitam, Kedah, Malaysia","cost":0,"link":"https://www.google.com/maps/dir/?api=1&origin=Bukit+Kayu+Hitam%2C+Kedah%2C+Malaysia&destination=Brinchang%2C+Cameron+Highlands%2C+Malaysia","note":"🕒 营业/可去：道路全天\n⭐ 最理想时间：11:00–12:00 Malaysia time离开 border\n⏱ 建议停留：约6.5–8 hr含午餐/R&R/山路\n💡 为什么去：这是全程最累的驾驶日之一，到 Cameron 后只安排晚餐/散步\n⚠️ 注意：建议走 North-South Expressway → Simpang Pulai 上 Cameron，天黑后山路放慢。\n🔎 资料：Route planning estimate；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":7,"name":"Cameron Centrum · Evening","category":"🛍️ 购物","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Cameron Centrum, Brinchang","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Cameron+Centrum","note":"🕒 营业/可去：Daily 10:00–22:00\n⭐ 最理想时间：19:00–21:30\n⏱ 建议停留：1–2 hr\n💡 为什么去：长途到 Cameron 后最轻松的晚间逛吃选择\n⚠️ 注意：不要再排农场；早点休息 Day8 才能早起。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":7,"name":"Brinchang Steamboat Dinner Zone","category":"🍜 美食","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Brinchang, Cameron Highlands","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Brinchang+steamboat+Cameron+Highlands","note":"🕒 营业/可去：各餐厅不同；多为晚餐时段\n⭐ 最理想时间：18:30–20:30\n⏱ 建议停留：1–1.5 hr\n💡 为什么去：Cameron 晚上凉，火锅很适合4个人\n⚠️ 注意：周末等位较久；我们的建议日是 Tue，相对轻松。\n🔎 资料：Local restaurant hours vary；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":7,"name":"Cameron Valley Tea House 2 · Arrive Early Only","category":"🍜 美食","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Cameron Valley Tea House 2, Tanah Rata","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Cameron+Valley+Tea+House+2","note":"🕒 营业/可去：Mon–Thu约08:30–19:00；Fri–Sun约08:00–20:00\n⭐ 最理想时间：只有18:00前抵达才考虑\n⏱ 建议停留：45–75 min\n💡 为什么去：若 border/路况非常顺，可在入住前喝茶看山景\n⚠️ 注意：不要为了赶 closing time 危险赶山路。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":8,"name":"BOH Tea Centre · Sungei Palas","category":"📍 景点","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Sungei Palas BOH Tea Centre, Brinchang","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=BOH+Tea+Centre+Sungei+Palas","note":"🕒 营业/可去：Tue–Sun 08:30–16:30；Mon closed\n⭐ 最理想时间：08:30开门就到\n⏱ 建议停留：1.5–2 hr\n💡 为什么去：茶园景色、factory/tea centre，是 Cameron 最值得去的点之一\n⚠️ 注意：路窄、停车会塞；越早越好。\n🔎 资料：Tourism Malaysia/BOH info + Google listing；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":8,"name":"Mossy Forest","category":"📍 景点","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Mossy Forest, Gunung Brinchang","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Mossy+Forest+Cameron+Highlands","note":"🕒 营业/可去：Daily约09:00–16:00\n⭐ 最理想时间：09:00–11:30\n⏱ 建议停留：1.5–2 hr\n💡 为什么去：高山苔藓森林、雾景，是 Cameron 跟茶园不同的体验\n⚠️ 注意：山路狭窄/规则可能变；若自驾路况限制，改订 local 4x4 tour。雨天防滑。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":8,"name":"Kea Farm Market","category":"🛍️ 购物","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Kea Farm Market, Brinchang","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Kea+Farm+Market+Cameron+Highlands","note":"🕒 营业/可去：约 Daily 07:00–19:00\n⭐ 最理想时间：08:00–11:00 或 16:00后\n⏱ 建议停留：60–90 min\n💡 为什么去：蔬菜、草莓、玉米、手信集中\n⚠️ 注意：靠近 BOH/Sheep Sanctuary，可串一起；停车易塞。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":8,"name":"The Sheep Sanctuary","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Kea Farm, Brinchang","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=The+Sheep+Sanctuary+Cameron+Highlands","note":"🕒 营业/可去：Daily 09:00–17:30\n⭐ 最理想时间：10:00–12:00\n⏱ 建议停留：45–75 min\n💡 为什么去：喜欢动物/拍照就值得投，位置就在 Kea Farm\n⚠️ 注意：不喜欢动物互动的人可 skip，把时间留给茶园。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":8,"name":"Big Red Strawberry Farm","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Brinchang, Cameron Highlands","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Big+Red+Strawberry+Farm","note":"🕒 营业/可去：Daily 09:00–17:00\n⭐ 最理想时间：11:00–15:00\n⏱ 建议停留：60–90 min\n💡 为什么去：草莓/蔬菜/小吃，容易到\n⚠️ 注意：草莓自采是否开放看当天产量，不保证。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":8,"name":"Healthy Strawberry Farm","category":"📍 景点","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Jalan Rumah Persekutuan, Brinchang","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Healthy+Strawberry+Farm+Cameron+Highlands","note":"🕒 营业/可去：Daily 07:30–19:00\n⭐ 最理想时间：15:00–17:30\n⏱ 建议停留：45–75 min\n💡 为什么去：另一个草莓候选，营业较长\n⚠️ 注意：跟 Big Red 二选一即可。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":8,"name":"Cameron Lavender Garden","category":"📍 景点","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"59 Brinchang, Cameron Highlands","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Cameron+Lavender+Garden","note":"🕒 营业/可去：Daily约09:00–18:00\n⭐ 最理想时间：14:00–16:30\n⏱ 建议停留：1–1.5 hr\n💡 为什么去：花园、拍照、lavender ice cream，适合喜欢拍照的人\n⚠️ 注意：属于付费园区，最新票价出发前再查。\n🔎 资料：Google Maps/Waze listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":8,"name":"Cameron Valley Tea House 2","category":"🍜 美食","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"34.5 Mile, Tanah Rata, Cameron Highlands","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Cameron+Valley+Tea+House+2","note":"🕒 营业/可去：Mon–Thu约08:30–19:00；Fri–Sun约08:00–20:00\n⭐ 最理想时间：16:00–18:00\n⏱ 建议停留：1–1.5 hr\n💡 为什么去：下午茶+茶园景色，适合 Day8 收尾\n⚠️ 注意：傍晚雾大也有感觉，但开车注意视线。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":8,"name":"Cameron Centrum · Night","category":"🛍️ 购物","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Cameron Centrum, Brinchang","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Cameron+Centrum","note":"🕒 营业/可去：Daily 10:00–22:00\n⭐ 最理想时间：19:00–21:30\n⏱ 建议停留：1–2 hr\n💡 为什么去：晚餐、咖啡、便利店、散步很方便\n⚠️ 注意：Day7去过就 Day8 可以 skip。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":8,"name":"Tanah Rata / Brinchang Steamboat","category":"🍜 美食","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Cameron Highlands, Pahang","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Cameron+Highlands+steamboat","note":"🕒 营业/可去：各餐厅不同\n⭐ 最理想时间：18:30–20:30\n⏱ 建议停留：1–1.5 hr\n💡 为什么去：高原夜晚适合火锅，4个人分食也方便\n⚠️ 注意：有些店排队，看到人少/停车方便就吃。\n🔎 资料：Local restaurant hours vary；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":9,"name":"Kea Farm · Last Buy","category":"🛍️ 购物","priority":"👍 想去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Kea Farm Market, Brinchang","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Kea+Farm+Market+Cameron+Highlands","note":"🕒 营业/可去：约 Daily 07:00–19:00\n⭐ 最理想时间：07:30–09:00\n⏱ 建议停留：45–60 min\n💡 为什么去：买草莓、蔬菜、玉米回 JB 的最后机会\n⚠️ 注意：买冷藏品记得准备保冷袋。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":9,"name":"Cameron Valley Tea House 2 · Last Tea","category":"🍜 美食","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Cameron Valley Tea House 2, Tanah Rata","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Cameron+Valley+Tea+House+2","note":"🕒 营业/可去：Thu约08:30–19:00\n⭐ 最理想时间：08:30–09:30\n⏱ 建议停留：45–60 min\n💡 为什么去：如果 Day8 没喝到，可最后补\n⚠️ 注意：不要拖过10:00才开始下山。\n🔎 资料：Google Maps listing checked 2026-08；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":9,"name":"🚗 Cameron Highlands → JB","category":"🚗 交通 / Border","priority":"⭐ 必去","plan_status":"confirmed","start_time":"09:30","duration_minutes":450,"travel_minutes":0,"location":"Cameron Highlands, Pahang, Malaysia","cost":0,"link":"https://www.google.com/maps/dir/?api=1&origin=Cameron+Highlands%2C+Pahang%2C+Malaysia&destination=Johor+Bahru%2C+Johor%2C+Malaysia","note":"🕒 营业/可去：道路全天\n⭐ 最理想时间：09:00–10:00离开\n⏱ 建议停留：约7–8 hr含R&R\n💡 为什么去：最后一天以安全回家为主\n⚠️ 注意：山路下去先慢开；中途至少2次休息。\n🔎 资料：Route planning estimate；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":9,"name":"Ipoh Lunch Stop · Optional","category":"🍜 美食","priority":"🙂 有空再去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"Ipoh, Perak, Malaysia","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Ipoh+food","note":"🕒 营业/可去：视选择餐厅\n⭐ 最理想时间：12:00–14:00\n⏱ 建议停留：45–75 min\n💡 为什么去：如果经过 Ipoh 刚好饿，可停一次再继续南下\n⚠️ 注意：不要为了吃又绕 Old Town 很久。\n🔎 资料：Flexible route stop；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"},{"day_no":9,"name":"Pagoh / Yong Peng R&R · Driver Rest","category":"⛽ 加油 / 休息","priority":"⭐ 必去","plan_status":"candidate","start_time":null,"duration_minutes":60,"travel_minutes":0,"location":"North-South Expressway, Johor, Malaysia","cost":0,"link":"https://www.google.com/maps/search/?api=1&query=Pagoh+R%26R","note":"🕒 营业/可去：R&R 通常长时段/24h服务为主\n⭐ 最理想时间：每2–2.5小时\n⏱ 建议停留：20–30 min\n💡 为什么去：长途最后一段一定休息，避免疲劳驾驶\n⚠️ 注意：任何人觉得司机累就主动要求换人/停车。\n🔎 资料：Road safety stop；营业时间/票价可能调整，出发前48小时再确认。\n[RT9D8N-2026-V1]"}];
-const ROADTRIP_9D8N_CHECKLIST=[{"category":"👤 Personal","text":"Passport · 每个人确认有效期与护照状态","mode":"all_members","details":"建议护照有效期至少6个月，并各自保存护照资料页照片/离线副本。"},{"category":"🇹🇭 Border","text":"TDAC · 每个人完成 Thailand Digital Arrival Card","mode":"all_members","details":"Thailand 陆路也需要 TDAC。建议在 Day2 入境前3天内完成；保存 PDF/QR/Email。Group submission 可一次填多人，但每个人都要确认自己资料正确。"},{"category":"👤 Personal","text":"Travel Insurance · 每个人都有旅游保险资料","mode":"all_members","details":"每个人手机离线保存 policy number、emergency contact、coverage。"},{"category":"👤 Personal","text":"SIM / Roaming · 每个人网络准备好","mode":"all_members","details":"至少确认 Thailand 有 data；建议其中2人以上能独立导航/联系。"},{"category":"👤 Personal","text":"THB Cash / Card · 每个人准备付款方式","mode":"all_members","details":"每个人至少有少量 THB 现金 + 可海外刷卡/提款的卡；不要把全部现金放同一人。"},{"category":"👤 Personal","text":"Personal Medication / 常用药","mode":"all_members","details":"个人处方药、晕车/止痛/肠胃药按自身需要准备；处方药带原包装/证明较稳妥。"},{"category":"👤 Personal","text":"Powerbank + Charging Cable","mode":"all_members","details":"每个人确认手机、充电线、powerbank；车上再准备 multi-port charger。"},{"category":"👤 Personal","text":"雨具 / 防晒 / 好走的鞋","mode":"all_members","details":"11月 Hat Yai/Songkhla 仍可能雨多；Krabi 海岛晒；Cameron 湿冷。"},{"category":"👤 Personal","text":"酒店地址 / 紧急联系人离线截图","mode":"all_members","details":"每个人手机都保留 Hat Yai、Ao Nang、Cameron 住宿地址，以及车牌/同伴电话。"},{"category":"👤 Personal","text":"个人行李完成检查","mode":"all_members","details":"护照、钱包、药、衣物、拖鞋/泳衣、洗漱用品、充电、雨具全部自己确认。"},{"category":"🚗 Car","text":"车辆 Registration / Grant 原件或可接受文件","mode":"shared","details":"Thailand Customs 临时进口会用到车辆注册文件。准备原件/官方可接受副本。"},{"category":"🚗 Car","text":"Authorization Letter · 若司机/带车者不是车主","mode":"shared","details":"Thai Customs 指引：若控制车辆的人不是车主，要有车主授权文件。"},{"category":"🇹🇭 Border","text":"Thailand Compulsory Motor Insurance","mode":"shared","details":"在入境前办好 Thailand compulsory motor insurance；确认保险日期覆盖整个 Thailand 停留。"},{"category":"🇹🇭 Border","text":"确认 Thailand 车辆表格/保险最新流程","mode":"shared","details":"出发前一周确认 Sadao 当前 TM2/TM3 / vehicle declaration / insurance counter 要求，因为表格流程会调整。"},{"category":"🇹🇭 Border","text":"Border 文件袋 · Passport / TDAC / Vehicle / Insurance / Copies","mode":"shared","details":"集中一袋但不要只放一个电子版本；准备2套 photocopy。"},{"category":"🇹🇭 Border","text":"入境 Thailand 后保管 Temporary Import / Special Declaration","mode":"shared","details":"Day7 出境时要把车辆临时进口文件交回/核销；不要遗失。"},{"category":"🇹🇭 Border","text":"确认新 Bukit Kayu Hitam–Sadao checkpoint 路线/时间","mode":"shared","details":"2026-07起新路线启用；当前为 06:00–24:00 Malaysia time / 05:00–23:00 Thailand time。出发前再确认。"},{"category":"🚗 Car","text":"Car Service / Engine Oil / Coolant / Battery","mode":"shared","details":"长途约2,000km级别，出发前检查保养状态。"},{"category":"🚗 Car","text":"Tyre Pressure / Tread / Spare Tyre / Jack","mode":"shared","details":"山路 + 高速 + 雨天，轮胎状态非常重要。"},{"category":"🚗 Car","text":"Touch n Go / RFID / eWallet balance","mode":"shared","details":"Malaysia 高速先充值足够，避免临时找 top-up。"},{"category":"🚗 Car","text":"车充 / Phone Holder / Dashcam / Memory","mode":"shared","details":"至少一个稳定 phone holder；出发前清 dashcam storage。"},{"category":"🚗 Car","text":"First Aid / Torch / Umbrella / Drinking Water","mode":"shared","details":"车上放一套应急用品、水、纸巾、垃圾袋。"},{"category":"🏨 Booking","text":"Ipoh / Hat Yai / Ao Nang / Cameron Hotels 确认","mode":"shared","details":"确认日期、parking、late check-in、取消政策；地址存入全部人手机。"},{"category":"🏨 Booking","text":"Krabi Island Tour · 等天气接近再确认主方案","mode":"shared","details":"Hong / 4 Islands / Phi Phi 三选一。建议保留可取消方案；Day4晚上再确认 Day5 海况。"},{"category":"🧳 Other","text":"Offline Maps 下载","mode":"shared","details":"至少下载 Hat Yai/Songkhla、Krabi、Cameron、Malaysia north-south route 离线地图。"},{"category":"🧳 Other","text":"Shared THB / Expense Kitty 设置好","mode":"shared","details":"决定共同基金怎么放；实际消费继续在 App Expenses 记账。"},{"category":"🧳 Other","text":"Driver Rotation / Fatigue Plan","mode":"shared","details":"Day7 Hat Yai→Cameron、Day9 Cameron→JB 最累；先决定谁可替换驾驶。"},{"category":"🧳 Other","text":"出发前 48h 检查天气 / Flood / Sea Conditions","mode":"shared","details":"特别看 Songkhla/Hat Yai 降雨、Krabi 海况、Cameron 雨雾。"},{"category":"🧳 Other","text":"Cooler Bag / 保冷袋","mode":"shared","details":"Day9 想买 Cameron 草莓/蔬菜回 JB 建议准备。"},{"category":"🧳 Other","text":"Thailand time zone reminder · 慢 Malaysia 1小时","mode":"shared","details":"Border/店家营业时间注意是当地时间。"}];
-
-function checklistState(row){
-  const mode=row.completion_mode||'shared';
-  if(mode!=='all_members'){
-    return {mode,complete:!!row.done,doneCount:row.done?1:0,required:1,joined:members.length};
-  }
-
-  const required=Math.max(1,Number(currentTrip?.people||members.length||1));
-  const checkedIds=new Set(
-    checklistTicks
-      .filter(t=>t.checklist_id===row.id)
-      .map(t=>t.user_id)
-  );
-  const doneCount=members.filter(m=>checkedIds.has(m.user_id)).length;
-  const complete=members.length>=required && doneCount>=required;
-  return {mode,complete,doneCount,required,joined:members.length,checkedIds};
-}
-
-async function toggleMyChecklistTick(checklistId,checked){
-  if(!checklistTicksAvailable){
-    toast('请先运行 V5.1 Supabase SQL 才能使用个人 Tick','err');
-    return;
-  }
-
-  if(checked){
-    const {error}=await sb.from('trip_checklist_ticks').upsert({
-      checklist_id:checklistId,
-      user_id:user.id,
-      checked_at:new Date().toISOString()
-    },{onConflict:'checklist_id,user_id'});
-    if(error){toast('个人 Tick 失败：'+error.message,'err');return;}
-  }else{
-    const {error}=await sb.from('trip_checklist_ticks')
-      .delete().eq('checklist_id',checklistId).eq('user_id',user.id);
-    if(error){toast('取消 Tick 失败：'+error.message,'err');return;}
-  }
-
-  await refreshTrip();
-}
-
-function getFullPlanImportProgress(){
-  const marker='[RT9D8N-2026-V1]';
-
-  // Old detection used only the hidden marker in note.
-  // V5.2.1 also compares Day + exact template name, so already-imported
-  // database rows are recognised even if the marker is missing.
-  const markerIds=new Set(
-    items
-      .filter(i=>String(i.note||'').includes(marker))
-      .map(i=>i.id)
-  );
-
-  const actualKeys=new Set(
-    items.map(i=>
-      `${Number(i.day_no)}::${String(i.name||'').trim().toLowerCase()}`
-    )
-  );
-
-  let matchedByTemplate=0;
-  ROADTRIP_9D8N_ITEMS.forEach(t=>{
-    const key=`${Number(t.day_no)}::${String(t.name||'').trim().toLowerCase()}`;
-    if(actualKeys.has(key)) matchedByTemplate++;
-  });
-
-  const markerCount=markerIds.size;
-  const matched=Math.max(markerCount,matchedByTemplate);
-  const total=ROADTRIP_9D8N_ITEMS.length;
-  const percent=total ? Math.round(matched/total*100) : 0;
-
-  return {matched,total,percent,markerCount,matchedByTemplate};
-}
-
-function renderFullPlanImportStatus(){
-  const el=$('fullPlanImportStatus');
-  const btn=$('importFull9D8NBtn');
-  if(!el || !currentTrip) return;
-
-  const progress=getFullPlanImportProgress();
-  const {matched,total,percent}=progress;
-
-  const routeText=(routes()||[]).join(' ').toLowerCase();
-  const nineDayRouteSignals=[
-    'ipoh','hat yai','songkhla','krabi','cameron'
-  ].filter(word=>routeText.includes(word)).length;
-
-  const nonBudgetItems=items.filter(i=>!isBudgetItem(i));
-  const populatedNineDayTrip=
-    Number(currentTrip.days)===9 &&
-    nonBudgetItems.length>=25 &&
-    nineDayRouteSignals>=2;
-
-  // Strongest case: exact template fully recognised.
-  if(matched>=total && total>0){
-    el.textContent=`✅ 已导入完整 9D8N 模板 · ${matched}/${total} 项已识别。`;
-    if(btn) btn.textContent='✅ 已导入 · 检查 / 补齐';
-    return;
-  }
-
-  // Partial exact recognition.
-  if(matched>0){
-    el.textContent=`✅ 已有 9D8N 行程资料 · 已识别 ${matched}/${total} 个模板项目（${percent}%）。按下面只会补缺少项目。`;
-    if(btn) btn.textContent='检查 / 补齐缺少项目';
-    return;
-  }
-
-  // Safety fallback: user clearly already has a populated 9-day roadtrip,
-  // so don't claim "not imported" merely because template markers/names differ.
-  if(populatedNineDayTrip){
-    el.textContent=`✅ 已检测到现有 9天自驾行程 · 当前已有 ${nonBudgetItems.length} 个行程项目。模板识别标记不同，但你的资料仍在。`;
-    if(btn) btn.textContent='检查 / 补齐模板（不会重复同名项目）';
-    return;
-  }
-
-  el.textContent=`完整模板共 ${total} 个项目；导入后可直接投票与排时间。`;
-  if(btn) btn.textContent='导入 / 补齐完整 9D8N 行程';
-}
-
-async function importFull9D8NPlan(){
-  if(!currentTrip || !user) return;
-  const btn=$('importFull9D8NBtn');
-  const ok=confirm(
-    '导入完整 9D8N JB → Ipoh → Thailand → Cameron 模板？\\n\\n'+
-    '• 不会删除现有地点 / Vote / Expense / 图片\\n'+
-    '• 会把 Trip 天数设为 9，并更新 9 天路线名称\\n'+
-    '• 只补同 Day 同名不存在的地点\\n'+
-    '• 会补齐完整出发 Checklist（若已运行 V5.1 SQL）'
-  );
-  if(!ok) return;
-
-  if(btn){btn.disabled=true;btn.textContent='正在导入完整计划…';}
-  try{
-    const tripPatch={
-      days:9,
-      people:4,
-      routes:ROADTRIP_9D8N_ROUTES,
-      budget_target:Number(currentTrip.budget_target||6200)
-    };
-    const {error:tripErr}=await sb.from('trips').update(tripPatch).eq('id',currentTrip.id);
-    if(tripErr) throw tripErr;
-
-    const existing=new Set(items.map(i=>`${Number(i.day_no)}::${String(i.name||'').trim().toLowerCase()}`));
-    const missing=ROADTRIP_9D8N_ITEMS.filter(t=>
-      !existing.has(`${Number(t.day_no)}::${String(t.name||'').trim().toLowerCase()}`)
-    );
-
-    if(missing.length){
-      const rows=missing.map(t=>({
-        trip_id:currentTrip.id,
-        day_no:Number(t.day_no),
-        name:t.name,
-        category:t.category,
-        priority:t.priority,
-        plan_status:t.plan_status||'candidate',
-        auto_confirmed:false,
-        start_time:t.start_time||null,
-        duration_minutes:Number(t.duration_minutes||60),
-        travel_minutes:Number(t.travel_minutes||0),
-        location:t.location||'',
-        cost:Number(t.cost||0),
-        link:t.link||'',
-        note:t.note||'',
-        created_by:user.id
-      }));
-      const {error:itemErr}=await sb.from('items').insert(rows);
-      if(itemErr) throw itemErr;
-    }
-
-    let addedChecklist=0;
-    if(checklistAvailable){
-      const existingChecklist=new Set(checklist.map(x=>String(x.text||'').trim().toLowerCase()));
-      const missingChecklist=ROADTRIP_9D8N_CHECKLIST.filter(x=>!existingChecklist.has(x.text.trim().toLowerCase()));
-      if(missingChecklist.length){
-        const rows=missingChecklist.map(x=>({
-          trip_id:currentTrip.id,
-          text:x.text,
-          category:x.category,
-          completion_mode:x.mode||'shared',
-          details:x.details||'',
-          created_by:user.id
-        }));
-        const {error:checkErr}=await sb.from('trip_checklist').insert(rows);
-        if(checkErr){
-          console.warn('Checklist import skipped',checkErr);
-        }else{
-          addedChecklist=rows.length;
-        }
-      }
-    }
-
-    activeDay=1;
-    itineraryMode='candidates';
-    await refreshTrip();
-    switchPanel('overview');
-    toast(`已补齐 ${missing.length} 个行程项目${addedChecklist?` + ${addedChecklist} 个 Checklist`:''} ✅`);
-
-  }catch(err){
-    console.error(err);
-    toast('导入失败：'+(err.message||String(err)),'err');
-  }finally{
-    if(btn) btn.disabled=false;
-    // Never blindly reset to "not imported"; derive state from actual DB rows.
-    renderFullPlanImportStatus();
-  }
-}
-
 function renderChecklist(){
   const list=$('checklistList');
   const overviewList=$('overviewChecklistList');
@@ -6300,7 +5655,6 @@ function renderChecklist(){
 
   if(!list || !overviewList || !disabled || !form) return;
 
-  const upgraded=checklistAvailable && checklistTicksAvailable;
   disabled.classList.toggle('hide',checklistAvailable);
   if(overviewDisabled) overviewDisabled.classList.toggle('hide',checklistAvailable);
 
@@ -6309,67 +5663,55 @@ function renderChecklist(){
     if(el) el.disabled=!checklistAvailable;
   });
 
-  const states=checklist.map(row=>({row,state:checklistState(row)}));
-  const total=states.length;
-  const done=states.filter(x=>x.state.complete).length;
+  const total=checklist.length;
+  const done=checklist.filter(x=>x.done).length;
   const pct=total ? Math.round(done/total*100) : 0;
 
   if($('checklistProgressText')) $('checklistProgressText').textContent=`${done} / ${total}`;
   if($('checklistProgressBar')) $('checklistProgressBar').style.width=`${pct}%`;
+
   if($('overviewChecklistCount')) $('overviewChecklistCount').textContent=`${done} / ${total}`;
   if($('overviewChecklistProgressBar')) $('overviewChecklistProgressBar').style.width=`${pct}%`;
   if($('overviewChecklistMeta')){
     $('overviewChecklistMeta').textContent=checklistAvailable
-      ? (total ? `${done}/${total} 完成 · 点开查看` : '还没有清单 · 点开添加')
+      ? (total
+          ? `${done}/${total} 完成 · 点开查看`
+          : '还没有清单 · 点开添加')
       : 'Checklist 尚未启用';
   }
 
   if(!checklistAvailable){
-    list.innerHTML=''; overviewList.innerHTML=''; return;
+    list.innerHTML='';
+    overviewList.innerHTML='';
+    return;
   }
+
   if(!total){
     const empty=`<div class="checklistEmpty">还没有清单。按「＋ 添加 Checklist」开始。</div>`;
-    list.innerHTML=empty; overviewList.innerHTML=empty; return;
+    list.innerHTML=empty;
+    overviewList.innerHTML=empty;
+    return;
   }
 
   const rowHtml=(row,compact=false)=>{
-    const st=checklistState(row);
     const doneBy=members.find(m=>m.user_id===row.done_by)?.display_name||'';
-    const isAll=st.mode==='all_members';
-
-    let memberHtml='';
-    if(isAll){
-      const chips=members.map(m=>{
-        const checked=st.checkedIds?.has(m.user_id);
-        const mine=m.user_id===user.id;
-        return `<button type="button" class="memberTick ${checked?'done':''} ${mine?'mine':''}"
-          data-personal-checklist="${row.id}" data-personal-checked="${checked?'1':'0'}"
-          ${mine?'':'disabled'}>${checked?'✓':'○'} ${escapeHtml(m.display_name)}</button>`;
-      }).join('');
-      const missing=Math.max(0,st.required-st.joined);
-      memberHtml=`<div class="checklistMemberProgress">${chips}</div>`+
-        (st.complete
-          ? `<span class="checklistAllDone">✓ 全部 ${st.required} 人完成</span>`
-          : `<span class="checklistWaiting">${st.doneCount}/${st.required} 完成${missing?` · 还等 ${missing} 人加入 Trip`:''}</span>`);
-    }
-
     return `
-      <div class="checklistItem ${st.complete?'done':''}">
-        ${isAll
-          ? `<span class="checklistGroupIcon">👥</span>`
-          : `<input class="checklistCheck" type="checkbox" data-checklist-toggle="${row.id}" ${row.done?'checked':''} aria-label="${escapeHtml(row.text)}">`
-        }
+      <div class="checklistItem ${row.done?'done':''}">
+        <input class="checklistCheck" type="checkbox"
+          data-checklist-toggle="${row.id}" ${row.done?'checked':''}
+          aria-label="${escapeHtml(row.text)}">
         <div class="checklistTextWrap">
           <div class="checklistItemText">${escapeHtml(row.text)}</div>
           <div class="checklistItemMeta">
             ${escapeHtml(row.category||'🧳 Other')}
-            ${!isAll && row.done && doneBy?` · ✓ ${escapeHtml(doneBy)}`:''}
-            ${isAll?' · 👥 每个人分别 Tick':''}
+            ${row.done && doneBy?` · ✓ ${escapeHtml(doneBy)}`:''}
           </div>
-          ${row.details?`<div class="checklistItemDetails">${escapeHtml(row.details)}</div>`:''}
-          ${memberHtml}
         </div>
-        ${compact ? '' : `<button class="checklistDelete" type="button" data-checklist-delete="${row.id}" aria-label="删除">⌫</button>`}
+        ${compact
+          ? ''
+          : `<button class="checklistDelete" type="button"
+              data-checklist-delete="${row.id}" aria-label="删除">⌫</button>`
+        }
       </div>`;
   };
 
@@ -6379,12 +5721,6 @@ function renderChecklist(){
   document.querySelectorAll('[data-checklist-toggle]').forEach(el=>{
     el.addEventListener('change',()=>toggleChecklist(el.dataset.checklistToggle,el.checked));
   });
-  document.querySelectorAll('[data-personal-checklist]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const checked=btn.dataset.personalChecked==='1';
-      toggleMyChecklistTick(btn.dataset.personalChecklist,!checked);
-    });
-  });
   document.querySelectorAll('[data-checklist-delete]').forEach(btn=>{
     btn.addEventListener('click',()=>deleteChecklist(btn.dataset.checklistDelete));
   });
@@ -6392,42 +5728,57 @@ function renderChecklist(){
 
 function openChecklistDialog(){
   if(!checklistAvailable){
-    toast('Checklist 尚未启用，请先运行 Supabase SQL','err'); return;
+    toast('Checklist 尚未启用，请先运行 Supabase SQL','err');
+    return;
   }
+
   $('checklistCategory').value='👤 Personal';
   $('checklistText').value='';
-  $('checklistMode').value='shared';
-  $('checklistDetails').value='';
   $('checklistDialog').showModal();
   setTimeout(()=>$('checklistText')?.focus(),100);
 }
 
-async function addChecklist(text,category,mode='shared',details=''){
+async function addChecklist(text,category){
   if(!checklistAvailable) return false;
+
   const value=String(text||'').trim();
   if(!value) return false;
 
-  const payload={
+  const {error}=await sb.from('trip_checklist').insert({
     trip_id:currentTrip.id,
     text:value,
     category:category||'🧳 Other',
-    completion_mode:mode||'shared',
-    details:String(details||'').trim(),
     created_by:user.id
-  };
-  const {error}=await sb.from('trip_checklist').insert(payload);
-  if(error){toast('Checklist 保存失败：'+error.message,'err');return false;}
+  });
+
+  if(error){
+    toast('Checklist 保存失败：'+error.message,'err');
+    return false;
+  }
   await refreshTrip();
   return true;
 }
 
 async function toggleChecklist(id,done){
   const {error}=await sb.from('trip_checklist')
-    .update({done,done_by:done?user.id:null,updated_at:new Date().toISOString()})
+    .update({
+      done,
+      done_by:done?user.id:null,
+      updated_at:new Date().toISOString()
+    })
     .eq('id',id);
-  if(error){toast('Checklist 更新失败：'+error.message,'err');await refreshTrip();return;}
+
+  if(error){
+    toast('Checklist 更新失败：'+error.message,'err');
+    await refreshTrip();
+    return;
+  }
+
   const local=checklist.find(x=>x.id===id);
-  if(local){local.done=done;local.done_by=done?user.id:null;}
+  if(local){
+    local.done=done;
+    local.done_by=done?user.id:null;
+  }
   renderChecklist();
 }
 
@@ -6435,34 +5786,53 @@ async function deleteChecklist(id){
   const row=checklist.find(x=>x.id===id);
   if(!row) return;
   if(!confirm(`删除「${row.text}」？`)) return;
+
   const {error}=await sb.from('trip_checklist').delete().eq('id',id);
-  if(error){toast('删除失败：'+error.message,'err');return;}
+  if(error){
+    toast('删除失败：'+error.message,'err');
+    return;
+  }
+
   checklist=checklist.filter(x=>x.id!==id);
-  checklistTicks=checklistTicks.filter(x=>x.checklist_id!==id);
   renderChecklist();
 }
 
-
 async function seedTravelChecklist(){
   if(!checklistAvailable) return;
+
   const starter=[
-    {category:'👤 Personal',text:'Passport',mode:'all_members',details:'每个人确认 Passport / 离线副本。'},
-    {category:'🇹🇭 Border',text:'TDAC',mode:'all_members',details:'每个人入境 Thailand 前3天内完成 TDAC。'},
-    {category:'🚗 Car',text:'检查 tyre pressure / 车辆状态',mode:'shared',details:'高速+山路前检查。'},
-    {category:'🇹🇭 Border',text:'Thailand car insurance',mode:'shared',details:'确认日期覆盖 Thailand 停留。'},
-    {category:'👤 Personal',text:'THB cash / Card',mode:'all_members',details:'每个人准备自己的付款方式。'},
-    {category:'👤 Personal',text:'SIM / Roaming',mode:'all_members',details:'每个人确认 Thailand data。'},
-    {category:'🏨 Booking',text:'确认 Hotel booking',mode:'shared',details:'确认日期、parking、地址。'},
-    {category:'👤 Personal',text:'Powerbank / Charging cable',mode:'all_members',details:'每个人自己确认。'}
+    ['👤 Personal','Passport'],
+    ['👤 Personal','Driving Licence'],
+    ['🚗 Car','检查 tyre pressure / 车辆状态'],
+    ['🇹🇭 Border','Thailand car insurance'],
+    ['🇹🇭 Border','准备车辆 / 入境所需文件'],
+    ['👤 Personal','THB cash / Card'],
+    ['👤 Personal','SIM / Roaming'],
+    ['🏨 Booking','确认 Hotel booking'],
+    ['🧳 Other','Powerbank / Charging cable']
   ];
+
   const existing=new Set(checklist.map(x=>String(x.text||'').trim().toLowerCase()));
-  const rows=starter.filter(x=>!existing.has(x.text.toLowerCase())).map(x=>({
-    trip_id:currentTrip.id,category:x.category,text:x.text,
-    completion_mode:x.mode,details:x.details,created_by:user.id
-  }));
-  if(!rows.length){toast('常用清单已经加过了');return;}
+  const rows=starter
+    .filter(([,text])=>!existing.has(text.toLowerCase()))
+    .map(([category,text])=>({
+      trip_id:currentTrip.id,
+      category,
+      text,
+      created_by:user.id
+    }));
+
+  if(!rows.length){
+    toast('常用清单已经加过了');
+    return;
+  }
+
   const {error}=await sb.from('trip_checklist').insert(rows);
-  if(error){toast('加入清单失败：'+error.message,'err');return;}
+  if(error){
+    toast('加入清单失败：'+error.message,'err');
+    return;
+  }
+
   await refreshTrip();
   toast(`已加入 ${rows.length} 项常用清单 ✅`);
 }
@@ -7184,357 +6554,395 @@ function renderItems(){
   });
 }
 
+function renderExpenses(){
+  const memberMap = Object.fromEntries(members.map(m=>[m.user_id,m.display_name]));
+  $('expensePaidBy').innerHTML = members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.display_name)}</option>`).join('');
+  $('expenseShareMembers').innerHTML = members.map(m=>`
+    <label class="shareUser"><span><input type="checkbox" class="shareMemberChk" value="${m.user_id}" checked> ${escapeHtml(m.display_name)}</span></label>
+  `).join('');
 
-const EXPENSE_CATEGORIES=[
-  '🍜 Food','🏨 Hotel','⛽ Fuel','🛣 Toll','💆 Massage',
-  '🎟 Ticket','🛍 Shopping','🚗 Parking','🧳 Other'
-];
-
-function expenseDayNo(exp){
-  const direct=Number(exp?.day_no||0);
-  if(direct>0) return direct;
-  const note=String(exp?.note||'');
-  const m=note.match(/关联行程：Day\s*(\d+)/i);
-  return m ? Number(m[1]) : null;
-}
-
-function expenseCategoryName(exp){
-  return String(exp?.category||'🧳 Other').trim() || '🧳 Other';
-}
-
-function expenseShareUserIds(expenseId){
-  return shares.filter(s=>s.expense_id===expenseId).map(s=>s.user_id);
-}
-
-function expensePeopleStats(){
-  const stats={};
-  members.forEach(m=>{
-    stats[m.user_id]={
-      user_id:m.user_id,
-      name:m.display_name||'Member',
-      paid:0,
-      share:0,
-      net:0
-    };
-  });
-
-  expenses.forEach(exp=>{
-    const rm=rmValue(exp.amount,exp.currency);
-    if(!stats[exp.paid_by]){
-      stats[exp.paid_by]={user_id:exp.paid_by,name:'Member',paid:0,share:0,net:0};
-    }
-    stats[exp.paid_by].paid+=rm;
-
-    const part=expenseShareUserIds(exp.id);
-    if(part.length){
-      const each=rm/part.length;
-      part.forEach(uid=>{
-        if(!stats[uid]){
-          stats[uid]={user_id:uid,name:'Member',paid:0,share:0,net:0};
-        }
-        stats[uid].share+=each;
-      });
-    }
-  });
-
-  Object.values(stats).forEach(row=>row.net=row.paid-row.share);
-  return Object.values(stats);
-}
-
-function renderExpensePeopleOverview(){
-  const box=$('expensePeopleOverview');
-  if(!box) return;
-
-  const rows=expensePeopleStats();
-  box.innerHTML=rows.length
-    ? rows.map(row=>`
-      <button type="button" class="expensePersonCard ${expensePerson===row.user_id?'active':''}"
-        data-expense-person="${row.user_id}">
-        <div class="expensePersonName">${escapeHtml(row.name)}</div>
-        <div class="expensePersonMetrics">
-          <div><span>Paid</span><b>${money(row.paid)}</b></div>
-          <div><span>Share</span><b>${money(row.share)}</b></div>
-          <div class="${row.net>=0?'netPositive':'netNegative'}">
-            <span>${row.net>=0?'应收':'应付'}</span>
-            <b>${money(Math.abs(row.net))}</b>
+  $('expenseList').innerHTML = expenses.length ? expenses.map(exp=>{
+    const expShares = shares.filter(s=>s.expense_id===exp.id).map(s=>s.user_id);
+    const each = expShares.length ? rmValue(exp.amount,exp.currency)/expShares.length : 0;
+    return `
+      <div class="expenseCard appExpenseCard">
+        <div class="expenseHead">
+          <div class="expenseIcon">${exp.currency==='THB'?'฿':'💸'}</div>
+          <div class="expenseMain">
+            <div class="title">${escapeHtml(exp.title)}</div>
+            <div class="expenseMeta">${new Date(exp.spent_at).toLocaleString()}<br>💳 ${escapeHtml(memberMap[exp.paid_by]||'')} 付款</div>
+          </div>
+          <div class="expenseAmountWrap">
+            <div class="expenseAmount">${moneyCurr(exp.amount,exp.currency)}</div>
+            <div class="footerMini">≈ ${money(rmValue(exp.amount,exp.currency))}</div>
           </div>
         </div>
-      </button>`).join('')
-    : `<div class="empty">还没有成员花费资料。</div>`;
+        ${exp.note?`<div class="note">${escapeHtml(exp.note)}</div>`:''}
+        <div class="expensePills">
+          <span class="pill">👥 分摊人数 ${expShares.length}</span>
+          ${expShares.length?`<span class="pill">🧾 每人 ≈ ${money(each)}</span>`:''}
+          <span class="pill">💱 ${escapeHtml(exp.currency)}</span>
+        </div>
+        <div class="expenseActions">
+          <button class="iconbtn" data-edit-expense="${exp.id}">✏️ 编辑</button>
+          <button class="iconbtn danger" data-del-expense="${exp.id}">⌫ 删除</button>
+        </div>
+      </div>
+    `;
+  }).join('') : `<div class="empty">还没有 Expense，先记第一笔油费、酒店或晚餐吧。</div>`;
 
-  document.querySelectorAll('[data-expense-person]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const uid=btn.dataset.expensePerson;
-      expensePerson=expensePerson===uid ? '' : uid;
-      if($('expensePersonFilter')) $('expensePersonFilter').value=expensePerson;
-      renderExpenses();
-    });
-  });
+  document.querySelectorAll('[data-edit-expense]').forEach(el=>el.addEventListener('click',()=>openExpenseDialog(el.dataset.editExpense)));
+  document.querySelectorAll('[data-del-expense]').forEach(el=>el.addEventListener('click',()=>deleteExpense(el.dataset.delExpense)));
 }
 
-function renderExpenseCategorySummary(){
-  const box=$('expenseCategorySummary');
-  if(!box) return;
-
-  const totals={};
-  expenses.forEach(exp=>{
-    const category=expenseCategoryName(exp);
-    totals[category]=(totals[category]||0)+rmValue(exp.amount,exp.currency);
-  });
-
-  const rows=Object.entries(totals).sort((a,b)=>b[1]-a[1]);
-  box.innerHTML=rows.length
-    ? rows.map(([cat,total])=>`
-      <button type="button" class="expenseCategoryChip ${expenseCategory===cat?'active':''}"
-        data-expense-category-chip="${escapeHtml(cat)}">
-        <span>${escapeHtml(cat)}</span>
-        <b>${money(total)}</b>
-      </button>`).join('')
-    : `<div class="empty">有 Expense 后会显示 Category Spending。</div>`;
-
-  document.querySelectorAll('[data-expense-category-chip]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const cat=btn.dataset.expenseCategoryChip;
-      expenseCategory=expenseCategory===cat ? '' : cat;
-      if($('expenseCategoryFilter')) $('expenseCategoryFilter').value=expenseCategory;
-      renderExpenses();
-    });
-  });
+async function toggleDone(id, done){
+  const {error}=await sb.from('items').update({done}).eq('id',id);
+  if(error) toast(error.message,'err');
 }
 
-function filteredExpenses(){
-  let list=[...expenses];
+async function toggleVote(itemId){
+  const item=items.find(i=>i.id===itemId);
+  if(!item || isBudgetItem(item)) return;
 
-  if(expenseSearch){
-    const q=expenseSearch.toLowerCase();
-    list=list.filter(exp=>[
-      exp.title,
-      exp.note,
-      expenseCategoryName(exp),
-      members.find(m=>m.user_id===exp.paid_by)?.display_name
-    ].join(' ').toLowerCase().includes(q));
-  }
+  const mine=votes.find(v=>v.item_id===itemId && v.user_id===user.id);
 
-  if(expensePerson){
-    list=list.filter(exp=>
-      exp.paid_by===expensePerson ||
-      expenseShareUserIds(exp.id).includes(expensePerson)
-    );
-  }
+  if(mine){
+    const {error}=await sb.from('item_votes')
+      .delete()
+      .eq('item_id',itemId)
+      .eq('user_id',user.id);
 
-  if(expenseDay){
-    list=list.filter(exp=>String(expenseDayNo(exp)||'')===String(expenseDay));
-  }
-
-  if(expenseCategory){
-    list=list.filter(exp=>expenseCategoryName(exp)===expenseCategory);
-  }
-
-  if(expenseCurrency){
-    list=list.filter(exp=>exp.currency===expenseCurrency);
-  }
-
-  list.sort((a,b)=>{
-    if(expenseSort==='oldest'){
-      return new Date(a.spent_at)-new Date(b.spent_at);
+    if(error){
+      toast(error.message,'err');
+      return;
     }
-    if(expenseSort==='high'){
-      return rmValue(b.amount,b.currency)-rmValue(a.amount,a.currency);
+  }else{
+    const {error}=await sb.from('item_votes')
+      .insert({item_id:itemId,user_id:user.id});
+
+    if(error){
+      toast(error.message,'err');
+      return;
     }
-    if(expenseSort==='low'){
-      return rmValue(a.amount,a.currency)-rmValue(b.amount,b.currency);
-    }
-    return new Date(b.spent_at)-new Date(a.spent_at);
-  });
-
-  return list;
-}
-
-function setupExpenseFilterOptions(){
-  if($('expensePersonFilter')){
-    const current=$('expensePersonFilter').value;
-    $('expensePersonFilter').innerHTML=
-      `<option value="">全部成员</option>`+
-      members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.display_name)}</option>`).join('');
-    $('expensePersonFilter').value=expensePerson||current||'';
   }
 
-  if($('expenseDayFilter')){
-    $('expenseDayFilter').innerHTML=
-      `<option value="">全部 Day</option>`+
-      Array.from({length:Number(currentTrip?.days||0)},(_,i)=>
-        `<option value="${i+1}">Day ${i+1}</option>`
-      ).join('');
-    $('expenseDayFilter').value=expenseDay||'';
-  }
+  // Read the authoritative vote count from Supabase before deciding status.
+  const {count,error:countError}=await sb.from('item_votes')
+    .select('*',{count:'exact',head:true})
+    .eq('item_id',itemId);
 
-  if($('expenseCategoryFilter')){
-    $('expenseCategoryFilter').innerHTML=
-      `<option value="">全部 Category</option>`+
-      EXPENSE_CATEGORIES.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
-    $('expenseCategoryFilter').value=expenseCategory||'';
-  }
-
-  if($('expenseCurrencyFilter')) $('expenseCurrencyFilter').value=expenseCurrency||'';
-  if($('expenseSortFilter')) $('expenseSortFilter').value=expenseSort||'newest';
-  if($('expenseSearchFilter') && $('expenseSearchFilter').value!==expenseSearch){
-    $('expenseSearchFilter').value=expenseSearch;
-  }
-}
-
-function csvEscape(value){
-  const text=String(value??'');
-  return `"${text.replace(/"/g,'""')}"`;
-}
-
-function exportExpensesCsv(){
-  const memberMap=Object.fromEntries(members.map(m=>[m.user_id,m.display_name]));
-  const list=filteredExpenses();
-
-  if(!list.length){
-    toast('目前筛选结果没有 Expense 可以导出','err');
+  if(countError){
+    toast(countError.message,'err');
+    await refreshTrip();
     return;
   }
 
-  const rows=[
-    [
-      'Date','Day','Expense','Category','Currency','Original Amount',
-      'RM Amount','Paid By','Shared With','Per Person RM',
-      'Linked Place','Note'
-    ]
-  ];
+  const votesNow=Number(count||0);
+  const required=requiredVoteCount();
 
-  list.forEach(exp=>{
-    const expShares=expenseShareUserIds(exp.id);
-    const rm=rmValue(exp.amount,exp.currency);
-    const each=expShares.length ? rm/expShares.length : 0;
-    const linked=items.find(i=>i.id===exp.linked_item_id);
+  // 4/4 (or configured people/people) = definitely going.
+  if(votesNow>=required){
+    const {error}=await sb.from('items').update({
+      plan_status:'confirmed',
+      auto_confirmed:true
+    }).eq('id',itemId);
 
-    rows.push([
-      new Date(exp.spent_at).toLocaleString(),
-      expenseDayNo(exp)||'',
-      exp.title||'',
-      expenseCategoryName(exp),
-      exp.currency||'',
-      Number(exp.amount||0).toFixed(2),
-      rm.toFixed(2),
-      memberMap[exp.paid_by]||'',
-      expShares.map(uid=>memberMap[uid]||uid).join(' | '),
-      each.toFixed(2),
-      linked?.name||'',
-      exp.note||''
-    ]);
-  });
+    if(error){
+      toast(error.message,'err');
+      await refreshTrip();
+      return;
+    }
 
-  const csv='\ufeff'+rows.map(row=>row.map(csvEscape).join(',')).join('\r\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  const safeTitle=String(currentTrip?.title||'RoadTrip')
-    .replace(/[\\/:*?"<>|]+/g,'-')
-    .slice(0,60);
+    item.plan_status='confirmed';
+    item.auto_confirmed=true;
+    itineraryMode='timeline';
 
-  a.href=url;
-  a.download=`${safeTitle}-expenses.csv`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
+    await refreshTrip();
+    toast(`🎉 ${votesNow}/${required} 全票通过，已自动加入正式行程`);
 
-  toast(`已导出 ${list.length} 笔 Expense CSV ✅`);
-}
-
-function renderExpenses(){
-  const memberMap=Object.fromEntries(members.map(m=>[m.user_id,m.display_name]));
-
-  $('expensePaidBy').innerHTML=
-    members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.display_name)}</option>`).join('');
-
-  $('expenseShareMembers').innerHTML=
-    members.map(m=>`
-      <label class="shareUser">
-        <span><input type="checkbox" class="shareMemberChk" value="${m.user_id}" checked> ${escapeHtml(m.display_name)}</span>
-      </label>`).join('');
-
-  setupExpenseFilterOptions();
-  renderExpensePeopleOverview();
-  renderExpenseCategorySummary();
-
-  const list=filteredExpenses();
-  const filteredRm=list.reduce((sum,exp)=>sum+rmValue(exp.amount,exp.currency),0);
-
-  if($('expenseFilterResult')){
-    const activeFilters=[
-      expenseSearch?'Search':null,
-      expensePerson?'成员':null,
-      expenseDay?`Day ${expenseDay}`:null,
-      expenseCategory||null,
-      expenseCurrency||null
-    ].filter(Boolean);
-
-    $('expenseFilterResult').textContent=
-      `${list.length} / ${expenses.length} 笔 · ${money(filteredRm)}`+
-      (activeFilters.length?` · ${activeFilters.join(' / ')}`:'');
+    // The 4th voter can immediately assign the actual time.
+    if(!item.start_time){
+      setTimeout(()=>openItemDialog(itemId),180);
+    }
+    return;
   }
 
-  $('expenseList').innerHTML=list.length
-    ? list.map(exp=>{
-        const expShares=expenseShareUserIds(exp.id);
-        const each=expShares.length
-          ? rmValue(exp.amount,exp.currency)/expShares.length
-          : 0;
-        const day=expenseDayNo(exp);
-        const category=expenseCategoryName(exp);
-        const linked=items.find(i=>i.id===exp.linked_item_id);
+  // Only auto-confirmed items auto-revert when a vote is withdrawn.
+  if(votesNow<required && item.auto_confirmed){
+    const {error}=await sb.from('items').update({
+      plan_status:'candidate',
+      auto_confirmed:false
+    }).eq('id',itemId);
 
-        return `
-          <div class="expenseCard appExpenseCard">
-            <div class="expenseHead">
-              <div class="expenseIcon">${escapeHtml(category.split(' ')[0]||'💸')}</div>
-              <div class="expenseMain">
-                <div class="title">${escapeHtml(exp.title)}</div>
-                <div class="expenseMeta">
-                  ${new Date(exp.spent_at).toLocaleString()}
-                  ${day?` · Day ${day}`:''}
-                  <br>💳 ${escapeHtml(memberMap[exp.paid_by]||'')} 付款
-                </div>
-              </div>
-              <div class="expenseAmountWrap">
-                <div class="expenseAmount">${moneyCurr(exp.amount,exp.currency)}</div>
-                <div class="footerMini">≈ ${money(rmValue(exp.amount,exp.currency))}</div>
-              </div>
-            </div>
+    if(!error){
+      item.plan_status='candidate';
+      item.auto_confirmed=false;
+      itineraryMode='candidates';
+      toast(`票数变成 ${votesNow}/${required}，已自动退回候选`);
+    }
+  }
 
-            ${exp.note?`<div class="note">${escapeHtml(exp.note)}</div>`:''}
+  await refreshTrip();
+}
 
-            <div class="expensePills">
-              <span class="pill">${escapeHtml(category)}</span>
-              ${day?`<span class="pill">📅 Day ${day}</span>`:''}
-              <span class="pill">👥 ${expShares.length} 人分摊</span>
-              ${expShares.length?`<span class="pill">🧾 每人 ≈ ${money(each)}</span>`:''}
-              <span class="pill">💱 ${escapeHtml(exp.currency)}</span>
-              ${linked?`<span class="pill">📍 ${escapeHtml(linked.name)}</span>`:''}
-            </div>
+function openItemDialog(id){
+  editingItem = id ? items.find(i=>i.id===id) : null;
+  $('itemModalTitle').textContent = editingItem ? '编辑地点' : '新增地点';
+  $('itemFormMsg').innerHTML='';
+  const saveBtn=$('itemSaveBtn');
+  if(saveBtn){ saveBtn.disabled=false; saveBtn.textContent='保存'; }
 
-            <div class="expenseActions">
-              <button class="iconbtn" data-edit-expense="${exp.id}">✏️ 编辑</button>
-              <button class="iconbtn danger" data-del-expense="${exp.id}">⌫ 删除</button>
-            </div>
-          </div>`;
-      }).join('')
-    : `<div class="empty">${
-        expenses.length
-          ? '没有符合目前筛选条件的 Expense。'
-          : '还没有 Expense，先记第一笔油费、酒店或晚餐吧。'
-      }</div>`;
+  const daySelect=$('itemDay');
+  daySelect.innerHTML=Array.from({length:currentTrip.days},(_,i)=>{
+    const day=i+1;
+    const route=routes()[i] || '';
+    return `<option value="${day}">Day ${day}${route?` · ${escapeHtml(route)}`:''}</option>`;
+  }).join('');
+  daySelect.value=String(editingItem?.day_no || activeDay || 1);
 
-  document.querySelectorAll('[data-edit-expense]').forEach(el=>{
-    el.addEventListener('click',()=>openExpenseDialog(el.dataset.editExpense));
-  });
+  $('itemName').value = editingItem?.name || '';
+  $('itemCategory').value = editingItem?.category || '🍜 美食';
+  $('itemPriority').value = editingItem?.priority || '👍 想去';
+  $('itemPlanStatus').value = editingItem?.plan_status || 'candidate';
+  $('itemStartTime').value = editingItem?.start_time ? String(editingItem.start_time).slice(0,5) : '';
+  $('itemDuration').value = Number(editingItem?.duration_minutes ?? 60);
+  $('itemTravel').value = Number(editingItem?.travel_minutes ?? 0);
+  $('itemLocation').value = editingItem?.location || '';
+  $('itemCost').value = editingItem?.cost || 0;
+  $('itemLink').value = editingItem?.link || '';
+  $('itemNote').value = editingItem?.note || '';
+  $('itemPhoto').value = '';
+  $('currentPhotoBox').innerHTML = editingItem?.image_url ? `当前照片：<a href="${escapeHtml(editingItem.image_url)}" target="_blank">查看</a>` : '当前没有照片';
+  $('itemDialog').showModal();
+}
 
-  document.querySelectorAll('[data-del-expense]').forEach(el=>{
-    el.addEventListener('click',()=>deleteExpense(el.dataset.delExpense));
-  });
+async function uploadPhoto(file){
+  if(!file) return '';
+  const ext=(file.name.split('.').pop() || 'jpg').toLowerCase();
+  const path=`${currentTrip.id}/${crypto.randomUUID()}.${ext}`;
+  const {error}=await sb.storage.from('trip-photos').upload(path,file,{upsert:false});
+  if(error) throw error;
+  const {data}=sb.storage.from('trip-photos').getPublicUrl(path);
+  return data.publicUrl;
+}
+
+async function saveItem(e){
+  e.preventDefault();
+
+  const form=$('itemForm');
+  const msgBox=$('itemFormMsg');
+  const saveBtn=$('itemSaveBtn');
+
+  if(!form.reportValidity()){
+    msgBox.innerHTML='<div class="saveState error">⚠️ 请先填写必填资料，例如名称。</div>';
+    return;
+  }
+
+  saveBtn.disabled=true;
+  saveBtn.textContent='保存中…';
+  msgBox.innerHTML='<div class="saveState saving">⏳ 正在保存并同步给其他成员…</div>';
+
+  try{
+    let imageUrl=editingItem?.image_url||'';
+    const file=$('itemPhoto').files[0];
+
+    if(file){
+      msgBox.innerHTML='<div class="saveState saving">📷 正在上传照片…</div>';
+      imageUrl=await uploadPhoto(file);
+    }
+
+    const selectedStatus=normalizePlanStatus($('itemPlanStatus').value);
+    const isManualConfirmation=
+      selectedStatus==='confirmed' &&
+      editingItem?.auto_confirmed!==true;
+
+    const payload={
+      trip_id:currentTrip.id,
+      day_no:Number($('itemDay').value||activeDay||1),
+      name:$('itemName').value.trim(),
+      category:$('itemCategory').value,
+      priority:$('itemPriority').value,
+      plan_status:selectedStatus,
+      // If an auto-confirmed item is edited/scheduled and kept confirmed,
+      // keep auto_confirmed true. Manual confirmation is false.
+      auto_confirmed:
+        editingItem?.auto_confirmed===true && selectedStatus==='confirmed'
+          ? true
+          : false,
+      start_time:$('itemStartTime').value||null,
+      duration_minutes:Math.max(0,Number($('itemDuration').value||60)),
+      travel_minutes:Math.max(0,Number($('itemTravel').value||0)),
+      location:$('itemLocation').value.trim(),
+      cost:Number($('itemCost').value||0),
+      link:$('itemLink').value.trim(),
+      note:$('itemNote').value.trim(),
+      image_url:imageUrl
+    };
+
+    msgBox.innerHTML='<div class="saveState saving">☁️ 正在写入 Supabase…</div>';
+
+    let result;
+    if(editingItem){
+      result=await sb.from('items')
+        .update(payload)
+        .eq('id',editingItem.id)
+        .select('id');
+    }else{
+      payload.created_by=user.id;
+      result=await sb.from('items')
+        .insert(payload)
+        .select('id');
+    }
+
+    if(result.error) throw result.error;
+    if(!result.data?.length){
+      throw new Error('Supabase 没有返回已保存记录。请确认你仍然是这趟 Trip 的成员。');
+    }
+
+    activeDay=payload.day_no;
+    const savedAsBudget=isBudgetItem(payload);
+
+    // Planner mode only matters for real itinerary items.
+    if(!savedAsBudget){
+      itineraryMode=payload.plan_status==='confirmed' ? 'timeline' : 'candidates';
+    }
+
+    msgBox.innerHTML='<div class="saveState success">✅ 保存成功！正在刷新…</div>';
+    await refreshTrip();
+
+    setTimeout(()=>{
+      $('itemDialog').close();
+
+      if(savedAsBudget){
+        // Budget / Trip Info belongs to Budget & Expenses, not Itinerary.
+        switchPanel('expenses');
+        const budgetDetails=$('budgetHubDetails');
+        if(budgetDetails) budgetDetails.open=true;
+        setTimeout(()=>{
+          budgetDetails?.scrollIntoView({
+            behavior:'smooth',
+            block:'start'
+          });
+        },80);
+        toast('Budget / Trip Info 已保存 ✅');
+      }else{
+        switchPanel('itinerary');
+        window.scrollTo({top:0,behavior:'smooth'});
+
+        if(payload.plan_status==='confirmed'){
+          toast(
+            payload.start_time
+              ? '已确认并加入正式时间表 ✅'
+              : '已确认；现在显示在“待排时间” 🕒'
+          );
+        }else{
+          toast('已保存行程项目 ✅');
+        }
+      }
+    },220);
+
+  }catch(err){
+    const raw=String(err?.message||err||'Unknown error');
+    const lower=raw.toLowerCase();
+
+    let friendly=raw;
+
+    if(
+      lower.includes('plan_status') ||
+      lower.includes('start_time') ||
+      lower.includes('duration_minutes') ||
+      lower.includes('travel_minutes') ||
+      lower.includes('auto_confirmed') ||
+      lower.includes('schema cache')
+    ){
+      friendly=
+        'Planner 数据库字段还没准备完整。请到 Supabase → SQL Editor，运行 V4 ZIP 里的 01_RUN_THIS_SQL_V4.sql。\\n\\n原始错误：'+raw;
+    }else if(lower.includes('row-level security')||lower.includes('rls')){
+      friendly=
+        'Supabase 权限阻止了保存。请确认你仍然是这趟 Trip 的成员。\\n\\n原始错误：'+raw;
+    }else if(lower.includes('storage')||lower.includes('bucket')){
+      friendly=
+        '照片上传失败。可以先不选择照片再保存，或检查 trip-photos Storage bucket。\\n\\n原始错误：'+raw;
+    }
+
+    msgBox.innerHTML=
+      `<div class="saveState error"><b>❌ 保存失败</b><br>${escapeHtml(friendly).replace(/\\n/g,'<br>')}</div>`;
+
+    saveBtn.disabled=false;
+    saveBtn.textContent='再试一次';
+  }
+}
+
+async function deleteItem(id){
+  const item=items.find(x=>x.id===id);
+  const label=item?.name || '这个地点';
+
+  if(!confirm(`确定删除「${label}」吗？`)) return;
+
+  const {data:deleted,error}=await sb
+    .from('items')
+    .delete()
+    .eq('id',id)
+    .select('id');
+
+  if(error){
+    toast('删除失败：'+error.message,'err');
+    return;
+  }
+
+  if(!deleted?.length){
+    toast('没有删除成功，请确认权限后再试。','err');
+    return;
+  }
+
+  // Remove locally immediately so the card disappears without waiting for Realtime.
+  items=items.filter(x=>x.id!==id);
+  votes=votes.filter(v=>v.item_id!==id);
+  renderTrip();
+  toast('已删除 ✅');
+
+  // Re-sync once in the background for consistency.
+  refreshTrip();
+}
+
+
+function populateExpenseItemsForDay(dayNo, selectedItemId=''){
+  const itemSelect=$('expenseLinkedItem');
+  const preview=$('expenseLinkedPreview');
+
+  if(!dayNo){
+    itemSelect.disabled=true;
+    itemSelect.innerHTML='<option value="">请先选择 Day</option>';
+    preview.classList.remove('show');
+    preview.textContent='';
+    return;
+  }
+
+  const dayItems=items
+    .filter(i=>i.day_no===dayNo)
+    .sort((a,b)=>{
+      const rank={'⭐ 必去':0,'👍 想去':1,'🙂 有空再去':2};
+      const pr=(rank[a.priority]??9)-(rank[b.priority]??9);
+      if(pr!==0)return pr;
+      return (a.name||'').localeCompare(b.name||'');
+    });
+
+  itemSelect.disabled=false;
+  itemSelect.innerHTML=
+    '<option value="">不关联行程地点</option>'+
+    dayItems.map(i=>{
+      const budget=Number(i.cost||0)>0 ? ` · ${money(i.cost)}` : '';
+      return `<option value="${i.id}">${escapeHtml(i.category)} · ${escapeHtml(i.name)}${budget}</option>`;
+    }).join('');
+
+  if(selectedItemId && dayItems.some(i=>i.id===selectedItemId)){
+    itemSelect.value=selectedItemId;
+  }else{
+    itemSelect.value='';
+  }
+
+  preview.classList.remove('show');
+  preview.textContent='';
 }
 
 function openExpenseDialog(id){
@@ -7551,13 +6959,11 @@ function openExpenseDialog(id){
       return `<option value="${day}">Day ${day}${route?` · ${escapeHtml(route)}`:''}</option>`;
     }).join('');
 
-  const savedDay=editingExpense ? expenseDayNo(editingExpense) : null;
-  const defaultDay=savedDay || Math.min(Math.max(Number(activeDay||1),1),currentTrip.days);
+  const defaultDay=Math.min(Math.max(Number(activeDay||1),1),currentTrip.days);
   daySelect.value=String(defaultDay);
   populateExpenseItemsForDay(defaultDay);
 
   $('expenseTitle').value = editingExpense?.title || '';
-  $('expenseCategory').value = expenseCategoryName(editingExpense);
   $('expenseAmount').value = editingExpense?.amount || '';
   $('expenseCurrency').value = editingExpense?.currency || 'RM';
 
@@ -7575,10 +6981,6 @@ function openExpenseDialog(id){
     : nowLocalInput();
 
   $('expenseNote').value = editingExpense?.note || '';
-
-  if(editingExpense?.linked_item_id){
-    $('expenseLinkedItem').value=editingExpense.linked_item_id;
-  }
 
   const selected = editingExpense
     ? shares.filter(s=>s.expense_id===editingExpense.id).map(s=>s.user_id)
@@ -7601,18 +7003,12 @@ async function saveExpense(e){
   e.preventDefault();
   const selected = [...document.querySelectorAll('.shareMemberChk:checked')].map(c=>c.value);
   if(!selected.length){ toast('至少选择 1 位分摊成员','err'); return; }
-  const linkedDay=Number($('expenseLinkedDay').value||0) || null;
-  const linkedItemId=$('expenseLinkedItem').value || null;
-
   const payload = {
     trip_id:currentTrip.id,
     title:$('expenseTitle').value.trim(),
-    category:$('expenseCategory').value || '🧳 Other',
     amount:Number($('expenseAmount').value||0),
     currency:$('expenseCurrency').value,
     paid_by:$('expensePaidBy').value,
-    day_no:linkedDay,
-    linked_item_id:linkedItemId,
     note:$('expenseNote').value.trim(),
     spent_at:new Date($('expenseDate').value || Date.now()).toISOString()
   };
@@ -7634,8 +7030,7 @@ async function saveExpense(e){
     const {error:shareErr}=await sb.from('expense_shares').insert(shareRows);
     if(shareErr) throw shareErr;
     $('expenseDialog').close();
-    await refreshTrip();
-    toast('Expense 已保存 ✅');
+    toast('Expense 已保存');
   }catch(err){ toast(err.message || String(err),'err'); }
 }
 
