@@ -2159,6 +2159,233 @@ body[data-theme="dark"] #itemFormMsg .error{
 }
 </style>
 
+
+<style id="roadTripV41BudgetExpenses">
+/* =========================================================
+   V4.1 — Dedicated Budget Hub + roomy Expenses layout
+   ========================================================= */
+.budgetHub{
+  margin-bottom:22px;
+  border-color:#6d5bd0 !important;
+  background:
+    radial-gradient(circle at top right,rgba(124,58,237,.12),transparent 32%),
+    linear-gradient(180deg,#111c2e,#0f172a) !important;
+}
+.budgetHubTitle{
+  margin-bottom:14px;
+}
+.budgetHubStats{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  margin-bottom:16px;
+}
+.budgetHubStat{
+  min-width:0;
+  padding:14px;
+  border-radius:18px;
+  border:1px solid #334155;
+  background:#111c2e;
+}
+.budgetHubStat strong{
+  display:block;
+  font-size:20px;
+  line-height:1.15;
+  color:#fff;
+  overflow-wrap:anywhere;
+}
+.budgetHubStat span{
+  display:block;
+  margin-top:5px;
+  color:#94a3b8;
+  font-size:11px;
+}
+.budgetInfoGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.budgetHubCard{
+  min-width:0;
+  border:1px solid #6d5bd0;
+  border-radius:18px;
+  background:linear-gradient(180deg,#161a2f,#131d31);
+  padding:14px;
+  cursor:pointer;
+  transition:.16s ease;
+}
+.budgetHubCard:hover{
+  border-color:#8b5cf6;
+  transform:translateY(-1px);
+}
+.budgetHubCardTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+.budgetHubCardTitle{
+  min-width:0;
+  font-weight:900;
+  color:#fff;
+  line-height:1.35;
+}
+.budgetHubAmount{
+  flex:0 0 auto;
+  color:#c4b5fd;
+  font-weight:900;
+  white-space:nowrap;
+}
+.budgetHubMeta{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:9px;
+}
+.budgetHubNote{
+  margin-top:9px;
+  color:#aebbd0;
+  font-size:11.5px;
+  line-height:1.5;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.emptyBudget{
+  grid-column:1/-1;
+  border:1px dashed #475569;
+  border-radius:16px;
+  padding:18px;
+  text-align:center;
+  color:#94a3b8;
+}
+
+/* Expenses get real visual breathing room */
+.expenseSection{
+  margin-top:4px;
+}
+.expenseSectionHeading{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  padding:2px 2px 10px;
+  margin-bottom:4px;
+}
+.expenseSectionHeading h3,
+.expenseListHeading h3{
+  margin:0;
+}
+#expenseInsights{
+  gap:14px !important;
+  margin:0 0 18px !important;
+}
+#expenseInsights .insightCard{
+  padding:16px !important;
+  border-radius:20px !important;
+}
+.expenseSummaryGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:22px;
+}
+.expenseSummaryCard{
+  padding:18px !important;
+  min-width:0;
+}
+.expenseSummaryCard h3{
+  margin:0 0 14px !important;
+}
+.expenseSummaryCard .table tr+tr th,
+.expenseSummaryCard .table tr+tr td{
+  padding-top:12px;
+}
+.expenseListSection{
+  margin-top:4px;
+}
+.expenseListHeading{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  padding:0 2px 10px;
+}
+#expenseList{
+  display:grid;
+  gap:16px;
+  margin-top:4px !important;
+}
+#expenseList .expenseCard{
+  margin-bottom:0 !important;
+}
+#expenseList .appExpenseCard{
+  padding:17px !important;
+  border-radius:22px !important;
+}
+#expenseList .expenseActions{
+  margin-top:15px !important;
+  gap:10px !important;
+}
+#expenseList .expensePills{
+  margin-top:12px !important;
+  gap:8px !important;
+}
+#expenseList .note{
+  margin-top:12px !important;
+}
+body[data-theme="dark"] .budgetHubStat{
+  background:#101a2b;
+}
+
+/* Light mode */
+body:not([data-theme="dark"]) .budgetHub{
+  background:
+    radial-gradient(circle at top right,rgba(124,58,237,.08),transparent 32%),
+    linear-gradient(180deg,#ffffff,#f8f7ff) !important;
+}
+body:not([data-theme="dark"]) .budgetHubStat{
+  background:#fff;
+  border-color:#ddd6fe;
+}
+body:not([data-theme="dark"]) .budgetHubStat strong{color:#0f172a}
+body:not([data-theme="dark"]) .budgetHubStat span{color:#64748b}
+body:not([data-theme="dark"]) .budgetHubCard{
+  background:linear-gradient(180deg,#ffffff,#faf7ff);
+  border-color:#c4b5fd;
+}
+body:not([data-theme="dark"]) .budgetHubCardTitle{color:#0f172a}
+body:not([data-theme="dark"]) .budgetHubAmount{color:#6d28d9}
+body:not([data-theme="dark"]) .budgetHubNote{color:#64748b}
+
+@media(max-width:760px){
+  .budgetHubStats{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:9px;
+  }
+  .budgetInfoGrid{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+  .expenseSummaryGrid{
+    grid-template-columns:1fr;
+    gap:14px;
+    margin-bottom:20px;
+  }
+  #expenseInsights{
+    gap:10px !important;
+    margin-bottom:16px !important;
+  }
+  #expenseList{
+    gap:14px;
+  }
+  .budgetHub{
+    margin-bottom:20px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -2264,7 +2491,7 @@ body[data-theme="dark"] #itemFormMsg .error{
         <div class="card navbox">
           <button class="navbtn active" data-panel="overview">🏠 Overview<span class="small">预算 / 汇率 / 快速总览</span></button>
           <button class="navbtn" data-panel="itinerary">📅 Itinerary<span class="small">按天安排行程</span></button>
-          <button class="navbtn" data-panel="expenses">💸 Expenses<span class="small">记账与结算</span></button>
+          <button class="navbtn" data-panel="expenses">💰 Budget & Expenses<span class="small">预算 / 记账 / 结算</span></button>
           <button class="navbtn" data-panel="shared">👥 Shared<span class="small">邀请 / 成员 / 设置</span></button>
         </div>
       </aside>
@@ -2359,27 +2586,55 @@ body[data-theme="dark"] #itemFormMsg .error{
         <div id="expensesPanel" class="hide">
           <div class="sectionTitle">
             <div>
-              <h2>Expenses</h2>
-              <div class="route">支持 RM / THB，自动算总额与结算。</div>
+              <h2>Budget & Expenses</h2>
+              <div class="route">先看共同预算，再记录实际开销与结算。</div>
             </div>
             <div class="toolbar"><button class="btn dark" id="addExpenseBtn">＋ 新增 Expense</button></div>
           </div>
-          <div class="expenseInsights" id="expenseInsights"></div>
-          <div class="grid2">
-            <div class="card">
-              <h3>Expense Summary</h3>
-              <table class="table">
-                <tr><th>总实际支出</th><td id="sumActual"></td></tr>
-                <tr><th>预算目标</th><td id="sumBudget"></td></tr>
-                <tr><th>剩余 / 超出</th><td id="sumRemain"></td></tr>
-              </table>
+          <div class="budgetHub card">
+            <div class="sectionTitle budgetHubTitle">
+              <div>
+                <h3>💰 Budget / Trip Info</h3>
+                <div class="footerMini">这里集中放共同资金、酒店预算、油费、过路费、门票等预算资料。</div>
+              </div>
             </div>
-            <div class="card">
-              <h3>结算建议</h3>
-              <div id="settlementDetails"></div>
+            <div class="budgetHubStats" id="budgetHubStats"></div>
+            <div class="budgetInfoGrid" id="budgetInfoList"></div>
+          </div>
+
+          <div class="expenseSection">
+            <div class="expenseSectionHeading">
+              <div>
+                <h3>💳 Actual Expenses</h3>
+                <div class="footerMini">真正花出去的钱记录在这里，支持 RM / THB 和多人分摊。</div>
+              </div>
+            </div>
+
+            <div class="expenseInsights" id="expenseInsights"></div>
+
+            <div class="expenseSummaryGrid">
+              <div class="card expenseSummaryCard">
+                <h3>Expense Summary</h3>
+                <table class="table">
+                  <tr><th>总实际支出</th><td id="sumActual"></td></tr>
+                  <tr><th>预算目标</th><td id="sumBudget"></td></tr>
+                  <tr><th>剩余 / 超出</th><td id="sumRemain"></td></tr>
+                </table>
+              </div>
+              <div class="card expenseSummaryCard">
+                <h3>结算建议</h3>
+                <div id="settlementDetails"></div>
+              </div>
+            </div>
+
+            <div class="expenseListSection">
+              <div class="expenseListHeading">
+                <h3>🧾 Expense Records</h3>
+                <div class="footerMini">每一笔记录都会自动参与总预算和结算。</div>
+              </div>
+              <div id="expenseList"></div>
             </div>
           </div>
-          <div style="margin-top:12px" id="expenseList"></div>
         </div>
 
         <div id="sharedPanel" class="hide">
@@ -2419,7 +2674,7 @@ body[data-theme="dark"] #itemFormMsg .error{
       <button class="mobileTab active" data-panel="overview"><span>🏠</span><span>首页</span></button>
       <button class="mobileTab" data-panel="itinerary"><span>📅</span><span>行程</span></button>
       <button class="mobileCenterAdd" id="mobileAddBtn" type="button" aria-label="快速新增">＋</button>
-      <button class="mobileTab" data-panel="expenses"><span>💸</span><span>费用</span></button>
+      <button class="mobileTab" data-panel="expenses"><span>💰</span><span>预算</span></button>
       <button class="mobileTab" data-panel="shared"><span>👥</span><span>共享</span></button>
     </div>
   </div>
@@ -2503,7 +2758,7 @@ body[data-theme="dark"] #itemFormMsg .error{
         <span class="quickAddIcon">💸</span>
         <span>
           <span class="quickAddTitle">添加 Expense</span>
-          <span class="quickAddSub">记录谁付款、RM / THB、分摊给谁</span>
+          <span class="quickAddSub">记录实际开销、付款人、RM / THB 和分摊</span>
         </span>
         <span class="quickAddArrow">›</span>
       </button>
@@ -2969,7 +3224,70 @@ function switchPanel(panel){
 function itemVoteCount(itemId){ return votes.filter(v=>v.item_id===itemId).length; }
 function itemVotedByMe(itemId){ return votes.some(v=>v.item_id===itemId && v.user_id===user.id); }
 function topVotedItems(limit=5){
-  return [...items].map(i=>({...i, vote_count:itemVoteCount(i.id)})).sort((a,b)=>b.vote_count-a.vote_count).slice(0,limit);
+  return items
+    .filter(i=>!isBudgetItem(i))
+    .map(i=>({...i, vote_count:itemVoteCount(i.id)}))
+    .sort((a,b)=>b.vote_count-a.vote_count)
+    .slice(0,limit);
+}
+
+
+function renderBudgetHub(actual,remain){
+  const budgetItems=items
+    .filter(isBudgetItem)
+    .sort((a,b)=>{
+      const dayDiff=Number(a.day_no||0)-Number(b.day_no||0);
+      if(dayDiff!==0) return dayDiff;
+      return (a.name||'').localeCompare(b.name||'');
+    });
+
+  const budgetItemsTotal=budgetItems.reduce((sum,item)=>sum+Number(item.cost||0),0);
+  const tripTarget=Number(currentTrip?.budget_target||0);
+  const avgTarget=currentTrip?.people ? tripTarget/Number(currentTrip.people) : 0;
+
+  $('budgetHubStats').innerHTML=`
+    <div class="budgetHubStat">
+      <strong>${money(tripTarget)}</strong>
+      <span>共同预算目标</span>
+    </div>
+    <div class="budgetHubStat">
+      <strong>${money(budgetItemsTotal)}</strong>
+      <span>Budget 项目合计</span>
+    </div>
+    <div class="budgetHubStat">
+      <strong>${money(actual)}</strong>
+      <span>实际已花</span>
+    </div>
+    <div class="budgetHubStat">
+      <strong>${remain>=0?money(remain):'- '+money(Math.abs(remain))}</strong>
+      <span>${remain>=0?'预算剩余':'已超出预算'}</span>
+    </div>`;
+
+  $('budgetInfoList').innerHTML=budgetItems.length
+    ? budgetItems.map(item=>{
+        const displayName=(item.name||'').replace(/^\[Budget\]\s*/,'');
+        const location=(item.location||'').trim();
+        const wholeTrip=/whole trip/i.test(location);
+        const dayLabel=wholeTrip ? 'Whole Trip' : `Day ${item.day_no}`;
+        return `
+          <button class="budgetHubCard" type="button" data-budget-hub-edit="${item.id}">
+            <div class="budgetHubCardTop">
+              <div class="budgetHubCardTitle">${escapeHtml(displayName)}</div>
+              <div class="budgetHubAmount">${Number(item.cost||0)>0?money(item.cost):'—'}</div>
+            </div>
+            <div class="budgetHubMeta">
+              <span class="pill">${escapeHtml(item.category||'💰 Budget')}</span>
+              <span class="pill">📅 ${escapeHtml(dayLabel)}</span>
+              ${location && !wholeTrip?`<span class="pill">📍 ${escapeHtml(location)}</span>`:''}
+            </div>
+            ${item.note?`<div class="budgetHubNote">${escapeHtml(item.note)}</div>`:''}
+          </button>`;
+      }).join('')
+    : `<div class="emptyBudget">还没有 Budget / Trip Info。你可以用「添加地点 / 美食」建立名称以 <b>[Budget]</b> 开头的项目。</div>`;
+
+  document.querySelectorAll('[data-budget-hub-edit]').forEach(btn=>{
+    btn.addEventListener('click',()=>openItemDialog(btn.dataset.budgetHubEdit));
+  });
 }
 
 function renderTrip(){
@@ -2977,7 +3295,7 @@ function renderTrip(){
   $('tripSubtitle').textContent=`${currentTrip.days}天 · ${currentTrip.people}人同行 · Realtime Sync`;
   $('inviteCode').textContent=currentTrip.invite_code;
 
-  const planned=items.reduce((s,x)=>s+Number(x.cost||0),0);
+  const planned=items.filter(i=>!isBudgetItem(i)).reduce((s,x)=>s+Number(x.cost||0),0);
   const actual=expenses.reduce((s,e)=>s+rmValue(e.amount,e.currency),0);
   const remain=Number(currentTrip.budget_target||0)-actual;
   const totalVotes=votes.length;
@@ -2990,6 +3308,7 @@ function renderTrip(){
   $('budgetBar').style.width=pct+'%';
   $('budgetText').textContent=`实际 ${money(actual)} / 预算 ${money(currentTrip.budget_target)} · ${remain>=0?'剩余':'超出'} ${money(Math.abs(remain))}`;
   $('rateText').textContent=`1 THB = RM ${Number(currentTrip.thb_rate||0.13).toFixed(4)}`;
+  renderBudgetHub(actual,remain);
 
   const top=topVotedItems(4);
   $('topVotes').innerHTML=top.length?`<div class="voteLeaderboard">${top.map(i=>`
@@ -3006,7 +3325,8 @@ function renderTrip(){
     });
   });
 
-  $('recentItems').innerHTML=items.slice(0,5).length?items.slice(0,5).map(i=>`
+  const recentTripItems=items.filter(i=>!isBudgetItem(i)).slice(0,5);
+  $('recentItems').innerHTML=recentTripItems.length?recentTripItems.map(i=>`
     <button class="recentEditItem" type="button" data-recent-edit="${i.id}">
       <span class="recentEditIcon">${escapeHtml((i.category||'📍').split(' ')[0])}</span>
       <span>
@@ -3033,7 +3353,7 @@ function renderTrip(){
   const r=routes();
   $('dayOverview').innerHTML=Array.from({length:currentTrip.days},(_,i)=>{
     const day=i+1;
-    const di=items.filter(x=>x.day_no===day);
+    const di=items.filter(x=>x.day_no===day && !isBudgetItem(x));
     const done=di.filter(x=>x.done).length;
     const dayVotes=di.reduce((s,x)=>s+itemVoteCount(x.id),0);
     return `<button class="dayRouteCard ${activeDay===day?'active':''}" data-overview-day="${day}">
@@ -3057,7 +3377,7 @@ function renderTrip(){
   }));
   $('currentRoute').textContent=r[activeDay-1] || '';
 
-  const dayItems=items.filter(i=>Number(i.day_no)===Number(activeDay));
+  const dayItems=items.filter(i=>Number(i.day_no)===Number(activeDay) && !isBudgetItem(i));
   const dayBudget=dayItems.reduce((s,x)=>s+Number(x.cost||0),0);
   const dayVotes=dayItems.reduce((s,x)=>s+itemVoteCount(x.id),0);
   const scheduleInfo=getDaySchedule(activeDay);
@@ -3471,7 +3791,6 @@ function renderItems(){
   const candidateItems=applyFilters(buckets.candidates);
   const backupItems=applyFilters(buckets.backups);
   const skippedItems=applyFilters(buckets.skipped);
-  const budgetItems=applyFilters(buckets.budgets);
 
   let out='';
 
@@ -3509,25 +3828,6 @@ function renderItems(){
       </div>`;
   }
 
-  if(budgetItems.length){
-    out+=`
-      <div class="plannerSection budgetInfoSection">
-        <div class="plannerSectionHead">
-          <div class="plannerSectionTitle">💰 Budget / Trip Info</div>
-          <div class="plannerSectionCount">${budgetItems.length}</div>
-        </div>
-        ${budgetItems.map(item=>`
-          <div class="budgetInfoCard" data-budget-edit="${item.id}">
-            <div class="title">${escapeHtml(item.name)}</div>
-            ${item.location?`<div class="placeLocation">📍 ${escapeHtml(item.location)}</div>`:''}
-            <div class="budgetInfoMeta">
-              <span class="pill">${escapeHtml(item.category)}</span>
-              ${Number(item.cost)>0?`<span class="pill">💰 ${money(item.cost)}</span>`:''}
-            </div>
-          </div>`).join('')}
-      </div>`;
-  }
-
   $('itemsList').innerHTML=out;
 
   document.querySelectorAll('[data-done]').forEach(el=>{
@@ -3544,9 +3844,6 @@ function renderItems(){
   });
   document.querySelectorAll('[data-del-item]').forEach(el=>{
     el.addEventListener('click',()=>deleteItem(el.dataset.delItem));
-  });
-  document.querySelectorAll('[data-budget-edit]').forEach(el=>{
-    el.addEventListener('click',()=>openItemDialog(el.dataset.budgetEdit));
   });
 
   document.querySelectorAll('[data-confirm-plan]').forEach(el=>{
@@ -3589,7 +3886,7 @@ function renderExpenses(){
     const expShares = shares.filter(s=>s.expense_id===exp.id).map(s=>s.user_id);
     const each = expShares.length ? rmValue(exp.amount,exp.currency)/expShares.length : 0;
     return `
-      <div class="expenseCard appExpenseCard" style="margin-bottom:12px">
+      <div class="expenseCard appExpenseCard">
         <div class="expenseHead">
           <div class="expenseIcon">${exp.currency==='THB'?'฿':'💸'}</div>
           <div class="expenseMain">
