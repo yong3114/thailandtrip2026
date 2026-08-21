@@ -2595,7 +2595,7 @@ body:not([data-theme="dark"]) .budgetHubNote{color:#64748b}
             <div class="sectionTitle budgetHubTitle">
               <div>
                 <h3>💰 Budget / Trip Info</h3>
-                <div class="footerMini">这里集中放共同资金、酒店预算、油费、过路费、门票等预算资料。</div>
+                <div class="footerMini">这里集中放共同资金、酒店预算、油费、过路费、门票等预算资料。点卡片即可编辑，保存后会留在这里。</div>
               </div>
             </div>
             <div class="budgetHubStats" id="budgetHubStats"></div>
@@ -4121,24 +4121,42 @@ async function saveItem(e){
     }
 
     activeDay=payload.day_no;
-    itineraryMode=payload.plan_status==='confirmed' ? 'timeline' : 'candidates';
+    const savedAsBudget=isBudgetItem(payload);
+
+    // Planner mode only matters for real itinerary items.
+    if(!savedAsBudget){
+      itineraryMode=payload.plan_status==='confirmed' ? 'timeline' : 'candidates';
+    }
 
     msgBox.innerHTML='<div class="saveState success">✅ 保存成功！正在刷新…</div>';
     await refreshTrip();
 
     setTimeout(()=>{
       $('itemDialog').close();
-      switchPanel('itinerary');
-      window.scrollTo({top:0,behavior:'smooth'});
 
-      if(payload.plan_status==='confirmed'){
-        toast(
-          payload.start_time
-            ? '已确认并加入正式时间表 ✅'
-            : '已确认；现在显示在“待排时间” 🕒'
-        );
+      if(savedAsBudget){
+        // Budget / Trip Info belongs to Budget & Expenses, not Itinerary.
+        switchPanel('expenses');
+        setTimeout(()=>{
+          document.querySelector('.budgetHub')?.scrollIntoView({
+            behavior:'smooth',
+            block:'start'
+          });
+        },80);
+        toast('Budget / Trip Info 已保存 ✅');
       }else{
-        toast('已保存行程项目 ✅');
+        switchPanel('itinerary');
+        window.scrollTo({top:0,behavior:'smooth'});
+
+        if(payload.plan_status==='confirmed'){
+          toast(
+            payload.start_time
+              ? '已确认并加入正式时间表 ✅'
+              : '已确认；现在显示在“待排时间” 🕒'
+          );
+        }else{
+          toast('已保存行程项目 ✅');
+        }
       }
     },220);
 
