@@ -4773,6 +4773,197 @@ dialog .modal{
 }
 </style>
 
+
+<style id="roadTripV515R6AppMotion">
+/* =========================================================
+   R6 — Mobile Hero redesign + interactive swipe motion
+   ========================================================= */
+
+@media(max-width:760px){
+  /* ---------- Overview Hero redesign ---------- */
+  #tripView:not(.mobileSubpage) .hero{
+    position:relative;
+    overflow:hidden;
+    padding:16px !important;
+    border-radius:24px !important;
+    background:
+      radial-gradient(circle at 92% 4%,rgba(255,255,255,.12),transparent 34%),
+      radial-gradient(circle at 12% 100%,rgba(96,165,250,.18),transparent 38%),
+      linear-gradient(145deg,#10182a 0%,#2f2468 58%,#234ea6 100%) !important;
+    box-shadow:0 18px 42px rgba(14,24,50,.24) !important;
+  }
+
+  #tripView:not(.mobileSubpage) .hero::after{
+    content:"";
+    position:absolute;
+    width:120px;
+    height:120px;
+    right:-40px;
+    bottom:-58px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.1);
+    pointer-events:none;
+  }
+
+  #tripView:not(.mobileSubpage) .hero .top{
+    position:relative;
+    z-index:1;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:12px !important;
+  }
+
+  #tripView:not(.mobileSubpage) .hero .top > div:first-child{
+    min-width:0;
+  }
+
+  #tripView:not(.mobileSubpage) .appV2Badge{
+    display:inline-flex;
+    width:max-content;
+    max-width:100%;
+    margin-bottom:8px;
+    padding:5px 8px;
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    color:rgba(255,255,255,.75) !important;
+    font-size:7.5px !important;
+    font-weight:850;
+    letter-spacing:.06em !important;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  #tripView:not(.mobileSubpage) .hero h1{
+    margin:0 !important;
+    max-width:100%;
+    color:#fff !important;
+    font-size:25px !important;
+    font-weight:950 !important;
+    line-height:1.1 !important;
+    letter-spacing:-.035em !important;
+    overflow-wrap:anywhere;
+  }
+
+  #tripView:not(.mobileSubpage) .hero .sub{
+    display:inline-flex;
+    width:max-content;
+    max-width:100%;
+    margin-top:7px !important;
+    padding:6px 9px;
+    border-radius:10px;
+    background:rgba(255,255,255,.08);
+    color:rgba(255,255,255,.78) !important;
+    font-size:10px !important;
+    line-height:1.35;
+  }
+
+  #tripView:not(.mobileSubpage) .hero .toolbar{
+    display:grid !important;
+    grid-template-columns:44px 1fr 1fr;
+    gap:7px !important;
+    width:100%;
+  }
+
+  #tripView:not(.mobileSubpage) .hero .toolbar button{
+    min-width:0;
+    min-height:42px !important;
+    padding:8px 9px !important;
+    border-radius:13px !important;
+    background:rgba(255,255,255,.1) !important;
+    border:1px solid rgba(255,255,255,.14) !important;
+    color:#fff !important;
+    box-shadow:none !important;
+    font-size:10.5px !important;
+    font-weight:800 !important;
+  }
+
+  #tripView:not(.mobileSubpage) .hero .toolbar .themeToggle{
+    padding:0 !important;
+    font-size:16px !important;
+  }
+
+  #tripView:not(.mobileSubpage) .hero .cards{
+    position:relative;
+    z-index:1;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:8px !important;
+    margin-top:12px !important;
+  }
+
+  #tripView:not(.mobileSubpage) .hero .card.glass{
+    min-height:68px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:10px 11px !important;
+    border-radius:15px !important;
+    background:rgba(255,255,255,.09) !important;
+    border:1px solid rgba(255,255,255,.12) !important;
+    -webkit-backdrop-filter:blur(8px);
+    backdrop-filter:blur(8px);
+  }
+
+  #tripView:not(.mobileSubpage) .hero .stat .num{
+    color:#fff !important;
+    font-size:17px !important;
+    line-height:1.15;
+  }
+
+  #tripView:not(.mobileSubpage) .hero .stat .label{
+    margin-top:4px !important;
+    color:rgba(255,255,255,.64) !important;
+    font-size:9px !important;
+    font-weight:750;
+  }
+
+  /* ---------- Interactive swipe motion ---------- */
+  .content{
+    will-change:transform,opacity;
+    transform:translate3d(0,0,0);
+    opacity:1;
+  }
+
+  .content.uiSwipeTracking{
+    transition:none !important;
+  }
+
+  .content.uiSwipeSnap{
+    transition:
+      transform .24s cubic-bezier(.22,.78,.25,1),
+      opacity .24s ease !important;
+  }
+
+  .content.uiSwipeExit{
+    transition:
+      transform .18s cubic-bezier(.4,0,.8,.2),
+      opacity .18s ease !important;
+  }
+
+  .content.uiSwipeEnter{
+    transition:none !important;
+  }
+
+  body.uiSwipeActive{
+    overscroll-behavior-x:none;
+  }
+}
+
+@media(max-width:390px){
+  #tripView:not(.mobileSubpage) .hero{
+    padding:14px !important;
+  }
+  #tripView:not(.mobileSubpage) .hero h1{
+    font-size:23px !important;
+  }
+  #tripView:not(.mobileSubpage) .hero .toolbar{
+    grid-template-columns:42px 1fr 1fr;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -4855,7 +5046,7 @@ dialog .modal{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.5R5 · MOBILE FLOW · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.5R6 · APP MOTION · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -5749,6 +5940,9 @@ setTimeout(applySafeChecklistFilter,300);
 (function setupUiPolish(){
   const panelOrder=['overview','itinerary','expenses','shared'];
   let touchStartX=0,touchStartY=0,touchStartTime=0,touchTarget=null;
+  let tracking=false,horizontal=false,lastDx=0;
+
+  const contentEl=()=>document.querySelector('#tripView .content');
 
   const currentPanel=()=>{
     const active=document.querySelector('.mobileTab.active[data-panel],.navbtn.active[data-panel]');
@@ -5775,36 +5969,169 @@ setTimeout(applySafeChecklistFilter,300);
     return false;
   };
 
+  const cleanMotionClasses=()=>{
+    const el=contentEl();
+    if(!el) return;
+    el.classList.remove('uiSwipeTracking','uiSwipeSnap','uiSwipeExit','uiSwipeEnter');
+    el.style.transform='';
+    el.style.opacity='';
+    document.body.classList.remove('uiSwipeActive');
+  };
+
+  const snapBack=()=>{
+    const el=contentEl();
+    if(!el){cleanMotionClasses();return;}
+
+    el.classList.remove('uiSwipeTracking','uiSwipeExit','uiSwipeEnter');
+    el.classList.add('uiSwipeSnap');
+    el.style.transform='translate3d(0,0,0)';
+    el.style.opacity='1';
+
+    setTimeout(cleanMotionClasses,260);
+  };
+
+  const commitSwipe=(direction,nextPanel)=>{
+    const el=contentEl();
+    if(!el){
+      switchPanel(nextPanel,{preserveScroll:true});
+      return;
+    }
+
+    const width=Math.max(window.innerWidth,320);
+    const exitX=direction<0 ? -Math.min(width*.34,150) : Math.min(width*.34,150);
+    const enterX=direction<0 ? Math.min(width*.18,78) : -Math.min(width*.18,78);
+
+    el.classList.remove('uiSwipeTracking','uiSwipeSnap');
+    el.classList.add('uiSwipeExit');
+    el.style.transform=`translate3d(${exitX}px,0,0)`;
+    el.style.opacity='.45';
+
+    setTimeout(()=>{
+      switchPanel(nextPanel,{preserveScroll:true});
+
+      requestAnimationFrame(()=>{
+        const nextEl=contentEl();
+        if(!nextEl) return;
+
+        nextEl.classList.remove('uiSwipeExit','uiSwipeSnap');
+        nextEl.classList.add('uiSwipeEnter');
+        nextEl.style.transform=`translate3d(${enterX}px,0,0)`;
+        nextEl.style.opacity='.62';
+
+        requestAnimationFrame(()=>{
+          nextEl.classList.remove('uiSwipeEnter');
+          nextEl.classList.add('uiSwipeSnap');
+          nextEl.style.transform='translate3d(0,0,0)';
+          nextEl.style.opacity='1';
+          setTimeout(cleanMotionClasses,260);
+        });
+      });
+    },165);
+  };
+
   document.addEventListener('touchstart',e=>{
     if(e.touches.length!==1) return;
+
     const t=e.touches[0];
     touchStartX=t.clientX;
     touchStartY=t.clientY;
     touchStartTime=Date.now();
     touchTarget=e.target;
+    tracking=true;
+    horizontal=false;
+    lastDx=0;
   },{passive:true});
 
-  document.addEventListener('touchend',e=>{
-    if(!currentTrip || !touchTarget || e.changedTouches.length!==1) return;
+  document.addEventListener('touchmove',e=>{
+    if(!tracking || e.touches.length!==1 || !currentTrip) return;
     if(isSwipeBlockedTarget(touchTarget) || hasHorizontalScroller(touchTarget)) return;
     if(document.querySelector('dialog[open]')) return;
 
-    const t=e.changedTouches[0];
+    const t=e.touches[0];
     const dx=t.clientX-touchStartX;
     const dy=t.clientY-touchStartY;
-    const elapsed=Date.now()-touchStartTime;
 
-    // Deliberately strict so normal vertical scrolling never changes page.
-    if(elapsed>700 || Math.abs(dx)<72 || Math.abs(dx)<Math.abs(dy)*1.45) return;
+    if(!horizontal){
+      if(Math.abs(dx)<10 && Math.abs(dy)<10) return;
 
-    const now=currentPanel();
-    const index=panelOrder.indexOf(now);
-    if(index<0) return;
+      // Vertical intent wins immediately.
+      if(Math.abs(dy)>=Math.abs(dx)*.82){
+        tracking=false;
+        return;
+      }
 
-    const nextIndex=dx<0 ? index+1 : index-1;
-    if(nextIndex<0 || nextIndex>=panelOrder.length) return;
+      horizontal=true;
+      document.body.classList.add('uiSwipeActive');
+    }
 
-    switchPanel(panelOrder[nextIndex],{preserveScroll:true});
+    const panel=currentPanel();
+    const index=panelOrder.indexOf(panel);
+
+    // Add resistance at first/last page.
+    let displayDx=dx;
+    if((index===0 && dx>0) || (index===panelOrder.length-1 && dx<0)){
+      displayDx=dx*.24;
+    }else{
+      const max=Math.min(window.innerWidth*.42,180);
+      if(Math.abs(displayDx)>max){
+        displayDx=Math.sign(displayDx)*(max+(Math.abs(displayDx)-max)*.16);
+      }
+    }
+
+    lastDx=displayDx;
+
+    const el=contentEl();
+    if(el){
+      el.classList.add('uiSwipeTracking');
+      el.style.transform=`translate3d(${displayDx}px,0,0)`;
+      const fade=Math.min(.16,Math.abs(displayDx)/900);
+      el.style.opacity=String(1-fade);
+    }
+
+    e.preventDefault();
+  },{passive:false});
+
+  document.addEventListener('touchend',e=>{
+    if(!tracking && !horizontal){
+      cleanMotionClasses();
+      return;
+    }
+
+    tracking=false;
+
+    if(!horizontal || !currentTrip || e.changedTouches.length!==1){
+      snapBack();
+      horizontal=false;
+      return;
+    }
+
+    const t=e.changedTouches[0];
+    const rawDx=t.clientX-touchStartX;
+    const elapsed=Math.max(1,Date.now()-touchStartTime);
+    const velocity=Math.abs(rawDx)/elapsed;
+
+    const panel=currentPanel();
+    const index=panelOrder.indexOf(panel);
+    const direction=rawDx<0 ? -1 : 1;
+    const nextIndex=direction<0 ? index+1 : index-1;
+
+    const canMove=nextIndex>=0 && nextIndex<panelOrder.length;
+    const enoughDistance=Math.abs(rawDx)>=Math.min(92,window.innerWidth*.23);
+    const enoughVelocity=Math.abs(rawDx)>=48 && velocity>.55;
+
+    horizontal=false;
+
+    if(canMove && (enoughDistance||enoughVelocity)){
+      commitSwipe(direction,panelOrder[nextIndex]);
+    }else{
+      snapBack();
+    }
+  },{passive:true});
+
+  document.addEventListener('touchcancel',()=>{
+    tracking=false;
+    horizontal=false;
+    snapBack();
   },{passive:true});
 
   // Tiny visual confirmation for taps on interactive controls.
@@ -5816,7 +6143,7 @@ setTimeout(applySafeChecklistFilter,300);
     target.classList.add('uiTapFlash');
     setTimeout(()=>target.classList.remove('uiTapFlash'),240);
   },{passive:true});
-})();
+})()
 
 init();
 }
