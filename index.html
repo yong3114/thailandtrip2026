@@ -1975,6 +1975,54 @@ body[data-theme="dark"] .scheduleOkBox{
 }
 </style>
 
+
+<style id="roadTripV31SaveFix">
+#itemFormMsg{
+  margin-top:12px;
+}
+#itemFormMsg .saveState{
+  border-radius:14px;
+  padding:11px 12px;
+  font-size:12px;
+  line-height:1.5;
+  border:1px solid;
+}
+#itemFormMsg .saving{
+  background:#eff6ff;
+  color:#1d4ed8;
+  border-color:#bfdbfe;
+}
+#itemFormMsg .success{
+  background:#f0fdf4;
+  color:#166534;
+  border-color:#86efac;
+}
+#itemFormMsg .error{
+  background:#fef2f2;
+  color:#991b1b;
+  border-color:#fecaca;
+}
+body[data-theme="dark"] #itemFormMsg .saving{
+  background:#172554;
+  color:#bfdbfe;
+  border-color:#1d4ed8;
+}
+body[data-theme="dark"] #itemFormMsg .success{
+  background:#0e2f25;
+  color:#bbf7d0;
+  border-color:#166534;
+}
+body[data-theme="dark"] #itemFormMsg .error{
+  background:#3a1122;
+  color:#fecaca;
+  border-color:#991b1b;
+}
+#itemSaveBtn[disabled]{
+  opacity:.65;
+  cursor:wait;
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -2290,9 +2338,10 @@ body[data-theme="dark"] .scheduleOkBox{
         <div id="currentPhotoBox" class="footerMini"></div>
       </div>
     </div>
+    <div id="itemFormMsg" class="full" aria-live="polite"></div>
     <div class="modalActions">
       <button class="iconbtn" type="button" id="cancelItemBtn">取消</button>
-      <button class="btn primary" type="submit">保存</button>
+      <button class="btn primary" type="submit" id="itemSaveBtn">保存</button>
     </div>
   </form>
 </dialog>
@@ -3307,6 +3356,9 @@ async function toggleVote(itemId){
 function openItemDialog(id){
   editingItem = id ? items.find(i=>i.id===id) : null;
   $('itemModalTitle').textContent = editingItem ? '编辑地点' : '新增地点';
+  $('itemFormMsg').innerHTML='';
+  const saveBtn=$('itemSaveBtn');
+  if(saveBtn){ saveBtn.disabled=false; saveBtn.textContent='保存'; }
 
   const daySelect=$('itemDay');
   daySelect.innerHTML=Array.from({length:currentTrip.days},(_,i)=>{
@@ -3344,10 +3396,29 @@ async function uploadPhoto(file){
 
 async function saveItem(e){
   e.preventDefault();
+
+  const form=$('itemForm');
+  const msgBox=$('itemFormMsg');
+  const saveBtn=$('itemSaveBtn');
+
+  if(!form.reportValidity()){
+    msgBox.innerHTML='<div class="saveState error">⚠️ 请先填写必填资料，例如名称。</div>';
+    return;
+  }
+
+  saveBtn.disabled=true;
+  saveBtn.textContent='保存中…';
+  msgBox.innerHTML='<div class="saveState saving">⏳ 正在保存并同步给其他成员…</div>';
+
   try{
     let imageUrl = editingItem?.image_url || '';
     const file = $('itemPhoto').files[0];
-    if(file) imageUrl = await uploadPhoto(file);
+
+    if(file){
+      msgBox.innerHTML='<div class="saveState saving">📷 正在上传照片…</div>';
+      imageUrl = await uploadPhoto(file);
+    }
+
     const payload = {
       trip_id:currentTrip.id,
       day_no:Number($('itemDay').value || activeDay || 1),
@@ -3364,19 +3435,69 @@ async function saveItem(e){
       note:$('itemNote').value.trim(),
       image_url:imageUrl
     };
-    let error;
+
+    msgBox.innerHTML='<div class="saveState saving">☁️ 正在写入 Supabase…</div>';
+
+    let result;
     if(editingItem){
-      ({error}=await sb.from('items').update(payload).eq('id',editingItem.id));
+      result=await sb
+        .from('items')
+        .update(payload)
+        .eq('id',editingItem.id)
+        .select('id');
     }else{
       payload.created_by=user.id;
-      ({error}=await sb.from('items').insert(payload));
+      result=await sb
+        .from('items')
+        .insert(payload)
+        .select('id');
     }
-    if(error) throw error;
+
+    if(result.error) throw result.error;
+
+    if(!result.data?.length){
+      throw new Error('Supabase 没有返回已保存的记录。请确认你仍然是这趟 Trip 的成员，并检查数据库权限。');
+    }
+
     activeDay=Number($('itemDay').value || activeDay || 1);
-    $('itemDialog').close();
-    toast('已保存行程项目');
+
+    msgBox.innerHTML='<div class="saveState success">✅ 保存成功！正在刷新行程…</div>';
     await refreshTrip();
-  }catch(err){ toast(err.message || String(err),'err'); }
+
+    setTimeout(()=>{
+      $('itemDialog').close();
+      toast('已保存行程项目 ✅');
+    },250);
+
+  }catch(err){
+    const raw=String(err?.message || err || 'Unknown error');
+    const lower=raw.toLowerCase();
+
+    let friendly=raw;
+
+    if(
+      lower.includes('plan_status') ||
+      lower.includes('start_time') ||
+      lower.includes('duration_minutes') ||
+      lower.includes('travel_minutes') ||
+      lower.includes('schema cache')
+    ){
+      friendly=
+        'V3 Planner 数据库字段还没有准备好。请到 Supabase → SQL Editor，重新 Run ZIP 里的 01_RUN_THIS_SQL_V3_PLANNER.sql。这个 SQL 可以安全重复运行。\\n\\n原始错误：'+raw;
+    }else if(lower.includes('row-level security') || lower.includes('rls')){
+      friendly=
+        'Supabase 权限阻止了保存。请确认你是这趟 Trip 的成员，并重新运行 V3 Planner SQL。\\n\\n原始错误：'+raw;
+    }else if(lower.includes('storage') || lower.includes('bucket')){
+      friendly=
+        '照片上传失败。可以先不选照片再保存，或检查 Supabase 的 trip-photos Storage bucket。\\n\\n原始错误：'+raw;
+    }
+
+    msgBox.innerHTML=
+      `<div class="saveState error"><b>❌ 保存失败</b><br>${escapeHtml(friendly).replace(/\\n/g,'<br>')}</div>`;
+
+    saveBtn.disabled=false;
+    saveBtn.textContent='再试一次';
+  }
 }
 
 async function deleteItem(id){
