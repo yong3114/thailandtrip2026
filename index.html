@@ -2,14 +2,17 @@
 <html lang="zh-Hans">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="RoadTrip">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="app-icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="app-icon.svg">
+<link rel="manifest" href="manifest.webmanifest?v=522">
+<link rel="icon" href="app-icon.svg?v=522" type="image/svg+xml">
+<link rel="apple-touch-icon" href="app-icon.svg?v=522">
 <title>RoadTrip · Shared Travel Planner</title>
 <style>
 :root{
@@ -4418,6 +4421,28 @@ body:not([data-theme="dark"]){
 }
 </style>
 
+
+<style id="roadTripV522CacheStateFix">
+.buildVerifyBar{
+  width:max-content;
+  max-width:100%;
+  margin:10px 0 0;
+  padding:6px 9px;
+  border-radius:999px;
+  border:1px solid #2563eb;
+  background:#172554;
+  color:#bfdbfe;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.03em;
+}
+body:not([data-theme="dark"]) .buildVerifyBar{
+  background:#eff6ff;
+  color:#1d4ed8;
+  border-color:#93c5fd;
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -4490,7 +4515,8 @@ body:not([data-theme="dark"]){
       </div>
     </div>
 
-    <div class="card glass" style="margin-top:14px">
+    <div class="buildVerifyBar">Build V5.2.2 · Cache-busted</div>
+    <div class="card glass" style="margin-top:10px">
       <div class="sectionTitle"><h2>你的旅行</h2></div>
       <div id="tripList"></div>
     </div>
@@ -4500,7 +4526,7 @@ body:not([data-theme="dark"]){
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.2.1 · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.2.2 · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -5062,6 +5088,21 @@ body:not([data-theme="dark"]){
 
 <script src="config.js"></script>
 <script type="module">
+// ============================================================
+// V5.2.2 cache-busting bootstrap
+// Forces a unique document URL once so iPhone/Safari/GitHub Pages
+// cannot silently keep serving an older HTML build.
+// ============================================================
+const ROADTRIP_BUILD='5.2.2';
+try{
+  const currentUrl=new URL(window.location.href);
+  if(currentUrl.searchParams.get('appv')!==ROADTRIP_BUILD){
+    currentUrl.searchParams.set('appv',ROADTRIP_BUILD);
+    window.location.replace(currentUrl.toString());
+  }
+}catch(_){}
+
+
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
 const SUPABASE_URL = window.ROADTRIP_CONFIG?.SUPABASE_URL || '';
@@ -5484,8 +5525,9 @@ async function init(){
   // V5.2.1 migration:
   // You asked for Dark Mode as the app default. Older builds may have left
   // 'light' inside localStorage, so reset that legacy value to dark ONCE.
-  const darkMigrationKey='roadtrip-v521-dark-default-applied';
+  const darkMigrationKey='roadtrip-v522-dark-default-applied';
   if(!localStorage.getItem(darkMigrationKey)){
+    // Force the requested default exactly once for this new build.
     localStorage.setItem('roadtrip-theme','dark');
     localStorage.setItem(darkMigrationKey,'1');
   }
@@ -6120,38 +6162,41 @@ function renderFullPlanImportStatus(){
   const progress=getFullPlanImportProgress();
   const {matched,total,percent}=progress;
 
+  const routeText=(routes()||[]).join(' ').toLowerCase();
+  const nineDayRouteSignals=[
+    'ipoh','hat yai','songkhla','krabi','cameron'
+  ].filter(word=>routeText.includes(word)).length;
+
+  const nonBudgetItems=items.filter(i=>!isBudgetItem(i));
+  const populatedNineDayTrip=
+    Number(currentTrip.days)===9 &&
+    nonBudgetItems.length>=25 &&
+    nineDayRouteSignals>=2;
+
+  // Strongest case: exact template fully recognised.
   if(matched>=total && total>0){
-    el.textContent=`✅ 已导入完整 9D8N 模板 · ${matched}/${total} 项都在你的 Trip 里。`;
+    el.textContent=`✅ 已导入完整 9D8N 模板 · ${matched}/${total} 项已识别。`;
     if(btn) btn.textContent='✅ 已导入 · 检查 / 补齐';
     return;
   }
 
+  // Partial exact recognition.
   if(matched>0){
-    el.textContent=`已识别 ${matched}/${total} 个模板项目（${percent}%）· 你的旧资料还在；按下面只会补缺少的项目。`;
-    if(btn) btn.textContent='补齐缺少的 9D8N 项目';
+    el.textContent=`✅ 已有 9D8N 行程资料 · 已识别 ${matched}/${total} 个模板项目（${percent}%）。按下面只会补缺少项目。`;
+    if(btn) btn.textContent='检查 / 补齐缺少项目';
     return;
   }
 
-  // Extra safety: if the Trip already clearly uses the 9-day route but none
-  // of the old hidden markers survived, don't claim data was "lost".
-  const routeText=(routes()||[]).join(' ').toLowerCase();
-  const looksLikeNineDayTrip=
-    Number(currentTrip.days)===9 &&
-    (
-      routeText.includes('ipoh') ||
-      routeText.includes('hat yai') ||
-      routeText.includes('krabi') ||
-      routeText.includes('cameron')
-    ) &&
-    items.length>=20;
-
-  if(looksLikeNineDayTrip){
-    el.textContent=`ℹ️ 已检测到你的 9天 Thailand Trip 和 ${items.length} 个现有项目。旧模板标记可能已丢失，但资料仍在。`;
-    if(btn) btn.textContent='检查 / 补齐 9D8N 模板';
-  }else{
-    el.textContent=`完整模板共 ${total} 个 Trip Info / 固定路线 / 候选地点；导入后直接开始4人投票。`;
-    if(btn) btn.textContent='导入 / 补齐完整 9D8N 行程';
+  // Safety fallback: user clearly already has a populated 9-day roadtrip,
+  // so don't claim "not imported" merely because template markers/names differ.
+  if(populatedNineDayTrip){
+    el.textContent=`✅ 已检测到现有 9天自驾行程 · 当前已有 ${nonBudgetItems.length} 个行程项目。模板识别标记不同，但你的资料仍在。`;
+    if(btn) btn.textContent='检查 / 补齐模板（不会重复同名项目）';
+    return;
   }
+
+  el.textContent=`完整模板共 ${total} 个项目；导入后可直接投票与排时间。`;
+  if(btn) btn.textContent='导入 / 补齐完整 9D8N 行程';
 }
 
 async function importFull9D8NPlan(){
