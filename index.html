@@ -4399,6 +4399,144 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 }
 </style>
 
+
+<style id="roadTripV515R3ExpenseView">
+.expenseListHeading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.expenseExportBtn{
+  flex:0 0 auto;
+  min-height:40px;
+  white-space:nowrap;
+}
+.expensePeopleOverview{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
+  margin:12px 0;
+}
+.expensePersonCard{
+  appearance:none;
+  text-align:left;
+  min-width:0;
+  padding:12px;
+  border-radius:16px;
+  border:1px solid var(--rt-border);
+  background:var(--rt-surface-2);
+  color:var(--rt-text);
+  cursor:pointer;
+}
+.expensePersonCard.active{
+  border-color:color-mix(in srgb,var(--rt-purple) 55%,var(--rt-border));
+  background:var(--rt-purple-soft);
+}
+.expensePersonName{
+  font-size:11px;
+  font-weight:900;
+  color:var(--rt-text-2);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.expensePersonPaid{
+  margin-top:5px;
+  font-size:16px;
+  font-weight:950;
+  color:var(--rt-text);
+}
+.expensePersonLabel{
+  margin-top:1px;
+  font-size:9.5px;
+  color:var(--rt-muted);
+}
+.expensePersonMini{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  margin-top:8px;
+  padding-top:7px;
+  border-top:1px solid var(--rt-border);
+  font-size:9.5px;
+  color:var(--rt-muted);
+}
+.expensePersonMini b{font-size:10.5px}
+.expenseNetPositive{color:#22c55e}
+.expenseNetNegative{color:#f59e0b}
+.expenseRecordTools{
+  display:grid;
+  grid-template-columns:minmax(180px,1.5fr) repeat(4,minmax(110px,.7fr));
+  gap:8px;
+  margin:12px 0 7px;
+}
+.expenseToolField{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  min-height:42px;
+  padding:0 10px;
+  border:1px solid var(--rt-border);
+  border-radius:13px;
+  background:var(--rt-surface-2);
+}
+.expenseToolField input{
+  width:100%;
+  min-width:0;
+  margin:0 !important;
+  padding:0 !important;
+  min-height:38px;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.expenseToolSelect{
+  min-width:0;
+  min-height:42px;
+  margin:0 !important;
+}
+.expenseFilterMeta{
+  margin:0 2px 10px;
+  font-size:10.5px;
+  font-weight:800;
+  color:var(--rt-muted);
+}
+@media(max-width:800px){
+  .expensePeopleOverview{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .expenseRecordTools{
+    grid-template-columns:1fr 1fr;
+  }
+  .expenseSearchField{
+    grid-column:1/-1;
+  }
+}
+@media(max-width:480px){
+  .expenseListHeading{
+    align-items:flex-start;
+  }
+  .expenseExportBtn{
+    padding:8px 9px;
+    font-size:10.5px;
+  }
+  .expensePeopleOverview{
+    gap:7px;
+  }
+  .expensePersonCard{
+    padding:10px;
+    border-radius:14px;
+  }
+  .expensePersonPaid{
+    font-size:14px;
+  }
+  .expenseRecordTools{
+    gap:7px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -4481,7 +4619,7 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.5R2 · SAFE CHECKLIST FILTER · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.5R3 · EXPENSE VIEW · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -4746,9 +4884,39 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 
             <div class="expenseListSection">
               <div class="expenseListHeading">
-                <h3>🧾 Expense Records</h3>
-                <div class="footerMini">每一笔记录都会自动参与总预算和结算。</div>
+                <div>
+                  <h3>🧾 Expense Records</h3>
+                  <div class="footerMini">每一笔记录都会自动参与总预算和结算。</div>
+                </div>
+                <button class="ghost expenseExportBtn" type="button" id="exportExpensesBtn">⇩ Export CSV</button>
               </div>
+
+              <div class="expensePeopleOverview" id="expensePeopleOverview"></div>
+
+              <div class="expenseRecordTools">
+                <div class="expenseToolField expenseSearchField">
+                  <span>⌕</span>
+                  <input id="expenseSearchInput" type="search" placeholder="搜索 Expense">
+                </div>
+                <select id="expensePersonFilter" class="expenseToolSelect" aria-label="按人物筛选">
+                  <option value="all">全部人物</option>
+                </select>
+                <select id="expenseDayFilter" class="expenseToolSelect" aria-label="按日期筛选">
+                  <option value="all">全部日期</option>
+                </select>
+                <select id="expenseCurrencyFilter" class="expenseToolSelect" aria-label="按货币筛选">
+                  <option value="all">RM + THB</option>
+                  <option value="RM">RM</option>
+                  <option value="THB">THB</option>
+                </select>
+                <select id="expenseSortFilter" class="expenseToolSelect" aria-label="排序">
+                  <option value="newest">最新</option>
+                  <option value="oldest">最早</option>
+                  <option value="high">金额最高</option>
+                  <option value="low">金额最低</option>
+                </select>
+              </div>
+              <div class="expenseFilterMeta" id="expenseFilterMeta"></div>
               <div id="expenseList"></div>
             </div>
           </div>
@@ -5393,6 +5561,28 @@ async function init(){
   $('cancelItemBtn').addEventListener('click',()=>$('itemDialog').close());
   $('itemForm').addEventListener('submit',saveItem);
   $('addExpenseBtn').addEventListener('click',()=>openExpenseDialog(null));
+  $('expenseSearchInput')?.addEventListener('input',e=>{
+    expenseViewFilters.search=e.target.value||'';
+    renderExpenses();
+  });
+  $('expensePersonFilter')?.addEventListener('change',e=>{
+    expenseViewFilters.person=e.target.value||'all';
+    renderExpenses();
+  });
+  $('expenseDayFilter')?.addEventListener('change',e=>{
+    expenseViewFilters.day=e.target.value||'all';
+    renderExpenses();
+  });
+  $('expenseCurrencyFilter')?.addEventListener('change',e=>{
+    expenseViewFilters.currency=e.target.value||'all';
+    renderExpenses();
+  });
+  $('expenseSortFilter')?.addEventListener('change',e=>{
+    expenseViewFilters.sort=e.target.value||'newest';
+    renderExpenses();
+  });
+  $('exportExpensesBtn')?.addEventListener('click',exportExpensesCsv);
+
   $('budgetCategoryFilter')?.addEventListener('change',()=>{
     budgetCategoryFilter=$('budgetCategoryFilter').value || 'all';
     const actual=expenses.reduce((s,e)=>s+rmValue(e.amount,e.currency),0);
@@ -7174,16 +7364,146 @@ function renderItems(){
   });
 }
 
+let expenseViewFilters={search:'',person:'all',day:'all',currency:'all',sort:'newest'};
+
+function expensePersonStats(){
+  const stats={};
+  members.forEach(m=>{
+    stats[m.user_id]={uid:m.user_id,name:m.display_name||'Traveller',paid:0,share:0,net:0};
+  });
+
+  expenses.forEach(exp=>{
+    const rm=rmValue(exp.amount,exp.currency);
+    if(!stats[exp.paid_by]){
+      stats[exp.paid_by]={uid:exp.paid_by,name:'Traveller',paid:0,share:0,net:0};
+    }
+    stats[exp.paid_by].paid+=rm;
+
+    const expShares=shares.filter(s=>s.expense_id===exp.id).map(s=>s.user_id);
+    if(expShares.length){
+      const each=rm/expShares.length;
+      expShares.forEach(uid=>{
+        if(!stats[uid]){
+          stats[uid]={uid,name:'Traveller',paid:0,share:0,net:0};
+        }
+        stats[uid].share+=each;
+      });
+    }
+  });
+
+  Object.values(stats).forEach(s=>s.net=s.paid-s.share);
+  return Object.values(stats);
+}
+
+function expenseDateKey(exp){
+  const d=new Date(exp.spent_at);
+  if(Number.isNaN(d.getTime())) return '';
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+
+function renderExpensePeopleOverview(){
+  const el=$('expensePeopleOverview');
+  if(!el) return;
+
+  const stats=expensePersonStats();
+  el.innerHTML=stats.length ? stats.map(s=>`
+    <button class="expensePersonCard ${expenseViewFilters.person===s.uid?'active':''}"
+      type="button" data-expense-person-card="${s.uid}">
+      <div class="expensePersonName">${escapeHtml(s.name)}</div>
+      <div class="expensePersonPaid">${money(s.paid)}</div>
+      <div class="expensePersonLabel">实际付款</div>
+      <div class="expensePersonMini">
+        <span>应承担 ${money(s.share)}</span>
+        <b class="${s.net>=0?'expenseNetPositive':'expenseNetNegative'}">
+          ${s.net>=0?'+':'-'}${money(Math.abs(s.net))}
+        </b>
+      </div>
+    </button>
+  `).join('') : '';
+
+  document.querySelectorAll('[data-expense-person-card]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const uid=btn.dataset.expensePersonCard;
+      expenseViewFilters.person=expenseViewFilters.person===uid?'all':uid;
+      if($('expensePersonFilter')) $('expensePersonFilter').value=expenseViewFilters.person;
+      renderExpenses();
+    });
+  });
+}
+
+function filteredExpenses(){
+  const q=expenseViewFilters.search.trim().toLowerCase();
+  let rows=expenses.filter(exp=>{
+    if(q && !`${exp.title||''} ${exp.note||''}`.toLowerCase().includes(q)) return false;
+    if(expenseViewFilters.person!=='all' && exp.paid_by!==expenseViewFilters.person) return false;
+    if(expenseViewFilters.day!=='all' && expenseDateKey(exp)!==expenseViewFilters.day) return false;
+    if(expenseViewFilters.currency!=='all' && exp.currency!==expenseViewFilters.currency) return false;
+    return true;
+  });
+
+  rows=[...rows].sort((a,b)=>{
+    if(expenseViewFilters.sort==='oldest') return new Date(a.spent_at)-new Date(b.spent_at);
+    if(expenseViewFilters.sort==='high') return rmValue(b.amount,b.currency)-rmValue(a.amount,a.currency);
+    if(expenseViewFilters.sort==='low') return rmValue(a.amount,a.currency)-rmValue(b.amount,b.currency);
+    return new Date(b.spent_at)-new Date(a.spent_at);
+  });
+
+  return rows;
+}
+
+function renderExpenseFilters(){
+  const person=$('expensePersonFilter');
+  if(person){
+    const current=expenseViewFilters.person;
+    person.innerHTML=`<option value="all">全部人物</option>`+
+      members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.display_name)}</option>`).join('');
+    person.value=[...person.options].some(o=>o.value===current)?current:'all';
+    if(person.value==='all' && current!=='all') expenseViewFilters.person='all';
+  }
+
+  const day=$('expenseDayFilter');
+  if(day){
+    const dates=[...new Set(expenses.map(exp=>expenseDateKey(exp)).filter(Boolean))].sort().reverse();
+    const current=expenseViewFilters.day;
+    day.innerHTML=`<option value="all">全部日期</option>`+
+      dates.map(d=>`<option value="${d}">${d}</option>`).join('');
+    day.value=dates.includes(current)?current:'all';
+    if(day.value==='all' && current!=='all') expenseViewFilters.day='all';
+  }
+
+  if($('expenseCurrencyFilter')) $('expenseCurrencyFilter').value=expenseViewFilters.currency;
+  if($('expenseSortFilter')) $('expenseSortFilter').value=expenseViewFilters.sort;
+  if($('expenseSearchInput') && $('expenseSearchInput').value!==expenseViewFilters.search){
+    $('expenseSearchInput').value=expenseViewFilters.search;
+  }
+}
+
 function renderExpenses(){
-  const memberMap = Object.fromEntries(members.map(m=>[m.user_id,m.display_name]));
-  $('expensePaidBy').innerHTML = members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.display_name)}</option>`).join('');
-  $('expenseShareMembers').innerHTML = members.map(m=>`
+  const memberMap=Object.fromEntries(members.map(m=>[m.user_id,m.display_name]));
+
+  // Existing expense form controls stay exactly as before.
+  $('expensePaidBy').innerHTML=members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.display_name)}</option>`).join('');
+  $('expenseShareMembers').innerHTML=members.map(m=>`
     <label class="shareUser"><span><input type="checkbox" class="shareMemberChk" value="${m.user_id}" checked> ${escapeHtml(m.display_name)}</span></label>
   `).join('');
 
-  $('expenseList').innerHTML = expenses.length ? expenses.map(exp=>{
-    const expShares = shares.filter(s=>s.expense_id===exp.id).map(s=>s.user_id);
-    const each = expShares.length ? rmValue(exp.amount,exp.currency)/expShares.length : 0;
+  renderExpenseFilters();
+  renderExpensePeopleOverview();
+
+  const rows=filteredExpenses();
+  const visibleTotal=rows.reduce((sum,exp)=>sum+rmValue(exp.amount,exp.currency),0);
+
+  if($('expenseFilterMeta')){
+    $('expenseFilterMeta').textContent=
+      `显示 ${rows.length}/${expenses.length} 笔 · 合计 ${money(visibleTotal)}`;
+  }
+
+  $('expenseList').innerHTML=rows.length ? rows.map(exp=>{
+    const expShares=shares.filter(s=>s.expense_id===exp.id).map(s=>s.user_id);
+    const each=expShares.length ? rmValue(exp.amount,exp.currency)/expShares.length : 0;
     return `
       <div class="expenseCard appExpenseCard">
         <div class="expenseHead">
@@ -7207,12 +7527,69 @@ function renderExpenses(){
           <button class="iconbtn" data-edit-expense="${exp.id}">✏️ 编辑</button>
           <button class="iconbtn danger" data-del-expense="${exp.id}">⌫ 删除</button>
         </div>
-      </div>
-    `;
-  }).join('') : `<div class="empty">还没有 Expense，先记第一笔油费、酒店或晚餐吧。</div>`;
+      </div>`;
+  }).join('') : `<div class="empty">没有符合目前筛选条件的 Expense。</div>`;
 
   document.querySelectorAll('[data-edit-expense]').forEach(el=>el.addEventListener('click',()=>openExpenseDialog(el.dataset.editExpense)));
   document.querySelectorAll('[data-del-expense]').forEach(el=>el.addEventListener('click',()=>deleteExpense(el.dataset.delExpense)));
+}
+
+function csvCell(value){
+  const s=String(value??'');
+  return `"${s.replace(/"/g,'""')}"`;
+}
+
+function exportExpensesCsv(){
+  if(!expenses.length){
+    toast('目前没有 Expense 可以 Export','err');
+    return;
+  }
+
+  const memberMap=Object.fromEntries(members.map(m=>[m.user_id,m.display_name]));
+  const rows=filteredExpenses();
+  if(!rows.length){
+    toast('目前筛选条件没有 Expense','err');
+    return;
+  }
+
+  const header=[
+    'Date','Time','Expense','Currency','Original Amount','RM Amount',
+    'Paid By','Shared With','Per Person RM','Note'
+  ];
+
+  const csvRows=[header.map(csvCell).join(',')];
+
+  rows.forEach(exp=>{
+    const d=new Date(exp.spent_at);
+    const shareIds=shares.filter(s=>s.expense_id===exp.id).map(s=>s.user_id);
+    const rm=rmValue(exp.amount,exp.currency);
+    const each=shareIds.length?rm/shareIds.length:0;
+    csvRows.push([
+      Number.isNaN(d.getTime())?'':d.toLocaleDateString('en-CA'),
+      Number.isNaN(d.getTime())?'':d.toLocaleTimeString('en-MY',{hour:'2-digit',minute:'2-digit'}),
+      exp.title||'',
+      exp.currency||'RM',
+      Number(exp.amount||0).toFixed(2),
+      rm.toFixed(2),
+      memberMap[exp.paid_by]||'',
+      shareIds.map(uid=>memberMap[uid]||uid).join(' | '),
+      each.toFixed(2),
+      exp.note||''
+    ].map(csvCell).join(','));
+  });
+
+  const bom='\ufeff';
+  const blob=new Blob([bom+csvRows.join('\r\n')],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const safeTitle=String(currentTrip?.title||'RoadTrip').replace(/[\\/:*?"<>|]+/g,'-');
+  a.href=url;
+  a.download=`${safeTitle}-expenses.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  toast(`已 Export ${rows.length} 笔 Expense CSV ✅`);
 }
 
 async function toggleDone(id, done){
