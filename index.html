@@ -3069,6 +3069,15 @@ body:not([data-theme="dark"]) .undoToast button{
 }
 </style>
 
+
+<style id="roadTripV471OpenTripHotfix">
+#tripList [data-trip]:disabled{
+  opacity:.72;
+  cursor:wait;
+  filter:saturate(.8);
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -3151,7 +3160,7 @@ body:not([data-theme="dark"]) .undoToast button{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V4.7 · LIVE SYNC</div>
+          <div class="appV2Badge">✦ ROADTRIP V4.7.1 · LIVE SYNC</div>
           <div class="syncStatusRow" aria-live="polite">
             <span class="syncPill" id="networkStatusPill">● 检查网络…</span>
             <span class="lastSyncText" id="lastSyncText">尚未同步</span>
@@ -3543,7 +3552,7 @@ function friendlyErrorMessage(err,context='操作'){
   const lower=raw.toLowerCase();
 
   if(!navigator.onLine){
-    return `目前没有网络。${context}尚未同步，请恢复网络后再试。`;
+    return `目前网络状态不稳定。${context}尚未同步，但现有资料不会被删除。`;
   }
   if(lower.includes('failed to fetch') || lower.includes('network')){
     return `网络连接不稳定，${context}暂时没有完成。`;
@@ -4243,7 +4252,21 @@ async function loadTripList(){
         </div>
       </div>
     </div>`).join('');
-  document.querySelectorAll('[data-trip]').forEach(b=>b.addEventListener('click',()=>openTrip(b.dataset.trip)));
+  document.querySelectorAll('[data-trip]').forEach(b=>{
+    b.addEventListener('click',async()=>{
+      if(b.disabled) return;
+      const original=b.textContent;
+      b.disabled=true;
+      b.textContent='打开中…';
+      try{
+        await openTrip(b.dataset.trip);
+      }finally{
+        // Button may now be hidden because Trip opened; safe to restore anyway.
+        b.disabled=false;
+        b.textContent=original;
+      }
+    });
+  });
   document.querySelectorAll('[data-del-trip]').forEach(b=>b.addEventListener('click',()=>deleteOrLeaveTrip(b.dataset.delTrip, b.dataset.delOwner==='1')));
 }
 
@@ -4351,41 +4374,86 @@ async function deleteOrLeaveTrip(tripId,isOwner){
 }
 
 async function openTrip(id){
-  if(!navigator.onLine){
-    toast('目前离线，暂时无法打开新的 Trip','err');
-    return;
+  // IMPORTANT:
+  // navigator.onLine is only a hint. Never use it to block opening a Trip.
+  const listCopy=trips.find(t=>t.id===id) || null;
+
+  try{
+    // If the Trip is already visible in "你的旅行", open that known copy immediately.
+    // This makes the UI responsive even when the network check is temporarily wrong.
+    if(listCopy){
+      currentTrip={...listCopy};
+      activeDay=Math.min(Math.max(Number(activeDay||1),1),Number(currentTrip.days||1));
+      restoreLastSyncTime();
+
+      show(tripView);
+      if(mobileBar) mobileBar.classList.remove('hide');
+      renderTrip();
+      switchPanel('overview');
+    }
+
+    setSyncState('syncing','正在同步 Trip…');
+
+    // Always ATTEMPT Supabase. Do not pre-block using navigator.onLine.
+    const {data,error}=await sb.from('trips').select('*').eq('id',id).single();
+
+    if(error){
+      if(listCopy){
+        // Already opened from the known list. Keep the user inside the Trip.
+        setSyncState(
+          navigator.onLine ? 'error' : 'offline',
+          '已打开现有资料；最新内容暂时未同步'
+        );
+        toast('已打开 Trip；最新资料暂时无法同步','err');
+        return;
+      }
+      throw error;
+    }
+
+    currentTrip=data;
+    activeDay=Math.min(Math.max(Number(activeDay||1),1),Number(currentTrip.days||1));
+    restoreLastSyncTime();
+
+    // If we did not have a list copy, reveal the Trip now.
+    if(tripView.classList.contains('hide')){
+      show(tripView);
+      if(mobileBar) mobileBar.classList.remove('hide');
+    }
+
+    const synced=await refreshTrip({silent:true});
+    subscribeTrip();
+    switchPanel('overview');
+
+    if(!synced){
+      // refreshTrip already shows the correct sync state.
+      renderTrip();
+    }
+
+  }catch(err){
+    console.error('openTrip failed',err);
+
+    // If we had a local list copy, never kick the user back out.
+    if(listCopy && currentTrip?.id===id){
+      setSyncState('error','Trip 已打开，但同步失败');
+      toast('Trip 已打开，但同步失败。可以继续查看现有资料。','err');
+      return;
+    }
+
+    setSyncState('error',friendlyErrorMessage(err,'打开 Trip'));
+    toast(friendlyErrorMessage(err,'打开 Trip'),'err');
   }
-
-  setSyncState('syncing','正在打开 Trip…');
-  const {data,error}=await sb.from('trips').select('*').eq('id',id).single();
-
-  if(error){
-    setSyncState('error',friendlyErrorMessage(error,'打开 Trip'));
-    toast(friendlyErrorMessage(error,'打开 Trip'),'err');
-    return;
-  }
-
-  currentTrip=data;
-  activeDay=Math.min(activeDay,currentTrip.days)||1;
-  restoreLastSyncTime();
-  show(tripView);
-  if(mobileBar) mobileBar.classList.remove('hide');
-
-  await refreshTrip({silent:true});
-  subscribeTrip();
-  switchPanel('overview');
 }
 
 async function refreshTrip({silent=false}={}){
   if(!currentTrip) return false;
 
+  // navigator.onLine is advisory only; still attempt Supabase.
+  // Browsers can report false negatives, especially on iPhone/Safari.
   if(!navigator.onLine){
-    setSyncState('offline');
-    if(!silent) toast('目前离线，无法同步最新资料','err');
-    return false;
+    setSyncState('offline','正在尝试连接服务器…');
+  }else{
+    setSyncState('syncing','正在同步最新资料…');
   }
-
-  setSyncState('syncing','正在同步最新资料…');
 
   try{
     const [tripRes, membersRes, itemsRes, votesRes, expensesRes, sharesRes] = await Promise.all([
