@@ -2024,8 +2024,83 @@ body[data-theme="dark"] #itemFormMsg .error{
 </style>
 
 
-<style id="roadTripV34AutoVote">
-.autoVoteBadge{
+<style id="roadTripV40CleanStable">
+/* =========================================================
+   V4.0 CLEAN STABLE — No Google ETA
+   Strict separation between confirmed and candidate views.
+   ========================================================= */
+.plannerModeBtn span{
+  opacity:.82;
+  font-size:11px;
+  margin-left:3px;
+}
+.plannerSection{
+  margin:12px 0;
+}
+.plannerSectionHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:0 2px 8px;
+}
+.plannerSectionTitle{
+  font-weight:900;
+  font-size:14px;
+  color:var(--text);
+}
+.plannerSectionCount{
+  min-width:28px;
+  text-align:center;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#18263a;
+  border:1px solid #334155;
+  color:#dbe7f5;
+  font-size:10.5px;
+  font-weight:900;
+}
+.candidateOnlyNotice{
+  border:1px solid #334155;
+  border-radius:15px;
+  padding:9px 11px;
+  margin-bottom:10px;
+  background:#111c2e;
+  color:#b8c3d7;
+  font-size:11.5px;
+  line-height:1.45;
+}
+.confirmedOnlyNotice{
+  border:1px solid #16a34a;
+  border-radius:15px;
+  padding:9px 11px;
+  margin-bottom:10px;
+  background:#0e2f25;
+  color:#bbf7d0;
+  font-size:11.5px;
+  line-height:1.45;
+}
+.backupSection .plannerSectionTitle{color:#fbbf24}
+.skippedSection .plannerSectionTitle{color:#fca5a5}
+.budgetInfoSection .plannerSectionTitle{color:#c4b5fd}
+.budgetInfoCard{
+  border:1px solid #6d5bd0;
+  border-radius:17px;
+  padding:11px 12px;
+  margin-bottom:8px;
+  background:linear-gradient(180deg,#161a2f,#131d31);
+  cursor:pointer;
+}
+.budgetInfoCard .title{
+  font-size:14px;
+}
+.budgetInfoMeta{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:7px;
+}
+.autoConfirmedFlag{
   display:inline-flex;
   align-items:center;
   min-height:28px;
@@ -2037,7 +2112,7 @@ body[data-theme="dark"] #itemFormMsg .error{
   font-size:10.5px;
   font-weight:900;
 }
-.voteProgressBadge{
+.voteCountStrict{
   display:inline-flex;
   align-items:center;
   min-height:28px;
@@ -2049,46 +2124,38 @@ body[data-theme="dark"] #itemFormMsg .error{
   font-size:10.5px;
   font-weight:850;
 }
-</style>
-
-
-<style id="roadTripV33ConfirmedTimelineFix">
-.unscheduledBox{
-  box-shadow:0 10px 24px rgba(245,158,11,.08);
+.statusActions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  margin-top:10px;
 }
-.unscheduledItem{
-  min-height:48px;
+.statusActions button{
+  min-height:42px;
 }
-.unscheduledItem:hover{
-  border-color:#f59e0b;
+.timelineEmptyGuide{
+  border:1px dashed #475569;
+  border-radius:18px;
+  padding:20px 14px;
+  text-align:center;
+  color:#94a3b8;
+  background:rgba(15,23,42,.35);
+  line-height:1.55;
 }
-</style>
-
-
-<style id="roadTripV35GoogleEta">
-.googleEtaBar{
-  display:flex;gap:8px;align-items:center;flex-wrap:wrap;
-  padding:10px;margin:0 0 10px;border:1px solid var(--line);
-  border-radius:16px;background:rgba(37,99,235,.06);
+.timelineEmptyGuide b{
+  color:#e2e8f0;
 }
-.googleEtaBtn{
-  border:1px solid #2563eb;background:#172554;color:#dbeafe;
-  border-radius:14px;min-height:42px;padding:10px 13px;font-weight:850;
-}
-.googleEtaBtn.secondary{border-color:#475569;background:#111c2e;color:#cbd5e1}
-.googleEtaBtn:disabled{opacity:.55;cursor:wait}
-.googleEtaStatus{flex:1;min-width:220px;font-size:11.5px;color:var(--muted);line-height:1.45}
-.googleEtaHint{min-height:15px;margin-top:3px;font-size:10.5px;color:#60a5fa;line-height:1.35}
-.googleEtaBadge{
-  display:inline-flex;align-items:center;min-height:28px;padding:5px 8px;
-  border-radius:999px;background:#172554;border:1px solid #1d4ed8;
-  color:#bfdbfe;font-size:10.5px;font-weight:850;
-}
-body[data-theme="dark"] .googleEtaBar{background:#0d1830;border-color:#334155}
 @media(max-width:640px){
-  .googleEtaBar{display:grid;grid-template-columns:1fr 1fr}
-  .googleEtaStatus{grid-column:1/-1;min-width:0}
-  .googleEtaBtn{padding:9px 8px;font-size:12px}
+  .plannerModeSwitch{
+    grid-template-columns:1fr 1fr;
+  }
+  .plannerModeBtn{
+    font-size:12px;
+    padding:10px 8px;
+  }
+  .statusActions{
+    grid-template-columns:1fr 1fr;
+  }
 }
 </style>
 
@@ -2253,16 +2320,14 @@ body[data-theme="dark"] .googleEtaBar{background:#0d1830;border-color:#334155}
           <div class="tabs" id="dayTabs"></div>
 
           <div class="plannerModeSwitch">
-            <button type="button" class="plannerModeBtn active" data-itinerary-mode="timeline">🗓 已确认时间表</button>
-            <button type="button" class="plannerModeBtn" data-itinerary-mode="candidates">🗳 候选 / 投票</button>
+            <button type="button" class="plannerModeBtn active" data-itinerary-mode="timeline">
+              🗓 已确认时间表 <span id="confirmedModeCount"></span>
+            </button>
+            <button type="button" class="plannerModeBtn" data-itinerary-mode="candidates">
+              🗳 候选 / 投票 <span id="candidateModeCount"></span>
+            </button>
           </div>
           <div id="scheduleWarnings"></div>
-
-          <div class="googleEtaBar" id="googleEtaBar">
-            <button type="button" class="googleEtaBtn" id="googleEtaBtn">🚗 Google 补齐当天车程</button>
-            <button type="button" class="googleEtaBtn secondary" id="googleEtaForceBtn">↻ 重新计算当天</button>
-            <div class="googleEtaStatus" id="googleEtaStatus"></div>
-          </div>
 
           <div class="itineraryTools" id="itineraryTools">
             <div class="searchRow">
@@ -2395,9 +2460,8 @@ body[data-theme="dark"] .googleEtaBar{background:#0d1830;border-color:#334155}
           <label>预计停留（分钟）
             <input id="itemDuration" type="number" min="0" max="1440" step="5" value="60">
           </label>
-          <label>预计去下一站车程（分钟）
-            <input id="itemTravel" type="number" min="0" max="600" step="1" value="0">
-            <span class="googleEtaHint" id="itemTravelHint">可手动填写；已确认时间表会自动用 Google 补齐</span>
+          <label>去下一站车程（分钟）
+            <input id="itemTravel" type="number" min="0" max="600" step="5" value="0">
           </label>
           <div class="plannerHelp">例如 09:00 到餐厅，吃 60 分钟，再开车 20 分钟；下一站最早应排 10:20。</div>
         </div>
@@ -2513,8 +2577,6 @@ let sb=null, user=null, authMode='login';
 let currentTrip=null, members=[], items=[], votes=[], expenses=[], shares=[], trips=[];
 let activeDay=1, editingItem=null, editingExpense=null, channel=null;
 let itemSearch='', itemCategoryFilter='全部', itemSortMode='default', itineraryMode='timeline';
-let googleMapsLoadPromise=null, googleEtaBusy=false, googleEtaTimer=null;
-
 const mobileBar=$('mobileBar'), mobileAddBtn=$('mobileAddBtn');
 
 if(!configured){
@@ -2668,19 +2730,6 @@ async function init(){
       renderItems();
     });
   });
-  $('googleEtaBtn')?.addEventListener('click',()=>autoCalculateDayTravel(activeDay,{force:false,silent:false}));
-  $('googleEtaForceBtn')?.addEventListener('click',()=>{
-    const schedule=getDaySchedule(activeDay);
-    const requests=Math.max(0,schedule.scheduled.length-1);
-    if(!requests){
-      autoCalculateDayTravel(activeDay,{force:true,silent:false});
-      return;
-    }
-    if(confirm(`重新计算 Day ${activeDay} 全部车程？\n预计最多会发送 ${requests} 次 Google Routes 请求。`)){
-      autoCalculateDayTravel(activeDay,{force:true,silent:false});
-    }
-  });
-
   document.querySelectorAll('#categoryFilters [data-cat]').forEach(btn=>{
     btn.addEventListener('click',()=>{
       itemCategoryFilter=btn.dataset.cat;
@@ -2962,7 +3011,7 @@ function renderTrip(){
       <span class="recentEditIcon">${escapeHtml((i.category||'📍').split(' ')[0])}</span>
       <span>
         <span class="recentEditTitle">${escapeHtml(i.name)}</span>
-        <span class="recentEditMeta">${escapeHtml(i.category)} · Day ${i.day_no} · ${planStatusLabel(i.plan_status||'candidate')} · ❤️ ${itemVoteCount(i.id)}</span>
+        <span class="recentEditMeta">${escapeHtml(i.category)} · Day ${i.day_no} · ${isBudgetItem(i)?'💰 Info':planStatusLabel(i.plan_status)} · ❤️ ${itemVoteCount(i.id)}</span>
       </span>
       <span class="recentEditArrow">›</span>
     </button>`).join(''):'<div class="empty">还没有行程项目</div>';
@@ -3008,15 +3057,16 @@ function renderTrip(){
   }));
   $('currentRoute').textContent=r[activeDay-1] || '';
 
-  const dayItems=items.filter(i=>i.day_no===activeDay);
+  const dayItems=items.filter(i=>Number(i.day_no)===Number(activeDay));
   const dayBudget=dayItems.reduce((s,x)=>s+Number(x.cost||0),0);
   const dayVotes=dayItems.reduce((s,x)=>s+itemVoteCount(x.id),0);
-  const dayDone=dayItems.filter(x=>x.done).length;
   const scheduleInfo=getDaySchedule(activeDay);
+  const candidateInfo=getCandidateBuckets(activeDay);
   $('dayMiniStats').innerHTML=`
-    <span class="dayMiniStat">📌 ${dayItems.length} 候选</span>
-    <span class="dayMiniStat">✅ ${scheduleInfo.confirmed.length} 确认</span>
+    <span class="dayMiniStat">🗳 ${candidateInfo.candidates.length} 候选</span>
+    <span class="dayMiniStat">✅ ${scheduleInfo.confirmed.length} 已确认</span>
     <span class="dayMiniStat">🕒 ${scheduleInfo.scheduled.length} 已排时间</span>
+    <span class="dayMiniStat">🟡 ${candidateInfo.backups.length} 备选</span>
     <span class="dayMiniStat">${scheduleInfo.conflicts.length?'⚠️':'✓'} ${scheduleInfo.conflicts.length} 冲突</span>
     <span class="dayMiniStat">❤️ ${dayVotes} 票</span>
     <span class="dayMiniStat">💰 ${money(dayBudget)}</span>`;
@@ -3049,203 +3099,19 @@ function renderTrip(){
 
 
 
-
-
-function hasGoogleEtaKey(){
-  const key=String(cfg.GOOGLE_MAPS_API_KEY||'').trim();
-  return !!key && !key.includes('PASTE_');
+function normalizePlanStatus(status){
+  return ['candidate','confirmed','backup','skipped'].includes(status) ? status : 'candidate';
 }
-
-function routePointText(item){
-  if(!item) return '';
-  const loc=String(item.location||'').trim();
-  if(loc && !/^whole trip$/i.test(loc)) return loc;
-  return String(item.name||'').replace(/^\[Budget\]\s*/,'').trim();
+function isBudgetItem(item){
+  return (item?.name||'').trim().startsWith('[Budget]');
 }
-
-async function ensureGoogleRoutesLibrary(){
-  if(window.google?.maps?.importLibrary) return true;
-  if(googleMapsLoadPromise) return googleMapsLoadPromise;
-
-  const key=String(cfg.GOOGLE_MAPS_API_KEY||'').trim();
-  if(!key || key.includes('PASTE_')){
-    throw new Error('config.js 还没有 GOOGLE_MAPS_API_KEY');
-  }
-
-  googleMapsLoadPromise=new Promise((resolve,reject)=>{
-    const callback='__roadtripGoogleReady_'+Date.now();
-    window[callback]=()=>{
-      try{ delete window[callback]; }catch(_){}
-      resolve(true);
-    };
-
-    const script=document.createElement('script');
-    script.async=true;
-    script.defer=true;
-    script.src=
-      'https://maps.googleapis.com/maps/api/js?key='+
-      encodeURIComponent(key)+
-      '&v=weekly&loading=async&auth_referrer_policy=origin&callback='+
-      encodeURIComponent(callback);
-
-    script.onerror=()=>{
-      googleMapsLoadPromise=null;
-      try{ delete window[callback]; }catch(_){}
-      reject(new Error('Google Maps API 加载失败。请检查 API key、Billing、HTTP referrer 和 Maps JavaScript API。'));
-    };
-    document.head.appendChild(script);
-  });
-
-  return googleMapsLoadPromise;
-}
-
-async function computeGoogleDriveEta(origin,destination){
-  await ensureGoogleRoutesLibrary();
-  const {Route}=await google.maps.importLibrary('routes');
-
-  const {routes}=await Route.computeRoutes({
-    origin,
-    destination,
-    travelMode:'DRIVING',
-    routingPreference:'TRAFFIC_UNAWARE',
-    fields:['durationMillis','distanceMeters']
-  });
-
-  const route=routes?.[0];
-  if(!route || !Number.isFinite(Number(route.durationMillis))){
-    throw new Error(`Google 找不到路线：${origin} → ${destination}`);
-  }
-
-  return {
-    minutes:Math.max(1,Math.ceil(Number(route.durationMillis)/60000)),
-    km:Number.isFinite(Number(route.distanceMeters))
-      ? Math.round((Number(route.distanceMeters)/1000)*10)/10
-      : null
-  };
-}
-
-function googleSegmentIsFresh(cur,next){
-  return (
-    cur.travel_source==='google' &&
-    cur.travel_to_item_id===next.id &&
-    String(cur.travel_origin_text||'')===routePointText(cur) &&
-    String(cur.travel_destination_text||'')===routePointText(next) &&
-    Number(cur.travel_minutes||0)>0
-  );
-}
-
-function queueAutoGoogleEta(dayNo){
-  clearTimeout(googleEtaTimer);
-  if(!hasGoogleEtaKey() || itineraryMode!=='timeline') return;
-  googleEtaTimer=setTimeout(()=>{
-    autoCalculateDayTravel(dayNo,{force:false,silent:true});
-  },900);
-}
-
-async function autoCalculateDayTravel(dayNo,{force=false,silent=false}={}){
-  if(googleEtaBusy) return;
-
-  const status=$('googleEtaStatus');
-  const btn=$('googleEtaBtn');
-  const forceBtn=$('googleEtaForceBtn');
-
-  if(!hasGoogleEtaKey()){
-    if(status) status.innerHTML='🔑 还没设置 Google API key；目前继续使用手动车程。';
-    if(!silent) toast('还没设置 Google Maps API key','err');
-    return;
-  }
-
-  const schedule=getDaySchedule(dayNo);
-  if(schedule.scheduled.length<2){
-    if(status) status.textContent='至少需要 2 个已确认 + 已排时间的地点才能计算车程。';
-    return;
-  }
-
-  const segments=[];
-  for(let i=0;i<schedule.scheduled.length-1;i++){
-    const cur=schedule.scheduled[i];
-    const next=schedule.scheduled[i+1];
-    if(force || !googleSegmentIsFresh(cur,next)){
-      segments.push({cur,next});
-    }
-  }
-
-  if(!segments.length){
-    if(status) status.textContent='✅ 当天 Google ETA 已缓存为最新，不会重复请求。';
-    return;
-  }
-
-  googleEtaBusy=true;
-  if(btn){btn.disabled=true;btn.textContent='🚗 计算中…';}
-  if(forceBtn) forceBtn.disabled=true;
-
-  try{
-    await ensureGoogleRoutesLibrary();
-
-    let success=0;
-    for(let i=0;i<segments.length;i++){
-      const {cur,next}=segments[i];
-      const origin=routePointText(cur);
-      const destination=routePointText(next);
-      if(!origin || !destination) continue;
-
-      if(status){
-        status.textContent=`Google ETA ${i+1}/${segments.length}：${cur.name} → ${next.name}`;
-      }
-
-      const eta=await computeGoogleDriveEta(origin,destination);
-
-      const {error}=await sb.from('items').update({
-        travel_minutes:eta.minutes,
-        travel_distance_km:eta.km,
-        travel_source:'google',
-        travel_to_item_id:next.id,
-        travel_origin_text:origin,
-        travel_destination_text:destination
-      }).eq('id',cur.id);
-
-      if(error) throw error;
-
-      const local=items.find(x=>x.id===cur.id);
-      if(local){
-        local.travel_minutes=eta.minutes;
-        local.travel_distance_km=eta.km;
-        local.travel_source='google';
-        local.travel_to_item_id=next.id;
-        local.travel_origin_text=origin;
-        local.travel_destination_text=destination;
-      }
-      success++;
-    }
-
-    if(status){
-      status.innerHTML=`✅ 已更新 <b>${success}</b> 段 Google ETA；未变化路段会继续使用缓存。`;
-    }
-    if(!silent) toast(`Google ETA 已更新 ${success} 段 ✅`);
-    renderTrip();
-
-  }catch(err){
-    const message=String(err?.message||err);
-    if(status) status.textContent='❌ '+message;
-    if(!silent) toast(message,'err');
-  }finally{
-    googleEtaBusy=false;
-    if(btn){btn.disabled=false;btn.textContent='🚗 Google 补齐当天车程';}
-    if(forceBtn) forceBtn.disabled=false;
-  }
-}
-
-function requiredVoteCount(){
-  return Math.max(1, Number(currentTrip?.people || 4));
-}
-
 function planStatusLabel(status){
   return ({
     candidate:'🗳 候选',
     confirmed:'✅ 已确认',
     backup:'🟡 备选',
     skipped:'✕ 不去'
-  })[status||'candidate'] || '🗳 候选';
+  })[normalizePlanStatus(status)] || '🗳 候选';
 }
 function planStatusClass(status){
   return ({
@@ -3253,7 +3119,12 @@ function planStatusClass(status){
     confirmed:'plan-confirmed',
     backup:'plan-backup',
     skipped:'plan-skipped'
-  })[status||'candidate'] || 'plan-candidate';
+  })[normalizePlanStatus(status)] || 'plan-candidate';
+}
+function requiredVoteCount(){
+  const configured=Number(currentTrip?.people||0);
+  const memberCount=Number(members?.length||0);
+  return Math.max(1, configured || memberCount || 4);
 }
 function timeToMinutes(value){
   if(!value) return null;
@@ -3267,26 +3138,26 @@ function minutesToTime(total){
   return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
 }
 function getDaySchedule(dayNo){
-  const confirmed=items
-    .filter(i=>i.day_no===dayNo && i.plan_status==='confirmed' && !(i.name||'').trim().startsWith('[Budget]'));
+  // STRICT: timeline can only receive confirmed non-budget items.
+  const confirmed=items.filter(i=>
+    Number(i.day_no)===Number(dayNo) &&
+    normalizePlanStatus(i.plan_status)==='confirmed' &&
+    !isBudgetItem(i)
+  );
 
   const scheduled=confirmed
     .filter(i=>i.start_time)
     .map(i=>({
       ...i,
       startMin:timeToMinutes(i.start_time),
-      duration:Number(i.duration_minutes||60),
-      travel:Number(i.travel_minutes||0),
-      travelKm:Number(i.travel_distance_km||0),
-      travelSource:i.travel_source||null,
-      travelToItemId:i.travel_to_item_id||null,
-      travelOriginText:i.travel_origin_text||'',
-      travelDestinationText:i.travel_destination_text||''
+      duration:Math.max(0,Number(i.duration_minutes||60)),
+      travel:Math.max(0,Number(i.travel_minutes||0))
     }))
     .filter(i=>i.startMin!==null)
     .sort((a,b)=>a.startMin-b.startMin);
 
-  const unscheduled=confirmed.filter(i=>!i.start_time);
+  const scheduledIds=new Set(scheduled.map(i=>i.id));
+  const unscheduled=confirmed.filter(i=>!scheduledIds.has(i.id));
   const conflicts=[];
 
   for(let idx=0;idx<scheduled.length-1;idx++){
@@ -3305,28 +3176,51 @@ function getDaySchedule(dayNo){
   }
   return {confirmed,scheduled,unscheduled,conflicts};
 }
+function getCandidateBuckets(dayNo){
+  const day=items.filter(i=>Number(i.day_no)===Number(dayNo));
+
+  return {
+    candidates:day.filter(i=>!isBudgetItem(i) && normalizePlanStatus(i.plan_status)==='candidate'),
+    backups:day.filter(i=>!isBudgetItem(i) && normalizePlanStatus(i.plan_status)==='backup'),
+    skipped:day.filter(i=>!isBudgetItem(i) && normalizePlanStatus(i.plan_status)==='skipped'),
+    budgets:day.filter(i=>isBudgetItem(i)),
+    confirmed:day.filter(i=>!isBudgetItem(i) && normalizePlanStatus(i.plan_status)==='confirmed')
+  };
+}
 async function setPlanStatus(itemId,status,openSchedule=false){
   const item=items.find(i=>i.id===itemId);
   if(!item) return;
 
-  const {error}=await sb.from('items').update({plan_status:status}).eq('id',itemId);
+  const normalized=normalizePlanStatus(status);
+  const patch={
+    plan_status:normalized,
+    auto_confirmed:false
+  };
+
+  const {error}=await sb.from('items').update(patch).eq('id',itemId);
   if(error){
     toast(error.message,'err');
     return;
   }
 
-  item.plan_status=status;
-  renderTrip();
+  item.plan_status=normalized;
+  item.auto_confirmed=false;
 
-  if(status==='confirmed'){
-    toast('已确认加入行程 ✅');
+  if(normalized==='confirmed'){
+    itineraryMode='timeline';
+    renderTrip();
+    toast('已确认加入正式行程 ✅');
+
     if(openSchedule && !item.start_time){
-      setTimeout(()=>openItemDialog(itemId),100);
+      setTimeout(()=>openItemDialog(itemId),120);
     }
-  }else if(status==='backup'){
-    toast('已放入备选 🟡');
   }else{
-    toast('行程状态已更新');
+    itineraryMode='candidates';
+    renderTrip();
+
+    if(normalized==='backup') toast('已放入备选 🟡');
+    else if(normalized==='skipped') toast('已标记不去');
+    else toast('已退回候选');
   }
 }
 
@@ -3347,57 +3241,49 @@ function renderItems(){
   const tools=$('itineraryTools');
   const warningBox=$('scheduleWarnings');
   const schedule=getDaySchedule(activeDay);
+  const buckets=getCandidateBuckets(activeDay);
+
+  const confirmedCount=$('confirmedModeCount');
+  const candidateCount=$('candidateModeCount');
+  if(confirmedCount) confirmedCount.textContent=`(${schedule.confirmed.length})`;
+  if(candidateCount) candidateCount.textContent=`(${buckets.candidates.length})`;
 
   document.querySelectorAll('[data-itinerary-mode]').forEach(btn=>{
     btn.classList.toggle('active',btn.dataset.itineraryMode===itineraryMode);
   });
-  const googleBar=$('googleEtaBar');
-  const googleStatus=$('googleEtaStatus');
 
-  if(googleBar) googleBar.style.display=itineraryMode==='timeline' ? '' : 'none';
-
+  // ========================================================
+  // MODE 1: CONFIRMED TIMELINE
+  // STRICTLY CONFIRMED ONLY. Candidate/backup/skipped never render here.
+  // ========================================================
   if(itineraryMode==='timeline'){
     if(tools) tools.style.display='none';
-
-    if(googleStatus){
-      if(hasGoogleEtaKey()){
-        const s=getDaySchedule(activeDay);
-        let stale=0;
-        for(let i=0;i<s.scheduled.length-1;i++){
-          if(!googleSegmentIsFresh(s.scheduled[i],s.scheduled[i+1])) stale++;
-        }
-        googleStatus.textContent = stale>0
-          ? `Google ETA：有 ${stale} 段需要计算/更新。`
-          : (s.scheduled.length>=2 ? '✅ Google ETA 已缓存为最新。' : '排好至少 2 个地点后会计算车程。');
-      }else{
-        googleStatus.innerHTML='🔑 未设置 Google key；目前使用手动车程。';
-      }
-    }
-
-    queueAutoGoogleEta(activeDay);
 
     if(schedule.conflicts.length){
       warningBox.innerHTML=`
         <div class="scheduleWarningBox">
-          <strong>⚠️ 这一天有 ${schedule.conflicts.length} 个时间冲突</strong>
-          需要调整开始时间、停留时间或车程，下面已经标红。
+          <strong>⚠️ ${schedule.conflicts.length} 个时间冲突</strong>
+          调整开始时间、停留时间或手动车程后，系统会重新检查。
         </div>`;
-    }else if(schedule.confirmed.length && schedule.unscheduled.length){
+    }else if(schedule.unscheduled.length){
       warningBox.innerHTML=`
         <div class="scheduleWarningBox">
-          <strong>🕒 还有 ${schedule.unscheduled.length} 个“已确认”地点没有排时间</strong>
-          点下面的项目设定几点去，才算真正完成当天计划。
+          <strong>🕒 ${schedule.unscheduled.length} 个已确认地点还没排时间</strong>
+          它们不会混进正式时间轴，会单独列在下面。
         </div>`;
     }else if(schedule.confirmed.length){
-      warningBox.innerHTML=`<div class="scheduleOkBox">✅ 当天已确认行程没有发现时间重叠。</div>`;
+      warningBox.innerHTML=`
+        <div class="scheduleOkBox">✅ 这一天的已确认行程没有发现时间重叠。</div>`;
     }else{
       warningBox.innerHTML='';
     }
 
-    let timelineHtml='';
+    let out=`<div class="confirmedOnlyNotice">
+      这里<strong>只显示已确认</strong>的地点。候选、备选和不去项目不会出现在这个页面。
+    </div>`;
 
     if(schedule.scheduled.length){
-      timelineHtml+=`<div class="timelineWrap">`;
+      out+=`<div class="timelineWrap">`;
 
       schedule.scheduled.forEach((item,idx)=>{
         const conflictFrom=schedule.conflicts.find(c=>c.currentId===item.id);
@@ -3405,25 +3291,26 @@ function renderItems(){
         const end=item.startMin+item.duration;
         const visual=getItemVisual(item);
 
-        timelineHtml+=`
+        out+=`
           <div class="timelineStop">
             <div class="timelineTime">${minutesToTime(item.startMin)}</div>
             <div class="timelineRail"><span class="timelineDot"></span></div>
             <div class="timelineCard ${conflictFrom||conflictTo?'timelineConflictCard':''}" data-timeline-edit="${item.id}">
               <div class="timelineTop">
-                <div>
+                <div style="min-width:0">
                   <div class="timelineName">${escapeHtml(visual.icon)} ${escapeHtml(item.name)}</div>
                   ${item.location?`<div class="placeLocation">📍 ${escapeHtml(item.location)}</div>`:''}
                 </div>
-                <span class="planStatusBadge plan-confirmed">✅ 确认</span>
+                <span class="planStatusBadge plan-confirmed">✅ 已确认</span>
               </div>
               <div class="timelineMeta">
                 <span class="timelineBadge">🕒 ${minutesToTime(item.startMin)}–${minutesToTime(end)}</span>
                 <span class="timelineBadge">⏱ ${item.duration} min</span>
-                <span class="timelineBadge">❤️ ${itemVoteCount(item.id)}</span>
+                <span class="timelineBadge">❤️ ${itemVoteCount(item.id)}/${requiredVoteCount()}</span>
                 ${Number(item.cost||0)>0?`<span class="timelineBadge">💰 ${money(item.cost)}</span>`:''}
+                ${item.auto_confirmed?`<span class="autoConfirmedFlag">4/4 自动确认</span>`:''}
               </div>
-              <div class="timelineEnd">点卡片可修改时间 / 停留 / 状态</div>
+              <div class="timelineEnd">点卡片修改时间、停留、车程或状态</div>
             </div>
           </div>`;
 
@@ -3431,17 +3318,14 @@ function renderItems(){
           const next=schedule.scheduled[idx+1];
           const ready=item.startMin+item.duration+item.travel;
           const conflict=ready>next.startMin;
-          timelineHtml+=`
+
+          out+=`
             <div class="travelSegment">
               <div></div><div class="timelineRail"></div>
               <div class="travelText ${conflict?'conflict':''}">
-                🚗 预计车程 ${item.travel} min
-                ${item.travelSource==='google'
-                  ? ` · Google${item.travelKm ? ` ${item.travelKm.toFixed(1)} km` : ''}`
-                  : ' · 手动'
-                }
+                🚗 手动预计车程 ${item.travel} min
                 ${conflict
-                  ? ` · ⚠️ 最早 ${minutesToTime(ready)} 才能到，但下一站排 ${minutesToTime(next.startMin)}（撞 ${ready-next.startMin} min）`
+                  ? ` · ⚠️ 最早 ${minutesToTime(ready)} 才能到，但下一站排 ${minutesToTime(next.startMin)}（冲突 ${ready-next.startMin} min）`
                   : ` · 下一站 ${minutesToTime(next.startMin)}`
                 }
               </div>
@@ -3449,28 +3333,28 @@ function renderItems(){
         }
       });
 
-      timelineHtml+=`</div>`;
+      out+=`</div>`;
     }else{
-      timelineHtml+=`
-        <div class="empty">
-          这一天暂时没有“已排时间”的项目。<br>
-          已确认但没填开始时间的地点，会显示在下面的「🕒 已确认，但还没排时间」。
+      out+=`
+        <div class="timelineEmptyGuide">
+          <b>这一天还没有排好的正式时间轴。</b><br>
+          去「🗳 候选 / 投票」确认地点；确认后再填写开始时间。
         </div>`;
     }
 
     if(schedule.unscheduled.length){
-      timelineHtml+=`
+      out+=`
         <div class="unscheduledBox">
-          <div class="unscheduledTitle">🕒 已确认，但还没排时间</div>
+          <div class="unscheduledTitle">🕒 已确认 · 待排时间</div>
           ${schedule.unscheduled.map(item=>`
             <button class="unscheduledItem" data-unscheduled-edit="${item.id}">
-              <span>${escapeHtml((getItemVisual(item).icon))} ${escapeHtml(item.name)}</span>
+              <span>${escapeHtml(getItemVisual(item).icon)} ${escapeHtml(item.name)}</span>
               <span>设置时间 ›</span>
             </button>`).join('')}
         </div>`;
     }
 
-    $('itemsList').innerHTML=timelineHtml;
+    $('itemsList').innerHTML=out;
 
     document.querySelectorAll('[data-timeline-edit]').forEach(el=>{
       el.addEventListener('click',()=>openItemDialog(el.dataset.timelineEdit));
@@ -3481,127 +3365,212 @@ function renderItems(){
     return;
   }
 
-  // Candidate / voting mode
+  // ========================================================
+  // MODE 2: CANDIDATE / VOTING
+  // STRICTLY excludes confirmed items.
+  // ========================================================
   if(tools) tools.style.display='';
-  warningBox.innerHTML='';
+  warningBox.innerHTML=`
+    <div class="candidateOnlyNotice">
+      这里用于投票和筛选。<strong>已确认</strong>项目会自动离开这里，进入「🗓 已确认时间表」。
+      ${requiredVoteCount()} / ${requiredVoteCount()} 全票会自动确认。
+    </div>`;
 
-  let dayItems=items.filter(i=>i.day_no===activeDay);
+  const applyFilters=(list)=>{
+    let filtered=[...list];
 
-  if(itemCategoryFilter!=='全部'){
-    dayItems=dayItems.filter(i=>(i.category||'').startsWith(itemCategoryFilter));
-  }
-  if(itemSearch){
-    dayItems=dayItems.filter(i=>
-      [i.name,i.location,i.note,i.category,i.priority,i.plan_status].join(' ').toLowerCase().includes(itemSearch)
-    );
-  }
+    if(itemCategoryFilter!=='全部'){
+      filtered=filtered.filter(i=>(i.category||'').startsWith(itemCategoryFilter));
+    }
 
-  if(itemSortMode==='votes'){
-    dayItems.sort((a,b)=>itemVoteCount(b.id)-itemVoteCount(a.id));
-  }else if(itemSortMode==='budget'){
-    dayItems.sort((a,b)=>Number(b.cost||0)-Number(a.cost||0));
-  }else if(itemSortMode==='name'){
-    dayItems.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
-  }else{
-    dayItems.sort((a,b)=>{
-      const statusRank={confirmed:0,candidate:1,backup:2,skipped:3};
-      const sr=(statusRank[a.plan_status||'candidate']??9)-(statusRank[b.plan_status||'candidate']??9);
-      if(sr!==0)return sr;
-      const vr=itemVoteCount(b.id)-itemVoteCount(a.id);
-      if(vr!==0)return vr;
-      const priorityRank={'⭐ 必去':0,'👍 想去':1,'🙂 有空再去':2};
-      return (priorityRank[a.priority]??9)-(priorityRank[b.priority]??9);
-    });
-  }
+    if(itemSearch){
+      filtered=filtered.filter(i=>
+        [i.name,i.location,i.note,i.category,i.priority].join(' ').toLowerCase().includes(itemSearch)
+      );
+    }
 
-  $('itemsList').innerHTML = dayItems.length ? dayItems.map(item=>{
-    const isBudget=(item.name||'').trim().startsWith('[Budget]');
+    if(itemSortMode==='votes'){
+      filtered.sort((a,b)=>itemVoteCount(b.id)-itemVoteCount(a.id));
+    }else if(itemSortMode==='budget'){
+      filtered.sort((a,b)=>Number(b.cost||0)-Number(a.cost||0));
+    }else if(itemSortMode==='name'){
+      filtered.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+    }else{
+      filtered.sort((a,b)=>{
+        const voteDiff=itemVoteCount(b.id)-itemVoteCount(a.id);
+        if(voteDiff!==0) return voteDiff;
+        const priorityRank={'⭐ 必去':0,'👍 想去':1,'🙂 有空再去':2};
+        return (priorityRank[a.priority]??9)-(priorityRank[b.priority]??9);
+      });
+    }
+
+    return filtered;
+  };
+
+  const renderCandidateCard=(item)=>{
     const visual=getItemVisual(item);
-    const status=item.plan_status||'candidate';
+    const votesNow=itemVoteCount(item.id);
+    const required=requiredVoteCount();
 
     return `
-    <div class="itemCard placeCard tapToEdit ${visual.cls} ${isBudget?'budgetCard':''}" data-card-edit="${item.id}" style="margin-bottom:12px">
-      <div class="placeCover">
-        <span class="categoryMiniLogo">${escapeHtml(visual.icon)}</span>
-        ${item.image_url?`<img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.name)}">`:`<div class="placeCoverEmoji">${escapeHtml(visual.icon)}</div>`}
-        <div class="placeCoverOverlay">
-          <span class="coverBadge">❤️ ${itemVoteCount(item.id)}</span>
-          ${item.done?'<span class="coverBadge">✓ 完成</span>':''}
-        </div>
-      </div>
-      <div class="placeBody">
-        <div class="placeTitleRow">
-          <div style="flex:1;min-width:0">
-            ${isBudget?'<div class="budgetTag">💰 TRIP BUDGET</div>':''}
-            ${!isBudget?`<span class="planStatusBadge ${planStatusClass(status)}">${planStatusLabel(status)}</span>`:''}
-            <button class="placeTitleButton" type="button" data-title-edit="${item.id}" title="点击编辑">
-              <div class="title">${escapeHtml(item.name)}</div>
-            </button>
-            ${item.location?`<div class="placeLocation">📍 ${escapeHtml(item.location)}</div>`:''}
+      <div class="itemCard placeCard tapToEdit ${visual.cls}" data-card-edit="${item.id}" style="margin-bottom:12px">
+        <div class="placeCover">
+          <span class="categoryMiniLogo">${escapeHtml(visual.icon)}</span>
+          ${item.image_url
+            ? `<img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.name)}">`
+            : `<div class="placeCoverEmoji">${escapeHtml(visual.icon)}</div>`
+          }
+          <div class="placeCoverOverlay">
+            <span class="coverBadge">❤️ ${votesNow}/${required}</span>
+            ${item.done?'<span class="coverBadge">✓ 完成</span>':''}
           </div>
-          <label title="完成"><input class="check" type="checkbox" ${item.done?'checked':''} data-done="${item.id}"></label>
         </div>
+        <div class="placeBody">
+          <div class="placeTitleRow">
+            <div style="flex:1;min-width:0">
+              <span class="planStatusBadge ${planStatusClass(item.plan_status)}">${planStatusLabel(item.plan_status)}</span>
+              <button class="placeTitleButton" type="button" data-title-edit="${item.id}">
+                <div class="title">${escapeHtml(item.name)}</div>
+              </button>
+              ${item.location?`<div class="placeLocation">📍 ${escapeHtml(item.location)}</div>`:''}
+            </div>
+            <label title="完成"><input class="check" type="checkbox" ${item.done?'checked':''} data-done="${item.id}"></label>
+          </div>
 
-        <div class="pills">
-          <span class="pill">${escapeHtml(item.category)}</span>
-          <span class="pill">${escapeHtml(item.priority)}</span>
-          ${!isBudget?`<span class="voteProgressBadge">❤️ ${itemVoteCount(item.id)}/${requiredVoteCount()}</span>`:''}
-          ${item.auto_confirmed?`<span class="autoVoteBadge">✓ 全票自动确认</span>`:''}
-          ${Number(item.cost)>0?`<span class="pill">💰 ${money(item.cost)}</span>`:''}
-          ${item.start_time?`<span class="pill">🕒 ${String(item.start_time).slice(0,5)}</span>`:''}
-        </div>
+          <div class="pills">
+            <span class="pill">${escapeHtml(item.category)}</span>
+            <span class="pill">${escapeHtml(item.priority)}</span>
+            <span class="voteCountStrict">❤️ ${votesNow}/${required}</span>
+            ${Number(item.cost)>0?`<span class="pill">💰 ${money(item.cost)}</span>`:''}
+          </div>
 
-        ${!isBudget?`
-          <div class="candidatePlanRow">
-            <button class="confirmPlanBtn ${status==='confirmed'?'confirmed':''}" data-confirm-plan="${item.id}">
-              ${status==='confirmed'?'✅ 已确认':'✅ 确认 + 排时间'}
-            </button>
+          <div class="statusActions">
+            <button class="confirmPlanBtn" data-confirm-plan="${item.id}">✅ 确认 + 排时间</button>
             <button class="backupPlanBtn" data-backup-plan="${item.id}">
-              ${status==='backup'?'🟡 已备选':'🟡 放备选'}
+              ${normalizePlanStatus(item.plan_status)==='backup'?'↩️ 退回候选':'🟡 放备选'}
             </button>
-          </div>`:''}
+          </div>
 
-        ${item.note?`<details class="itemDetails"><summary>查看时间 / 预算 / 备注</summary><div class="note">${escapeHtml(item.note)}</div></details>`:''}
+          ${item.note?`<details class="itemDetails"><summary>查看时间 / 预算 / 备注</summary><div class="note">${escapeHtml(item.note)}</div></details>`:''}
 
-        <div class="placeActions">
-          <button class="voteBtn ${itemVotedByMe(item.id)?'active':''}" data-vote="${item.id}">
-            ❤️ ${itemVotedByMe(item.id)?'已投票':'投票'}
-          </button>
-          ${item.link?`<a class="iconbtn mapBtn" href="${escapeHtml(item.link)}" target="_blank" rel="noopener">🗺️ 导航</a>`:'<button class="iconbtn mapBtn" disabled>无地图</button>'}
-          <button class="iconbtn editSmall" data-edit-item="${item.id}" aria-label="编辑">✎</button>
-          <button class="iconbtn deleteSmall" data-del-item="${item.id}" aria-label="删除">⌫</button>
+          <div class="placeActions">
+            <button class="voteBtn ${itemVotedByMe(item.id)?'active':''}" data-vote="${item.id}">
+              ❤️ ${itemVotedByMe(item.id)?'已投票':'投票'}
+            </button>
+            ${item.link
+              ? `<a class="iconbtn mapBtn" href="${escapeHtml(item.link)}" target="_blank" rel="noopener">🗺️ 导航</a>`
+              : '<button class="iconbtn mapBtn" disabled>无地图</button>'
+            }
+            <button class="iconbtn editSmall" data-edit-item="${item.id}" aria-label="编辑">✎</button>
+            <button class="iconbtn deleteSmall" data-del-item="${item.id}" aria-label="删除">⌫</button>
+          </div>
         </div>
-      </div>
-    </div>`;
-  }).join('') : `<div class="empty">没有符合筛选条件的项目。</div>`;
+      </div>`;
+  };
 
-  document.querySelectorAll('[data-done]').forEach(el=>el.addEventListener('change',()=>toggleDone(el.dataset.done, el.checked)));
-  document.querySelectorAll('[data-vote]').forEach(el=>el.addEventListener('click',()=>toggleVote(el.dataset.vote)));
-  document.querySelectorAll('[data-title-edit]').forEach(el=>el.addEventListener('click',()=>openItemDialog(el.dataset.titleEdit)));
-  document.querySelectorAll('[data-edit-item]').forEach(el=>el.addEventListener('click',()=>openItemDialog(el.dataset.editItem)));
-  document.querySelectorAll('[data-del-item]').forEach(el=>el.addEventListener('click',()=>deleteItem(el.dataset.delItem)));
+  const candidateItems=applyFilters(buckets.candidates);
+  const backupItems=applyFilters(buckets.backups);
+  const skippedItems=applyFilters(buckets.skipped);
+  const budgetItems=applyFilters(buckets.budgets);
+
+  let out='';
+
+  out+=`
+    <div class="plannerSection">
+      <div class="plannerSectionHead">
+        <div class="plannerSectionTitle">🗳 候选</div>
+        <div class="plannerSectionCount">${candidateItems.length}</div>
+      </div>
+      ${candidateItems.length
+        ? candidateItems.map(renderCandidateCard).join('')
+        : '<div class="empty">这个 Day 没有候选项目。</div>'
+      }
+    </div>`;
+
+  if(backupItems.length){
+    out+=`
+      <div class="plannerSection backupSection">
+        <div class="plannerSectionHead">
+          <div class="plannerSectionTitle">🟡 备选</div>
+          <div class="plannerSectionCount">${backupItems.length}</div>
+        </div>
+        ${backupItems.map(renderCandidateCard).join('')}
+      </div>`;
+  }
+
+  if(skippedItems.length){
+    out+=`
+      <div class="plannerSection skippedSection">
+        <div class="plannerSectionHead">
+          <div class="plannerSectionTitle">✕ 不去</div>
+          <div class="plannerSectionCount">${skippedItems.length}</div>
+        </div>
+        ${skippedItems.map(renderCandidateCard).join('')}
+      </div>`;
+  }
+
+  if(budgetItems.length){
+    out+=`
+      <div class="plannerSection budgetInfoSection">
+        <div class="plannerSectionHead">
+          <div class="plannerSectionTitle">💰 Budget / Trip Info</div>
+          <div class="plannerSectionCount">${budgetItems.length}</div>
+        </div>
+        ${budgetItems.map(item=>`
+          <div class="budgetInfoCard" data-budget-edit="${item.id}">
+            <div class="title">${escapeHtml(item.name)}</div>
+            ${item.location?`<div class="placeLocation">📍 ${escapeHtml(item.location)}</div>`:''}
+            <div class="budgetInfoMeta">
+              <span class="pill">${escapeHtml(item.category)}</span>
+              ${Number(item.cost)>0?`<span class="pill">💰 ${money(item.cost)}</span>`:''}
+            </div>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  $('itemsList').innerHTML=out;
+
+  document.querySelectorAll('[data-done]').forEach(el=>{
+    el.addEventListener('change',()=>toggleDone(el.dataset.done,el.checked));
+  });
+  document.querySelectorAll('[data-vote]').forEach(el=>{
+    el.addEventListener('click',()=>toggleVote(el.dataset.vote));
+  });
+  document.querySelectorAll('[data-title-edit]').forEach(el=>{
+    el.addEventListener('click',()=>openItemDialog(el.dataset.titleEdit));
+  });
+  document.querySelectorAll('[data-edit-item]').forEach(el=>{
+    el.addEventListener('click',()=>openItemDialog(el.dataset.editItem));
+  });
+  document.querySelectorAll('[data-del-item]').forEach(el=>{
+    el.addEventListener('click',()=>deleteItem(el.dataset.delItem));
+  });
+  document.querySelectorAll('[data-budget-edit]').forEach(el=>{
+    el.addEventListener('click',()=>openItemDialog(el.dataset.budgetEdit));
+  });
 
   document.querySelectorAll('[data-confirm-plan]').forEach(el=>{
     el.addEventListener('click',async()=>{
-      const item=items.find(i=>i.id===el.dataset.confirmPlan);
-      if(item?.plan_status==='confirmed'){
-        openItemDialog(item.id);
-      }else{
-        await setPlanStatus(el.dataset.confirmPlan,'confirmed',true);
-      }
+      await setPlanStatus(el.dataset.confirmPlan,'confirmed',true);
     });
   });
+
   document.querySelectorAll('[data-backup-plan]').forEach(el=>{
     el.addEventListener('click',async()=>{
       const item=items.find(i=>i.id===el.dataset.backupPlan);
-      await setPlanStatus(el.dataset.backupPlan,item?.plan_status==='backup'?'candidate':'backup',false);
+      const status=normalizePlanStatus(item?.plan_status);
+      await setPlanStatus(
+        el.dataset.backupPlan,
+        status==='backup' ? 'candidate' : 'backup',
+        false
+      );
     });
   });
 
   document.querySelectorAll('[data-card-edit]').forEach(card=>{
     card.addEventListener('click',(e)=>{
-      const interactive = e.target.closest(
-        'button, a, input, select, textarea, summary, details, label, [data-vote], [data-edit-item], [data-del-item], [data-done], [data-title-edit], [data-confirm-plan], [data-backup-plan]'
+      const interactive=e.target.closest(
+        'button,a,input,select,textarea,summary,details,label,[data-vote],[data-edit-item],[data-del-item],[data-done],[data-title-edit],[data-confirm-plan],[data-backup-plan]'
       );
       if(interactive) return;
       openItemDialog(card.dataset.cardEdit);
@@ -3657,9 +3626,9 @@ async function toggleDone(id, done){
 
 async function toggleVote(itemId){
   const item=items.find(i=>i.id===itemId);
-  if(!item) return;
+  if(!item || isBudgetItem(item)) return;
 
-  const mine = votes.find(v=>v.item_id===itemId && v.user_id===user.id);
+  const mine=votes.find(v=>v.item_id===itemId && v.user_id===user.id);
 
   if(mine){
     const {error}=await sb.from('item_votes')
@@ -3681,21 +3650,22 @@ async function toggleVote(itemId){
     }
   }
 
-  const {count,error:countErr}=await sb.from('item_votes')
+  // Read the authoritative vote count from Supabase before deciding status.
+  const {count,error:countError}=await sb.from('item_votes')
     .select('*',{count:'exact',head:true})
     .eq('item_id',itemId);
 
-  if(countErr){
-    toast(countErr.message,'err');
+  if(countError){
+    toast(countError.message,'err');
     await refreshTrip();
     return;
   }
 
   const votesNow=Number(count||0);
   const required=requiredVoteCount();
-  const isBudget=(item.name||'').trim().startsWith('[Budget]');
 
-  if(!isBudget && votesNow>=required){
+  // 4/4 (or configured people/people) = definitely going.
+  if(votesNow>=required){
     const {error}=await sb.from('items').update({
       plan_status:'confirmed',
       auto_confirmed:true
@@ -3703,23 +3673,26 @@ async function toggleVote(itemId){
 
     if(error){
       toast(error.message,'err');
-    }else{
-      item.plan_status='confirmed';
-      item.auto_confirmed=true;
       await refreshTrip();
-      toast(`🎉 ${votesNow}/${required} 全票通过！已自动加入确认行程。`);
-
-      itineraryMode='timeline';
-      renderTrip();
-
-      if(!item.start_time){
-        setTimeout(()=>openItemDialog(itemId),180);
-      }
       return;
     }
+
+    item.plan_status='confirmed';
+    item.auto_confirmed=true;
+    itineraryMode='timeline';
+
+    await refreshTrip();
+    toast(`🎉 ${votesNow}/${required} 全票通过，已自动加入正式行程`);
+
+    // The 4th voter can immediately assign the actual time.
+    if(!item.start_time){
+      setTimeout(()=>openItemDialog(itemId),180);
+    }
+    return;
   }
 
-  if(!isBudget && votesNow<required && item.auto_confirmed){
+  // Only auto-confirmed items auto-revert when a vote is withdrawn.
+  if(votesNow<required && item.auto_confirmed){
     const {error}=await sb.from('items').update({
       plan_status:'candidate',
       auto_confirmed:false
@@ -3728,7 +3701,8 @@ async function toggleVote(itemId){
     if(!error){
       item.plan_status='candidate';
       item.auto_confirmed=false;
-      toast(`票数变成 ${votesNow}/${required}，已自动退回候选。`);
+      itineraryMode='candidates';
+      toast(`票数变成 ${votesNow}/${required}，已自动退回候选`);
     }
   }
 
@@ -3757,12 +3731,6 @@ function openItemDialog(id){
   $('itemStartTime').value = editingItem?.start_time ? String(editingItem.start_time).slice(0,5) : '';
   $('itemDuration').value = Number(editingItem?.duration_minutes ?? 60);
   $('itemTravel').value = Number(editingItem?.travel_minutes ?? 0);
-  const etaHint=$('itemTravelHint');
-  if(etaHint){
-    etaHint.textContent=editingItem?.travel_source==='google'
-      ? `Google ETA${editingItem?.travel_distance_km ? ` · ${Number(editingItem.travel_distance_km).toFixed(1)} km` : ''}`
-      : '可手动填写；已确认时间表会自动用 Google 补齐';
-  }
   $('itemLocation').value = editingItem?.location || '';
   $('itemCost').value = editingItem?.cost || 0;
   $('itemLink').value = editingItem?.link || '';
@@ -3799,52 +3767,35 @@ async function saveItem(e){
   msgBox.innerHTML='<div class="saveState saving">⏳ 正在保存并同步给其他成员…</div>';
 
   try{
-    let imageUrl = editingItem?.image_url || '';
-    const file = $('itemPhoto').files[0];
+    let imageUrl=editingItem?.image_url||'';
+    const file=$('itemPhoto').files[0];
 
     if(file){
       msgBox.innerHTML='<div class="saveState saving">📷 正在上传照片…</div>';
-      imageUrl = await uploadPhoto(file);
+      imageUrl=await uploadPhoto(file);
     }
 
-    const payload = {
+    const selectedStatus=normalizePlanStatus($('itemPlanStatus').value);
+    const isManualConfirmation=
+      selectedStatus==='confirmed' &&
+      editingItem?.auto_confirmed!==true;
+
+    const payload={
       trip_id:currentTrip.id,
-      day_no:Number($('itemDay').value || activeDay || 1),
+      day_no:Number($('itemDay').value||activeDay||1),
       name:$('itemName').value.trim(),
       category:$('itemCategory').value,
       priority:$('itemPriority').value,
-      plan_status:$('itemPlanStatus').value,
-      start_time:$('itemStartTime').value || null,
-      duration_minutes:Number($('itemDuration').value||60),
-      travel_minutes:Number($('itemTravel').value||0),
-      travel_source:(
-        editingItem?.travel_source==='google' &&
-        Number(editingItem?.travel_minutes||0)===Number($('itemTravel').value||0) &&
-        String(editingItem?.location||'').trim()===$('itemLocation').value.trim() &&
-        String(editingItem?.name||'').trim()===$('itemName').value.trim()
-      ) ? 'google' : (Number($('itemTravel').value||0)>0 ? 'manual' : null),
-      travel_distance_km:(
-        editingItem?.travel_source==='google' &&
-        Number(editingItem?.travel_minutes||0)===Number($('itemTravel').value||0) &&
-        String(editingItem?.location||'').trim()===$('itemLocation').value.trim() &&
-        String(editingItem?.name||'').trim()===$('itemName').value.trim()
-      ) ? (editingItem?.travel_distance_km || null) : null,
-      travel_to_item_id:(
-        editingItem?.travel_source==='google' &&
-        Number(editingItem?.travel_minutes||0)===Number($('itemTravel').value||0) &&
-        String(editingItem?.location||'').trim()===$('itemLocation').value.trim() &&
-        String(editingItem?.name||'').trim()===$('itemName').value.trim()
-      ) ? (editingItem?.travel_to_item_id || null) : null,
-      travel_origin_text:(
-        editingItem?.travel_source==='google' &&
-        String(editingItem?.location||'').trim()===$('itemLocation').value.trim() &&
-        String(editingItem?.name||'').trim()===$('itemName').value.trim()
-      ) ? (editingItem?.travel_origin_text || null) : null,
-      travel_destination_text:(
-        editingItem?.travel_source==='google' &&
-        String(editingItem?.location||'').trim()===$('itemLocation').value.trim() &&
-        String(editingItem?.name||'').trim()===$('itemName').value.trim()
-      ) ? (editingItem?.travel_destination_text || null) : null,
+      plan_status:selectedStatus,
+      // If an auto-confirmed item is edited/scheduled and kept confirmed,
+      // keep auto_confirmed true. Manual confirmation is false.
+      auto_confirmed:
+        editingItem?.auto_confirmed===true && selectedStatus==='confirmed'
+          ? true
+          : false,
+      start_time:$('itemStartTime').value||null,
+      duration_minutes:Math.max(0,Number($('itemDuration').value||60)),
+      travel_minutes:Math.max(0,Number($('itemTravel').value||0)),
       location:$('itemLocation').value.trim(),
       cost:Number($('itemCost').value||0),
       link:$('itemLink').value.trim(),
@@ -3856,55 +3807,46 @@ async function saveItem(e){
 
     let result;
     if(editingItem){
-      result=await sb
-        .from('items')
+      result=await sb.from('items')
         .update(payload)
         .eq('id',editingItem.id)
         .select('id');
     }else{
       payload.created_by=user.id;
-      result=await sb
-        .from('items')
+      result=await sb.from('items')
         .insert(payload)
         .select('id');
     }
 
     if(result.error) throw result.error;
-
     if(!result.data?.length){
-      throw new Error('Supabase 没有返回已保存的记录。请确认你仍然是这趟 Trip 的成员，并检查数据库权限。');
+      throw new Error('Supabase 没有返回已保存记录。请确认你仍然是这趟 Trip 的成员。');
     }
 
-    activeDay=Number($('itemDay').value || activeDay || 1);
+    activeDay=payload.day_no;
+    itineraryMode=payload.plan_status==='confirmed' ? 'timeline' : 'candidates';
 
-    msgBox.innerHTML='<div class="saveState success">✅ 保存成功！正在刷新行程…</div>';
+    msgBox.innerHTML='<div class="saveState success">✅ 保存成功！正在刷新…</div>';
     await refreshTrip();
-
-    // If the user manually confirms this item, move directly to the real itinerary.
-    if(payload.plan_status==='confirmed'){
-      itineraryMode='timeline';
-      document.querySelectorAll('[data-itinerary-mode]').forEach(btn=>{
-        btn.classList.toggle('active',btn.dataset.itineraryMode==='timeline');
-      });
-
-      renderTrip();
-    }else{
-      renderTrip();
-    }
 
     setTimeout(()=>{
       $('itemDialog').close();
       switchPanel('itinerary');
       window.scrollTo({top:0,behavior:'smooth'});
-      toast(
-        payload.plan_status==='confirmed'
-          ? (payload.start_time ? '已确认并加入时间表 ✅' : '已确认；还需要排时间 🕒')
-          : '已保存行程项目 ✅'
-      );
-    },250);
+
+      if(payload.plan_status==='confirmed'){
+        toast(
+          payload.start_time
+            ? '已确认并加入正式时间表 ✅'
+            : '已确认；现在显示在“待排时间” 🕒'
+        );
+      }else{
+        toast('已保存行程项目 ✅');
+      }
+    },220);
 
   }catch(err){
-    const raw=String(err?.message || err || 'Unknown error');
+    const raw=String(err?.message||err||'Unknown error');
     const lower=raw.toLowerCase();
 
     let friendly=raw;
@@ -3914,16 +3856,17 @@ async function saveItem(e){
       lower.includes('start_time') ||
       lower.includes('duration_minutes') ||
       lower.includes('travel_minutes') ||
+      lower.includes('auto_confirmed') ||
       lower.includes('schema cache')
     ){
       friendly=
-        'V3 Planner 数据库字段还没有准备好。请到 Supabase → SQL Editor，重新 Run ZIP 里的 01_RUN_THIS_SQL_V3_PLANNER.sql。这个 SQL 可以安全重复运行。\\n\\n原始错误：'+raw;
-    }else if(lower.includes('row-level security') || lower.includes('rls')){
+        'Planner 数据库字段还没准备完整。请到 Supabase → SQL Editor，运行 V4 ZIP 里的 01_RUN_THIS_SQL_V4.sql。\\n\\n原始错误：'+raw;
+    }else if(lower.includes('row-level security')||lower.includes('rls')){
       friendly=
-        'Supabase 权限阻止了保存。请确认你是这趟 Trip 的成员，并重新运行 V3 Planner SQL。\\n\\n原始错误：'+raw;
-    }else if(lower.includes('storage') || lower.includes('bucket')){
+        'Supabase 权限阻止了保存。请确认你仍然是这趟 Trip 的成员。\\n\\n原始错误：'+raw;
+    }else if(lower.includes('storage')||lower.includes('bucket')){
       friendly=
-        '照片上传失败。可以先不选照片再保存，或检查 Supabase 的 trip-photos Storage bucket。\\n\\n原始错误：'+raw;
+        '照片上传失败。可以先不选择照片再保存，或检查 trip-photos Storage bucket。\\n\\n原始错误：'+raw;
     }
 
     msgBox.innerHTML=
