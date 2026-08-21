@@ -2618,6 +2618,18 @@ button,.btn,.ghost,.iconbtn,.voteBtn,.mobileTab,.filterChip,.tab{
 }
 </style>
 
+
+<style id="roadTripV44ExpenseSummaryFix">
+#sumActual,#sumBudget,#sumRemain{
+  font-weight:900;
+  text-align:right;
+}
+.expenseSummaryCard .table td:empty::after{
+  content:"RM 0.00";
+  color:var(--muted);
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -3468,6 +3480,71 @@ function topVotedItems(limit=5){
 }
 
 
+
+function renderExpenseSummaryBasics(actual,remain){
+  const budget=Number(currentTrip?.budget_target||0);
+  const people=Math.max(1,Number(currentTrip?.people||1));
+  const avg=actual/people;
+
+  if($('sumActual')) $('sumActual').textContent=money(actual);
+  if($('sumBudget')) $('sumBudget').textContent=money(budget);
+  if($('sumRemain')){
+    $('sumRemain').textContent=
+      `${remain>=0?'剩余':'超出'} ${money(Math.abs(remain))}`;
+  }
+
+  const paidTotals={};
+  expenses.forEach(e=>{
+    paidTotals[e.paid_by]=(paidTotals[e.paid_by]||0)+rmValue(e.amount,e.currency);
+  });
+  const topPayer=Object.entries(paidTotals).sort((a,b)=>b[1]-a[1])[0];
+  const topPayerName=topPayer
+    ? (members.find(m=>m.user_id===topPayer[0])?.display_name||'—')
+    : '—';
+
+  if($('expenseInsights')){
+    $('expenseInsights').innerHTML=`
+      <div class="insightCard"><b>${money(actual)}</b><span>目前实际支出</span></div>
+      <div class="insightCard"><b>${money(avg)}</b><span>平均 / 人</span></div>
+      <div class="insightCard"><b>${escapeHtml(topPayerName)}</b><span>目前先付最多</span></div>`;
+  }
+}
+
+function renderSettlementSafe(){
+  try{
+    const settlement=buildSettlements();
+
+    if($('settlementBox')){
+      $('settlementBox').innerHTML=settlement.lines.length
+        ? settlement.lines.slice(0,4).map(l=>`
+          <div style="padding:7px 0;border-bottom:1px solid var(--line)">
+            <b>${escapeHtml(l.from)}</b> → <b>${escapeHtml(l.to)}</b> ${money(l.amount)}
+          </div>`).join('')
+        : '<div class="muted">有 Expense 后会自动算谁该转给谁。</div>';
+    }
+
+    if($('settlementDetails')){
+      $('settlementDetails').innerHTML=settlement.lines.length
+        ? settlement.lines.map(l=>`
+          <div style="padding:9px 0;border-bottom:1px solid var(--line)">
+            <b>${escapeHtml(l.from)}</b> → <b>${escapeHtml(l.to)}</b> ${money(l.amount)}
+          </div>`).join('')
+        : '<div class="muted">记录几笔 Expense 后，这里会自动给结算建议。</div>';
+    }
+  }catch(err){
+    console.error('Settlement render failed',err);
+
+    if($('settlementBox')){
+      $('settlementBox').innerHTML=
+        '<div class="muted">结算资料暂时无法计算，但 Expense Summary 不受影响。</div>';
+    }
+    if($('settlementDetails')){
+      $('settlementDetails').innerHTML=
+        '<div class="muted">结算资料暂时无法计算，请刷新后再试。</div>';
+    }
+  }
+}
+
 function renderBudgetHub(actual,remain){
   const budgetItems=items
     .filter(isBudgetItem)
@@ -3539,6 +3616,10 @@ function renderTrip(){
   const planned=items.filter(i=>!isBudgetItem(i)).reduce((s,x)=>s+Number(x.cost||0),0);
   const actual=expenses.reduce((s,e)=>s+rmValue(e.amount,e.currency),0);
   const remain=Number(currentTrip.budget_target||0)-actual;
+
+  // Render Budget/Expense summary FIRST so later UI errors can never leave it blank.
+  renderExpenseSummaryBasics(actual,remain);
+
   const totalVotes=votes.length;
   $('plannedTotal').textContent=money(planned);
   $('actualTotal').textContent=money(actual);
@@ -3584,11 +3665,7 @@ function renderTrip(){
     });
   });
 
-  const settlement = buildSettlements();
-  $('settlementBox').innerHTML = settlement.lines.length ? settlement.lines.slice(0,4).map(l=>`
-    <div style="padding:7px 0;border-bottom:1px solid var(--line)"><b>${escapeHtml(l.from)}</b> → <b>${escapeHtml(l.to)}</b> ${money(l.amount)}</div>`).join('') : '<div class="muted">有 Expense 后会自动算谁该转给谁。</div>';
-  $('settlementDetails').innerHTML = settlement.lines.length ? settlement.lines.map(l=>`
-    <div style="padding:7px 0"><b>${escapeHtml(l.from)}</b> → <b>${escapeHtml(l.to)}</b> ${money(l.amount)}</div>`).join('') : '<div class="muted">记录几笔 Expense 后，这里会自动给结算建议。</div>';
+  renderSettlementSafe();
 
   // App-style full route scroller
   const r=routes();
@@ -3632,8 +3709,25 @@ function renderTrip(){
     <span class="dayMiniStat">❤️ ${dayVotes} 票</span>
     <span class="dayMiniStat">💰 ${money(dayBudget)}</span>`;
 
-  renderItems();
-  renderExpenses();
+  try{
+    renderItems();
+  }catch(err){
+    console.error('Itinerary render failed',err);
+    if($('itemsList')){
+      $('itemsList').innerHTML=
+        '<div class="empty">行程显示暂时出现问题，请刷新页面。Budget / Expense 数据仍然保留。</div>';
+    }
+  }
+
+  try{
+    renderExpenses();
+  }catch(err){
+    console.error('Expense list render failed',err);
+    if($('expenseList')){
+      $('expenseList').innerHTML=
+        '<div class="empty">Expense 列表暂时无法显示，请刷新页面。Summary 数据仍然有效。</div>';
+    }
+  }
 
   $('memberList').innerHTML=members.map(m=>`<span class="member">${m.role==='owner'?'👑':'👤'} ${escapeHtml(m.display_name)}</span>`).join('');
   $('setTitle').value=currentTrip.title;
@@ -3643,19 +3737,7 @@ function renderTrip(){
   $('setRate').value=currentTrip.thb_rate || 0.13;
   $('setCurrentRoute').value=r[activeDay-1] || '';
 
-  $('sumActual').textContent=money(actual);
-  $('sumBudget').textContent=money(currentTrip.budget_target);
-  $('sumRemain').textContent=`${remain>=0?'剩余':'超出'} ${money(Math.abs(remain))}`;
 
-  const paidTotals={};
-  expenses.forEach(e=>paidTotals[e.paid_by]=(paidTotals[e.paid_by]||0)+rmValue(e.amount,e.currency));
-  const topPayer=Object.entries(paidTotals).sort((a,b)=>b[1]-a[1])[0];
-  const topPayerName=topPayer ? (members.find(m=>m.user_id===topPayer[0])?.display_name || '—') : '—';
-  const avg=currentTrip.people ? actual/currentTrip.people : 0;
-  $('expenseInsights').innerHTML=`
-    <div class="insightCard"><b>${money(actual)}</b><span>目前实际支出</span></div>
-    <div class="insightCard"><b>${money(avg)}</b><span>平均 / 人</span></div>
-    <div class="insightCard"><b>${escapeHtml(topPayerName)}</b><span>目前先付最多</span></div>`;
 }
 
 
