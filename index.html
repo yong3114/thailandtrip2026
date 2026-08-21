@@ -3924,6 +3924,243 @@ button:disabled,
 }
 </style>
 
+
+<style id="roadTripV50UxCleanup">
+/* =========================================================
+   V5.0 — UX cleanup / contrast consistency
+   ========================================================= */
+
+/* ---------- Overview checklist dropdown ---------- */
+.overviewChecklist{
+  margin-bottom:12px;
+  padding:0 !important;
+  overflow:hidden;
+  border-color:color-mix(in srgb,var(--rt-green) 26%,var(--rt-border)) !important;
+}
+.overviewChecklistSummary{
+  list-style:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  min-height:68px;
+  padding:14px 16px;
+  cursor:pointer;
+  touch-action:manipulation;
+  user-select:none;
+  -webkit-user-select:none;
+}
+.overviewChecklistSummary::-webkit-details-marker{display:none}
+.overviewChecklistSummary::marker{content:""}
+.overviewChecklistSummaryLeft,
+.overviewChecklistSummaryRight{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.overviewChecklistSummaryLeft{min-width:0}
+.overviewChecklistSummary h3{
+  margin:0 0 3px;
+  font-size:15px;
+}
+.overviewChecklistIcon{
+  flex:0 0 auto;
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:var(--rt-green-soft);
+  border:1px solid color-mix(in srgb,var(--rt-green) 35%,var(--rt-border));
+}
+.overviewChecklistCount{
+  white-space:nowrap;
+  min-height:30px;
+  display:inline-flex;
+  align-items:center;
+  padding:5px 9px;
+  border-radius:999px;
+  background:var(--rt-surface-3);
+  color:var(--rt-text-2);
+  border:1px solid var(--rt-border);
+  font-size:10.5px;
+  font-weight:900;
+}
+.overviewChecklistChevron{
+  color:var(--rt-muted);
+  font-size:20px;
+  transition:transform .18s ease;
+}
+.overviewChecklist[open] .overviewChecklistChevron{
+  transform:rotate(180deg);
+}
+.overviewChecklistBody{
+  padding:0 16px 16px;
+  border-top:1px solid var(--rt-border);
+}
+.overviewChecklistProgress{
+  height:7px;
+  background:var(--rt-surface-3);
+  border-radius:999px;
+  overflow:hidden;
+  margin:13px 0 12px;
+}
+.overviewChecklistProgress > div{
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#16a34a,#22c55e);
+}
+.overviewChecklistActions,
+.checklistPrimaryActions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:11px;
+}
+.overviewChecklistActions button,
+.checklistPrimaryActions button{
+  min-height:44px;
+}
+.checklistListCompact .checklistItem{
+  padding:8px 9px;
+  min-height:48px;
+}
+
+/* ---------- Checklist add dialog ---------- */
+.checklistModal{
+  width:min(560px,100%);
+}
+.checklistModal .formGrid{
+  grid-template-columns:1fr;
+}
+.checklistModal h3{
+  margin-top:4px;
+}
+
+/* ---------- Day tab strip: remove white protruding column ---------- */
+.tabs{
+  background:color-mix(in srgb,var(--rt-bg) 92%,transparent) !important;
+  border:0 !important;
+  box-shadow:none !important;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-radius:0 !important;
+}
+body[data-theme="dark"] .tabs{
+  background:rgba(8,17,31,.88) !important;
+}
+.tab{
+  box-shadow:none !important;
+  background:var(--rt-surface-2) !important;
+  color:var(--rt-text-2) !important;
+  border-color:var(--rt-border) !important;
+}
+.tab.active{
+  background:var(--rt-purple-soft) !important;
+  color:var(--rt-purple) !important;
+  border-color:color-mix(in srgb,var(--rt-purple) 48%,var(--rt-border)) !important;
+}
+
+/* Route cards also blend into surrounding UI */
+.dayRouteCard{
+  background:var(--rt-surface-2) !important;
+  border-color:var(--rt-border) !important;
+  box-shadow:none !important;
+}
+.dayRouteCard.active{
+  background:var(--rt-purple-soft) !important;
+  border-color:color-mix(in srgb,var(--rt-purple) 48%,var(--rt-border)) !important;
+}
+
+/* ---------- Expense empty state contrast ---------- */
+#expenseList .empty,
+.expenseListSection .empty{
+  background:var(--rt-surface-2) !important;
+  color:var(--rt-muted) !important;
+  border-color:var(--rt-border-strong) !important;
+  opacity:1 !important;
+}
+body[data-theme="dark"] #expenseList .empty,
+body[data-theme="dark"] .expenseListSection .empty{
+  background:#101c2e !important;
+  color:#c1cddd !important;
+  border-color:#40536d !important;
+}
+
+/* ---------- Desktop side nav unselected contrast ---------- */
+.navbtn:not(.active){
+  background:var(--rt-surface) !important;
+  color:var(--rt-text-2) !important;
+  border-color:var(--rt-border) !important;
+  box-shadow:none !important;
+}
+.navbtn:not(.active) .small{
+  color:var(--rt-muted) !important;
+  opacity:1 !important;
+}
+body[data-theme="dark"] .navbtn:not(.active){
+  background:#101c2e !important;
+  color:#edf3fa !important;
+  border-color:#344760 !important;
+}
+body[data-theme="dark"] .navbtn:not(.active) .small{
+  color:#b8c6d9 !important;
+}
+
+/* ---------- Phone Add Place button: same scale as Expense ---------- */
+@media(max-width:640px){
+  #itineraryPanel .sectionTitle{
+    align-items:center !important;
+    gap:8px !important;
+  }
+  #itineraryPanel .sectionTitle > div:first-child{
+    min-width:0;
+    flex:1;
+  }
+  #itineraryPanel .toolbar{
+    width:auto !important;
+    flex:0 0 auto !important;
+    margin-left:auto;
+  }
+  #addItemBtn{
+    width:auto !important;
+    flex:0 0 auto !important;
+    min-height:44px !important;
+    padding:9px 12px !important;
+    border-radius:14px !important;
+    font-size:11.5px !important;
+    white-space:nowrap;
+  }
+
+  .overviewChecklistSummary{
+    padding:13px 14px;
+  }
+  .overviewChecklistBody{
+    padding:0 14px 14px;
+  }
+  .overviewChecklistActions,
+  .checklistPrimaryActions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+  .overviewChecklistActions button,
+  .checklistPrimaryActions button{
+    min-width:0;
+    padding-left:8px;
+    padding-right:8px;
+    font-size:11.5px;
+  }
+}
+
+/* Very narrow phones */
+@media(max-width:360px){
+  #addItemBtn{
+    font-size:10.5px !important;
+    padding:8px 9px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -4006,7 +4243,7 @@ button:disabled,
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V4.9 · TRAVEL UX</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.0 · UX CLEANUP</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -4063,6 +4300,35 @@ button:disabled,
               <div id="attentionList" class="attentionList"></div>
             </div>
           </div>
+
+          <details class="card overviewChecklist" id="overviewChecklistDetails">
+            <summary class="overviewChecklistSummary">
+              <div class="overviewChecklistSummaryLeft">
+                <span class="overviewChecklistIcon">✅</span>
+                <div>
+                  <h3>Shared Checklist</h3>
+                  <div class="footerMini" id="overviewChecklistMeta">点开查看出发前清单</div>
+                </div>
+              </div>
+              <div class="overviewChecklistSummaryRight">
+                <span class="overviewChecklistCount" id="overviewChecklistCount">0 / 0</span>
+                <span class="overviewChecklistChevron">⌄</span>
+              </div>
+            </summary>
+            <div class="overviewChecklistBody">
+              <div class="overviewChecklistProgress">
+                <div id="overviewChecklistProgressBar" style="width:0%"></div>
+              </div>
+              <div class="checklistDisabledNotice hide" id="overviewChecklistDisabledNotice">
+                Checklist 尚未启用，请先运行 V4.9 / V5.0 SQL。
+              </div>
+              <div id="overviewChecklistList" class="checklistList checklistListCompact"></div>
+              <div class="overviewChecklistActions">
+                <button class="btn primary" type="button" id="openChecklistOverviewBtn">＋ 添加 Checklist</button>
+                <button class="ghost" type="button" id="seedChecklistOverviewBtn">✨ 常用清单</button>
+              </div>
+            </div>
+          </details>
 
           <div class="card dayOverviewCard">
             <div class="sectionTitle">
@@ -4237,19 +4503,8 @@ button:disabled,
               Checklist 还没启用。请先运行 V4.9 ZIP 里的 Supabase SQL，然后重新打开 Trip。
             </div>
 
-            <form id="checklistForm" class="checklistAddRow">
-              <select id="checklistCategory" aria-label="Checklist 类别">
-                <option>👤 Personal</option>
-                <option>🚗 Car</option>
-                <option>🇹🇭 Border</option>
-                <option>🏨 Booking</option>
-                <option>🧳 Other</option>
-              </select>
-              <input id="checklistText" maxlength="120" required placeholder="例如：Thailand car insurance">
-              <button class="btn primary" type="submit">＋</button>
-            </form>
-
-            <div class="checklistToolbar">
+            <div class="checklistPrimaryActions">
+              <button class="btn primary" type="button" id="openChecklistBtn">＋ 添加 Checklist</button>
               <button class="ghost" type="button" id="seedChecklistBtn">✨ 加入常用旅行清单</button>
             </div>
 
@@ -4284,6 +4539,30 @@ button:disabled,
     </div>
   </div>
 
+
+<dialog id="checklistDialog">
+  <form id="checklistForm" class="modal checklistModal">
+    <h3>＋ 添加 Checklist</h3>
+    <div class="formGrid">
+      <label>类别
+        <select id="checklistCategory" aria-label="Checklist 类别">
+          <option>👤 Personal</option>
+          <option>🚗 Car</option>
+          <option>🇹🇭 Border</option>
+          <option>🏨 Booking</option>
+          <option>🧳 Other</option>
+        </select>
+      </label>
+      <label class="full">内容
+        <input id="checklistText" maxlength="120" required placeholder="例如：Thailand car insurance">
+      </label>
+    </div>
+    <div class="modalActions">
+      <button class="iconbtn" type="button" id="cancelChecklistBtn">取消</button>
+      <button class="btn primary" type="submit">保存</button>
+    </div>
+  </form>
+</dialog>
 
 <dialog id="todayDialog">
   <div class="modal todayModeSheet">
@@ -4631,7 +4910,7 @@ function installNativeSheet(dialogId){
 }
 
 // Apply the native interaction to all add/edit sheets.
-['itemDialog','expenseDialog','quickAddDialog','todayDialog'].forEach(installNativeSheet);
+['itemDialog','expenseDialog','quickAddDialog','todayDialog','checklistDialog'].forEach(installNativeSheet);
 
 
 init();
@@ -4720,16 +4999,23 @@ async function init(){
     renderTrip();
   });
 
+  $('openChecklistBtn')?.addEventListener('click',openChecklistDialog);
+  $('openChecklistOverviewBtn')?.addEventListener('click',openChecklistDialog);
+  $('cancelChecklistBtn')?.addEventListener('click',()=>$('checklistDialog').close());
+
   $('checklistForm')?.addEventListener('submit',async(e)=>{
     e.preventDefault();
     const text=$('checklistText').value.trim();
     const category=$('checklistCategory').value;
     if(await addChecklist(text,category)){
       $('checklistText').value='';
-      $('checklistText').focus();
+      $('checklistDialog').close();
+      toast('Checklist 已添加 ✅');
     }
   });
+
   $('seedChecklistBtn')?.addEventListener('click',seedTravelChecklist);
+  $('seedChecklistOverviewBtn')?.addEventListener('click',seedTravelChecklist);
   document.querySelectorAll('.mobileTab').forEach(btn=>{
     btn.addEventListener('click',()=>switchPanel(btn.dataset.panel));
   });
@@ -5358,15 +5644,24 @@ async function setTodayItemDone(itemId,done){
 
 function renderChecklist(){
   const list=$('checklistList');
+  const overviewList=$('overviewChecklistList');
   const disabled=$('checklistDisabledNotice');
+  const overviewDisabled=$('overviewChecklistDisabledNotice');
   const form=$('checklistForm');
   const seed=$('seedChecklistBtn');
+  const seedOverview=$('seedChecklistOverviewBtn');
+  const openBtn=$('openChecklistBtn');
+  const openOverviewBtn=$('openChecklistOverviewBtn');
 
-  if(!list || !disabled || !form) return;
+  if(!list || !overviewList || !disabled || !form) return;
 
   disabled.classList.toggle('hide',checklistAvailable);
+  if(overviewDisabled) overviewDisabled.classList.toggle('hide',checklistAvailable);
+
   [...form.elements].forEach(el=>el.disabled=!checklistAvailable);
-  if(seed) seed.disabled=!checklistAvailable;
+  [seed,seedOverview,openBtn,openOverviewBtn].forEach(el=>{
+    if(el) el.disabled=!checklistAvailable;
+  });
 
   const total=checklist.length;
   const done=checklist.filter(x=>x.done).length;
@@ -5375,17 +5670,30 @@ function renderChecklist(){
   if($('checklistProgressText')) $('checklistProgressText').textContent=`${done} / ${total}`;
   if($('checklistProgressBar')) $('checklistProgressBar').style.width=`${pct}%`;
 
+  if($('overviewChecklistCount')) $('overviewChecklistCount').textContent=`${done} / ${total}`;
+  if($('overviewChecklistProgressBar')) $('overviewChecklistProgressBar').style.width=`${pct}%`;
+  if($('overviewChecklistMeta')){
+    $('overviewChecklistMeta').textContent=checklistAvailable
+      ? (total
+          ? `${done}/${total} 完成 · 点开查看`
+          : '还没有清单 · 点开添加')
+      : 'Checklist 尚未启用';
+  }
+
   if(!checklistAvailable){
     list.innerHTML='';
+    overviewList.innerHTML='';
     return;
   }
 
   if(!total){
-    list.innerHTML=`<div class="checklistEmpty">还没有清单。可以自己添加，或按「加入常用旅行清单」。</div>`;
+    const empty=`<div class="checklistEmpty">还没有清单。按「＋ 添加 Checklist」开始。</div>`;
+    list.innerHTML=empty;
+    overviewList.innerHTML=empty;
     return;
   }
 
-  list.innerHTML=checklist.map(row=>{
+  const rowHtml=(row,compact=false)=>{
     const doneBy=members.find(m=>m.user_id===row.done_by)?.display_name||'';
     return `
       <div class="checklistItem ${row.done?'done':''}">
@@ -5399,10 +5707,16 @@ function renderChecklist(){
             ${row.done && doneBy?` · ✓ ${escapeHtml(doneBy)}`:''}
           </div>
         </div>
-        <button class="checklistDelete" type="button"
-          data-checklist-delete="${row.id}" aria-label="删除">⌫</button>
+        ${compact
+          ? ''
+          : `<button class="checklistDelete" type="button"
+              data-checklist-delete="${row.id}" aria-label="删除">⌫</button>`
+        }
       </div>`;
-  }).join('');
+  };
+
+  list.innerHTML=checklist.map(row=>rowHtml(row,false)).join('');
+  overviewList.innerHTML=checklist.map(row=>rowHtml(row,true)).join('');
 
   document.querySelectorAll('[data-checklist-toggle]').forEach(el=>{
     el.addEventListener('change',()=>toggleChecklist(el.dataset.checklistToggle,el.checked));
@@ -5410,6 +5724,18 @@ function renderChecklist(){
   document.querySelectorAll('[data-checklist-delete]').forEach(btn=>{
     btn.addEventListener('click',()=>deleteChecklist(btn.dataset.checklistDelete));
   });
+}
+
+function openChecklistDialog(){
+  if(!checklistAvailable){
+    toast('Checklist 尚未启用，请先运行 Supabase SQL','err');
+    return;
+  }
+
+  $('checklistCategory').value='👤 Personal';
+  $('checklistText').value='';
+  $('checklistDialog').showModal();
+  setTimeout(()=>$('checklistText')?.focus(),100);
 }
 
 async function addChecklist(text,category){
