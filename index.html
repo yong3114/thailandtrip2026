@@ -4,8 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="color-scheme" content="dark light">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="RoadTrip">
@@ -4228,99 +4226,180 @@ body[data-theme="dark"] .navbtn:not(.active) .small{
 </style>
 
 
-<style id="roadTripV511AndroidViewportFix">
+<style id="roadTripV52ExpensesPro">
 /* =========================================================
-   V5.1.1 — Android standalone / bottom white-gap fix
+   V5.2 — Expenses Pro
    ========================================================= */
-
-/* Paint the browser/PWA canvas itself, not only the page content. */
-html{
-  min-height:100%;
-  background:#08111f;
-  overscroll-behavior-y:none;
+.expensePeopleCard,
+.expenseCategoryCard{
+  margin:0 0 16px;
+}
+.expensePeopleGrid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.expensePersonCard{
+  min-width:0;
+  text-align:left;
+  border:1px solid var(--rt-border);
+  background:var(--rt-surface-2);
+  border-radius:18px;
+  padding:13px;
+  color:var(--rt-text);
+  transition:.15s ease;
+}
+.expensePersonCard.active{
+  border-color:var(--rt-purple);
+  background:var(--rt-purple-soft);
+}
+.expensePersonName{
+  font-weight:950;
+  color:var(--rt-text);
+  overflow-wrap:anywhere;
+}
+.expensePersonMetrics{
+  display:grid;
+  gap:7px;
+  margin-top:10px;
+}
+.expensePersonMetrics > div{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding-top:6px;
+  border-top:1px solid var(--rt-border);
+}
+.expensePersonMetrics span{
+  color:var(--rt-muted);
+  font-size:9.5px;
+  font-weight:800;
+}
+.expensePersonMetrics b{
+  color:var(--rt-text);
+  font-size:11.5px;
+  white-space:nowrap;
+}
+.expensePersonMetrics .netPositive b,
+.expensePersonMetrics .netPositive span{
+  color:var(--rt-green) !important;
+}
+.expensePersonMetrics .netNegative b,
+.expensePersonMetrics .netNegative span{
+  color:var(--rt-red) !important;
 }
 
-body{
-  min-height:100vh;
-  min-height:100svh;
-  min-height:100dvh;
-  background-color:#08111f;
+.expenseCategorySummary{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.expenseCategoryChip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:38px;
+  padding:7px 10px;
+  border-radius:14px;
+  border:1px solid var(--rt-border);
+  background:var(--rt-surface-2);
+  color:var(--rt-text-2);
+}
+.expenseCategoryChip b{
+  color:var(--rt-text);
+  font-size:11px;
+}
+.expenseCategoryChip.active{
+  background:var(--rt-purple-soft);
+  color:var(--rt-purple);
+  border-color:var(--rt-purple);
 }
 
-/* Make the real app area occupy the full dynamic viewport too. */
-.wrap{
-  min-height:100vh;
-  min-height:100svh;
-  min-height:100dvh;
+.expenseRecordsHeading{
+  align-items:center !important;
 }
-
-/* Keep dark canvas beneath Android gesture / nav area. */
-body[data-theme="dark"]{
-  background-color:#08111f !important;
+.expenseExportBtn{
+  flex:0 0 auto;
+  min-height:42px;
 }
-
-/* Light theme still gets a proper canvas instead of inherited white chrome. */
-body:not([data-theme="dark"]){
-  background-color:#f8fafc;
+.expenseFilterBar{
+  display:grid;
+  grid-template-columns:minmax(180px,1.4fr) repeat(5,minmax(120px,.8fr)) auto;
+  gap:8px;
+  margin:0 0 10px;
+}
+.expenseFilterBar > *{
+  min-width:0;
+}
+.expenseClearFilter{
+  white-space:nowrap;
+}
+.expenseFilterResult{
+  color:var(--rt-muted);
+  font-size:10.5px;
+  font-weight:800;
+  margin:0 2px 10px;
 }
 
 @media(max-width:980px){
-  html,
-  body{
-    width:100%;
-    min-height:100%;
+  .expensePeopleGrid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
   }
-
-  /* Android Chrome/PWA can report safe-area as zero; the page canvas
-     still stays dark all the way to the viewport edge. */
-  body[data-theme="dark"]::after{
-    content:"";
-    position:fixed;
-    left:0;
-    right:0;
-    bottom:0;
-    height:max(1px,env(safe-area-inset-bottom));
-    background:#08111f;
-    pointer-events:none;
-    z-index:0;
+  .expenseFilterBar{
+    grid-template-columns:repeat(3,minmax(0,1fr));
   }
-
-  .mobileBar{
-    z-index:30;
-    bottom:max(8px,env(safe-area-inset-bottom)) !important;
+  #expenseSearchFilter{
+    grid-column:1/-1;
   }
 }
 
-/* Avoid a white flash while Android restores the standalone app. */
-@media(prefers-color-scheme:dark){
-  html{
-    background:#08111f;
+@media(max-width:640px){
+  .expensePeopleGrid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
   }
-}
-</style>
+  .expensePersonCard{
+    padding:11px;
+    border-radius:16px;
+  }
+  .expensePersonName{
+    font-size:12px;
+  }
+  .expensePersonMetrics b{
+    font-size:10.5px;
+  }
 
+  .expenseFilterBar{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  #expenseSearchFilter{
+    grid-column:1/-1;
+  }
+  .expenseClearFilter{
+    grid-column:1/-1;
+  }
 
-<style id="roadTripV512AndroidNavImportUX">
-html.is-android .mobileBar{
-  bottom:8px !important;
-  left:10px !important;
-  right:10px !important;
-}
+  .expenseRecordsHeading{
+    align-items:flex-start !important;
+  }
+  .expenseExportBtn{
+    min-height:40px;
+    padding:8px 10px !important;
+    font-size:11px;
+  }
 
-html.is-android .wrap{
-  padding-bottom:112px !important;
-}
-
-html.is-android body::after{
-  height:1px !important;
-}
-
-html.is-ios .mobileBar{
-  bottom:max(8px,env(safe-area-inset-bottom)) !important;
-}
-
-#fullPlanImportCard.hide{
-  display:none !important;
+  .expenseCategorySummary{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    padding-bottom:4px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .expenseCategoryChip{
+    flex:0 0 auto;
+  }
 }
 </style>
 
@@ -4406,7 +4485,7 @@ html.is-ios .mobileBar{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.2 · MOBILE UX FIX</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.2 · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -4493,7 +4572,7 @@ html.is-ios .mobileBar{
             </div>
           </details>
 
-          <div class="card fullPlanImportCard" id="fullPlanImportCard">
+          <div class="card fullPlanImportCard">
             <div class="fullPlanImportTop">
               <div>
                 <div class="todayEyebrow">RESEARCHED 21 AUG 2026</div>
@@ -4624,6 +4703,26 @@ html.is-ios .mobileBar{
 
             <div class="expenseInsights" id="expenseInsights"></div>
 
+            <div class="card expensePeopleCard">
+              <div class="sectionTitle expensePeopleHead">
+                <div>
+                  <h3>👥 4人花费总览</h3>
+                  <div class="footerMini">Paid = 实际先付 · Share = 自己应该承担 · Net = 最后应收 / 应付</div>
+                </div>
+              </div>
+              <div id="expensePeopleOverview" class="expensePeopleGrid"></div>
+            </div>
+
+            <div class="card expenseCategoryCard">
+              <div class="sectionTitle">
+                <div>
+                  <h3>📊 Category Spending</h3>
+                  <div class="footerMini">快速看 Food、Hotel、Fuel、Shopping 等分别花了多少。</div>
+                </div>
+              </div>
+              <div id="expenseCategorySummary" class="expenseCategorySummary"></div>
+            </div>
+
             <div class="expenseSummaryGrid">
               <div class="card expenseSummaryCard">
                 <h3>Expense Summary</h3>
@@ -4640,10 +4739,40 @@ html.is-ios .mobileBar{
             </div>
 
             <div class="expenseListSection">
-              <div class="expenseListHeading">
-                <h3>🧾 Expense Records</h3>
-                <div class="footerMini">每一笔记录都会自动参与总预算和结算。</div>
+              <div class="expenseListHeading expenseRecordsHeading">
+                <div>
+                  <h3>🧾 Expense Records</h3>
+                  <div class="footerMini">可按成员 / Day / Category / Currency 筛选，并导出 CSV。</div>
+                </div>
+                <button class="ghost expenseExportBtn" type="button" id="exportExpensesCsv">⇩ Export CSV</button>
               </div>
+
+              <div class="expenseFilterBar">
+                <input id="expenseSearchFilter" placeholder="🔎 Search expense…" aria-label="Search expense">
+                <select id="expensePersonFilter" aria-label="Filter by person">
+                  <option value="">全部成员</option>
+                </select>
+                <select id="expenseDayFilter" aria-label="Filter by day">
+                  <option value="">全部 Day</option>
+                </select>
+                <select id="expenseCategoryFilter" aria-label="Filter by category">
+                  <option value="">全部 Category</option>
+                </select>
+                <select id="expenseCurrencyFilter" aria-label="Filter by currency">
+                  <option value="">RM + THB</option>
+                  <option value="RM">RM</option>
+                  <option value="THB">THB</option>
+                </select>
+                <select id="expenseSortFilter" aria-label="Sort expenses">
+                  <option value="newest">最新</option>
+                  <option value="oldest">最旧</option>
+                  <option value="high">金额高 → 低</option>
+                  <option value="low">金额低 → 高</option>
+                </select>
+                <button class="iconbtn expenseClearFilter" type="button" id="clearExpenseFilters">清除筛选</button>
+              </div>
+
+              <div class="expenseFilterResult" id="expenseFilterResult"></div>
               <div id="expenseList"></div>
             </div>
           </div>
@@ -4880,6 +5009,19 @@ html.is-ios .mobileBar{
         <div id="expenseLinkedPreview" class="linkedPreview"></div>
       </div>
       <label class="full">标题<input id="expenseTitle" required placeholder="例如：Mookata 晚餐"></label>
+      <label>Category
+        <select id="expenseCategory">
+          <option>🍜 Food</option>
+          <option>🏨 Hotel</option>
+          <option>⛽ Fuel</option>
+          <option>🛣 Toll</option>
+          <option>💆 Massage</option>
+          <option>🎟 Ticket</option>
+          <option>🛍 Shopping</option>
+          <option>🚗 Parking</option>
+          <option>🧳 Other</option>
+        </select>
+      </label>
       <label>金额<input id="expenseAmount" type="number" min="0" step="0.01" required></label>
       <label>货币
         <select id="expenseCurrency"><option>RM</option><option>THB</option></select>
@@ -4917,17 +5059,13 @@ const configured =
   !SUPABASE_PUBLISHABLE_KEY.includes('PASTE_');
 
 const $ = id => document.getElementById(id);
-
-const IS_ANDROID=/Android/i.test(navigator.userAgent||'');
-const IS_IOS=/iPhone|iPad|iPod/i.test(navigator.userAgent||'');
-document.documentElement.classList.toggle('is-android',IS_ANDROID);
-document.documentElement.classList.toggle('is-ios',IS_IOS);
 const setupView=$('setupView'), authView=$('authView'), homeView=$('homeView'), tripView=$('tripView');
 let sb=null, user=null, authMode='login';
 let currentTrip=null, members=[], items=[], votes=[], expenses=[], shares=[], trips=[];
 let checklist=[], checklistTicks=[], checklistAvailable=false, checklistTicksAvailable=false;
 let activeDay=1, todayDay=1, editingItem=null, editingExpense=null, channel=null;
 let itemSearch='', itemCategoryFilter='全部', itemSortMode='default', itineraryMode='timeline';
+let expenseSearch='', expensePerson='', expenseDay='', expenseCategory='', expenseCurrency='', expenseSort='newest';
 const mobileBar=$('mobileBar'), mobileAddBtn=$('mobileAddBtn');
 
 if(!configured){
@@ -5231,6 +5369,41 @@ async function init(){
     populateExpenseItemsForDay(Number($('expenseLinkedDay').value||0));
   });
 
+  $('expenseSearchFilter')?.addEventListener('input',e=>{
+    expenseSearch=e.target.value.trim();
+    renderExpenses();
+  });
+  $('expensePersonFilter')?.addEventListener('change',e=>{
+    expensePerson=e.target.value;
+    renderExpenses();
+  });
+  $('expenseDayFilter')?.addEventListener('change',e=>{
+    expenseDay=e.target.value;
+    renderExpenses();
+  });
+  $('expenseCategoryFilter')?.addEventListener('change',e=>{
+    expenseCategory=e.target.value;
+    renderExpenses();
+  });
+  $('expenseCurrencyFilter')?.addEventListener('change',e=>{
+    expenseCurrency=e.target.value;
+    renderExpenses();
+  });
+  $('expenseSortFilter')?.addEventListener('change',e=>{
+    expenseSort=e.target.value;
+    renderExpenses();
+  });
+  $('clearExpenseFilters')?.addEventListener('click',()=>{
+    expenseSearch='';
+    expensePerson='';
+    expenseDay='';
+    expenseCategory='';
+    expenseCurrency='';
+    expenseSort='newest';
+    renderExpenses();
+  });
+  $('exportExpensesCsv')?.addEventListener('click',exportExpensesCsv);
+
   $('expenseLinkedItem')?.addEventListener('change',()=>{
     const itemId=$('expenseLinkedItem').value;
     const linked=items.find(i=>i.id===itemId);
@@ -5309,16 +5482,8 @@ async function init(){
 function applyTheme(theme){
   document.body.dataset.theme=theme;
   document.querySelectorAll('.themeToggle').forEach(btn=>btn.textContent=theme==='dark'?'☀':'◐');
-
-  const dark=theme==='dark';
-  const canvasColor=dark ? '#08111f' : '#f8fafc';
-
   const meta=document.querySelector('meta[name="theme-color"]');
-  if(meta) meta.setAttribute('content',canvasColor);
-
-  document.documentElement.style.backgroundColor=canvasColor;
-  document.body.style.backgroundColor=canvasColor;
-  document.documentElement.style.colorScheme=dark ? 'dark' : 'light';
+  if(meta) meta.setAttribute('content', theme==='dark' ? '#08111f' : '#111827');
 }
 
 async function onAuth(e){
@@ -5892,29 +6057,13 @@ async function toggleMyChecklistTick(checklistId,checked){
 
 function renderFullPlanImportStatus(){
   const el=$('fullPlanImportStatus');
-  const card=$('fullPlanImportCard');
-  if(!el || !card || !currentTrip) return;
-
-  const existingKeys=new Set(
-    items.map(i=>`${Number(i.day_no)}::${String(i.name||'').trim().toLowerCase()}`)
-  );
-
+  if(!el || !currentTrip) return;
+  const marker='[RT9D8N-2026-V1]';
+  const imported=items.filter(i=>String(i.note||'').includes(marker)).length;
   const total=ROADTRIP_9D8N_ITEMS.length;
-  const covered=ROADTRIP_9D8N_ITEMS.filter(t=>
-    existingKeys.has(`${Number(t.day_no)}::${String(t.name||'').trim().toLowerCase()}`)
-  ).length;
-
-  const missing=Math.max(0,total-covered);
-
-  if(missing===0){
-    card.classList.add('hide');
-    return;
-  }
-
-  card.classList.remove('hide');
-  el.textContent=covered
-    ? `当前 Trip 已有 ${covered}/${total} 个模板项目 · 还差 ${missing} 个，按一下只补齐缺少项目。`
-    : `这是一个新的 / 未导入完整模板的 Trip。完整模板共 ${total} 个项目，可直接导入。`;
+  el.textContent=imported
+    ? `已导入 ${imported}/${total} 个模板项目 · 再按可补齐缺少项目，不会重复。`
+    : `完整模板共 ${total} 个 Trip Info / 固定路线 / 候选地点；导入后直接开始4人投票。`;
 }
 
 async function importFull9D8NPlan(){
@@ -6900,395 +7049,357 @@ function renderItems(){
   });
 }
 
-function renderExpenses(){
-  const memberMap = Object.fromEntries(members.map(m=>[m.user_id,m.display_name]));
-  $('expensePaidBy').innerHTML = members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.display_name)}</option>`).join('');
-  $('expenseShareMembers').innerHTML = members.map(m=>`
-    <label class="shareUser"><span><input type="checkbox" class="shareMemberChk" value="${m.user_id}" checked> ${escapeHtml(m.display_name)}</span></label>
-  `).join('');
 
-  $('expenseList').innerHTML = expenses.length ? expenses.map(exp=>{
-    const expShares = shares.filter(s=>s.expense_id===exp.id).map(s=>s.user_id);
-    const each = expShares.length ? rmValue(exp.amount,exp.currency)/expShares.length : 0;
-    return `
-      <div class="expenseCard appExpenseCard">
-        <div class="expenseHead">
-          <div class="expenseIcon">${exp.currency==='THB'?'฿':'💸'}</div>
-          <div class="expenseMain">
-            <div class="title">${escapeHtml(exp.title)}</div>
-            <div class="expenseMeta">${new Date(exp.spent_at).toLocaleString()}<br>💳 ${escapeHtml(memberMap[exp.paid_by]||'')} 付款</div>
-          </div>
-          <div class="expenseAmountWrap">
-            <div class="expenseAmount">${moneyCurr(exp.amount,exp.currency)}</div>
-            <div class="footerMini">≈ ${money(rmValue(exp.amount,exp.currency))}</div>
-          </div>
-        </div>
-        ${exp.note?`<div class="note">${escapeHtml(exp.note)}</div>`:''}
-        <div class="expensePills">
-          <span class="pill">👥 分摊人数 ${expShares.length}</span>
-          ${expShares.length?`<span class="pill">🧾 每人 ≈ ${money(each)}</span>`:''}
-          <span class="pill">💱 ${escapeHtml(exp.currency)}</span>
-        </div>
-        <div class="expenseActions">
-          <button class="iconbtn" data-edit-expense="${exp.id}">✏️ 编辑</button>
-          <button class="iconbtn danger" data-del-expense="${exp.id}">⌫ 删除</button>
-        </div>
-      </div>
-    `;
-  }).join('') : `<div class="empty">还没有 Expense，先记第一笔油费、酒店或晚餐吧。</div>`;
+const EXPENSE_CATEGORIES=[
+  '🍜 Food','🏨 Hotel','⛽ Fuel','🛣 Toll','💆 Massage',
+  '🎟 Ticket','🛍 Shopping','🚗 Parking','🧳 Other'
+];
 
-  document.querySelectorAll('[data-edit-expense]').forEach(el=>el.addEventListener('click',()=>openExpenseDialog(el.dataset.editExpense)));
-  document.querySelectorAll('[data-del-expense]').forEach(el=>el.addEventListener('click',()=>deleteExpense(el.dataset.delExpense)));
+function expenseDayNo(exp){
+  const direct=Number(exp?.day_no||0);
+  if(direct>0) return direct;
+  const note=String(exp?.note||'');
+  const m=note.match(/关联行程：Day\s*(\d+)/i);
+  return m ? Number(m[1]) : null;
 }
 
-async function toggleDone(id, done){
-  const {error}=await sb.from('items').update({done}).eq('id',id);
-  if(error) toast(error.message,'err');
+function expenseCategoryName(exp){
+  return String(exp?.category||'🧳 Other').trim() || '🧳 Other';
 }
 
-async function toggleVote(itemId){
-  const item=items.find(i=>i.id===itemId);
-  if(!item || isBudgetItem(item)) return;
-
-  const mine=votes.find(v=>v.item_id===itemId && v.user_id===user.id);
-
-  if(mine){
-    const {error}=await sb.from('item_votes')
-      .delete()
-      .eq('item_id',itemId)
-      .eq('user_id',user.id);
-
-    if(error){
-      toast(error.message,'err');
-      return;
-    }
-  }else{
-    const {error}=await sb.from('item_votes')
-      .insert({item_id:itemId,user_id:user.id});
-
-    if(error){
-      toast(error.message,'err');
-      return;
-    }
-  }
-
-  // Read the authoritative vote count from Supabase before deciding status.
-  const {count,error:countError}=await sb.from('item_votes')
-    .select('*',{count:'exact',head:true})
-    .eq('item_id',itemId);
-
-  if(countError){
-    toast(countError.message,'err');
-    await refreshTrip();
-    return;
-  }
-
-  const votesNow=Number(count||0);
-  const required=requiredVoteCount();
-
-  // 4/4 (or configured people/people) = definitely going.
-  if(votesNow>=required){
-    const {error}=await sb.from('items').update({
-      plan_status:'confirmed',
-      auto_confirmed:true
-    }).eq('id',itemId);
-
-    if(error){
-      toast(error.message,'err');
-      await refreshTrip();
-      return;
-    }
-
-    item.plan_status='confirmed';
-    item.auto_confirmed=true;
-    itineraryMode='timeline';
-
-    await refreshTrip();
-    toast(`🎉 ${votesNow}/${required} 全票通过，已自动加入正式行程`);
-
-    // The 4th voter can immediately assign the actual time.
-    if(!item.start_time){
-      setTimeout(()=>openItemDialog(itemId),180);
-    }
-    return;
-  }
-
-  // Only auto-confirmed items auto-revert when a vote is withdrawn.
-  if(votesNow<required && item.auto_confirmed){
-    const {error}=await sb.from('items').update({
-      plan_status:'candidate',
-      auto_confirmed:false
-    }).eq('id',itemId);
-
-    if(!error){
-      item.plan_status='candidate';
-      item.auto_confirmed=false;
-      itineraryMode='candidates';
-      toast(`票数变成 ${votesNow}/${required}，已自动退回候选`);
-    }
-  }
-
-  await refreshTrip();
+function expenseShareUserIds(expenseId){
+  return shares.filter(s=>s.expense_id===expenseId).map(s=>s.user_id);
 }
 
-function openItemDialog(id){
-  editingItem = id ? items.find(i=>i.id===id) : null;
-  $('itemModalTitle').textContent = editingItem ? '编辑地点' : '新增地点';
-  $('itemFormMsg').innerHTML='';
-  const saveBtn=$('itemSaveBtn');
-  if(saveBtn){ saveBtn.disabled=false; saveBtn.textContent='保存'; }
-
-  const daySelect=$('itemDay');
-  daySelect.innerHTML=Array.from({length:currentTrip.days},(_,i)=>{
-    const day=i+1;
-    const route=routes()[i] || '';
-    return `<option value="${day}">Day ${day}${route?` · ${escapeHtml(route)}`:''}</option>`;
-  }).join('');
-  daySelect.value=String(editingItem?.day_no || activeDay || 1);
-
-  $('itemName').value = editingItem?.name || '';
-  $('itemCategory').value = editingItem?.category || '🍜 美食';
-  $('itemPriority').value = editingItem?.priority || '👍 想去';
-  $('itemPlanStatus').value = editingItem?.plan_status || 'candidate';
-  $('itemStartTime').value = editingItem?.start_time ? String(editingItem.start_time).slice(0,5) : '';
-  $('itemDuration').value = Number(editingItem?.duration_minutes ?? 60);
-  $('itemTravel').value = Number(editingItem?.travel_minutes ?? 0);
-  $('itemLocation').value = editingItem?.location || '';
-  $('itemCost').value = editingItem?.cost || 0;
-  $('itemLink').value = editingItem?.link || '';
-  $('itemNote').value = editingItem?.note || '';
-  $('itemPhoto').value = '';
-  $('currentPhotoBox').innerHTML = editingItem?.image_url ? `当前照片：<a href="${escapeHtml(editingItem.image_url)}" target="_blank">查看</a>` : '当前没有照片';
-  $('itemDialog').showModal();
-}
-
-async function uploadPhoto(file){
-  if(!file) return '';
-  const ext=(file.name.split('.').pop() || 'jpg').toLowerCase();
-  const path=`${currentTrip.id}/${crypto.randomUUID()}.${ext}`;
-  const {error}=await sb.storage.from('trip-photos').upload(path,file,{upsert:false});
-  if(error) throw error;
-  const {data}=sb.storage.from('trip-photos').getPublicUrl(path);
-  return data.publicUrl;
-}
-
-async function saveItem(e){
-  e.preventDefault();
-
-  const form=$('itemForm');
-  const msgBox=$('itemFormMsg');
-  const saveBtn=$('itemSaveBtn');
-
-  if(!form.reportValidity()){
-    msgBox.innerHTML='<div class="saveState error">⚠️ 请先填写必填资料，例如名称。</div>';
-    return;
-  }
-
-  saveBtn.disabled=true;
-  saveBtn.textContent='保存中…';
-  msgBox.innerHTML='<div class="saveState saving">⏳ 正在保存并同步给其他成员…</div>';
-
-  try{
-    let imageUrl=editingItem?.image_url||'';
-    const file=$('itemPhoto').files[0];
-
-    if(file){
-      msgBox.innerHTML='<div class="saveState saving">📷 正在上传照片…</div>';
-      imageUrl=await uploadPhoto(file);
-    }
-
-    const selectedStatus=normalizePlanStatus($('itemPlanStatus').value);
-    const isManualConfirmation=
-      selectedStatus==='confirmed' &&
-      editingItem?.auto_confirmed!==true;
-
-    const payload={
-      trip_id:currentTrip.id,
-      day_no:Number($('itemDay').value||activeDay||1),
-      name:$('itemName').value.trim(),
-      category:$('itemCategory').value,
-      priority:$('itemPriority').value,
-      plan_status:selectedStatus,
-      // If an auto-confirmed item is edited/scheduled and kept confirmed,
-      // keep auto_confirmed true. Manual confirmation is false.
-      auto_confirmed:
-        editingItem?.auto_confirmed===true && selectedStatus==='confirmed'
-          ? true
-          : false,
-      start_time:$('itemStartTime').value||null,
-      duration_minutes:Math.max(0,Number($('itemDuration').value||60)),
-      travel_minutes:Math.max(0,Number($('itemTravel').value||0)),
-      location:$('itemLocation').value.trim(),
-      cost:Number($('itemCost').value||0),
-      link:$('itemLink').value.trim(),
-      note:$('itemNote').value.trim(),
-      image_url:imageUrl
+function expensePeopleStats(){
+  const stats={};
+  members.forEach(m=>{
+    stats[m.user_id]={
+      user_id:m.user_id,
+      name:m.display_name||'Member',
+      paid:0,
+      share:0,
+      net:0
     };
+  });
 
-    msgBox.innerHTML='<div class="saveState saving">☁️ 正在写入 Supabase…</div>';
-
-    let result;
-    if(editingItem){
-      result=await sb.from('items')
-        .update(payload)
-        .eq('id',editingItem.id)
-        .select('id');
-    }else{
-      payload.created_by=user.id;
-      result=await sb.from('items')
-        .insert(payload)
-        .select('id');
+  expenses.forEach(exp=>{
+    const rm=rmValue(exp.amount,exp.currency);
+    if(!stats[exp.paid_by]){
+      stats[exp.paid_by]={user_id:exp.paid_by,name:'Member',paid:0,share:0,net:0};
     }
+    stats[exp.paid_by].paid+=rm;
 
-    if(result.error) throw result.error;
-    if(!result.data?.length){
-      throw new Error('Supabase 没有返回已保存记录。请确认你仍然是这趟 Trip 的成员。');
-    }
-
-    activeDay=payload.day_no;
-    const savedAsBudget=isBudgetItem(payload);
-
-    // Planner mode only matters for real itinerary items.
-    if(!savedAsBudget){
-      itineraryMode=payload.plan_status==='confirmed' ? 'timeline' : 'candidates';
-    }
-
-    msgBox.innerHTML='<div class="saveState success">✅ 保存成功！正在刷新…</div>';
-    await refreshTrip();
-
-    setTimeout(()=>{
-      $('itemDialog').close();
-
-      if(savedAsBudget){
-        // Budget / Trip Info belongs to Budget & Expenses, not Itinerary.
-        switchPanel('expenses');
-        const budgetDetails=$('budgetHubDetails');
-        if(budgetDetails) budgetDetails.open=true;
-        setTimeout(()=>{
-          budgetDetails?.scrollIntoView({
-            behavior:'smooth',
-            block:'start'
-          });
-        },80);
-        toast('Budget / Trip Info 已保存 ✅');
-      }else{
-        switchPanel('itinerary');
-        window.scrollTo({top:0,behavior:'smooth'});
-
-        if(payload.plan_status==='confirmed'){
-          toast(
-            payload.start_time
-              ? '已确认并加入正式时间表 ✅'
-              : '已确认；现在显示在“待排时间” 🕒'
-          );
-        }else{
-          toast('已保存行程项目 ✅');
+    const part=expenseShareUserIds(exp.id);
+    if(part.length){
+      const each=rm/part.length;
+      part.forEach(uid=>{
+        if(!stats[uid]){
+          stats[uid]={user_id:uid,name:'Member',paid:0,share:0,net:0};
         }
-      }
-    },220);
-
-  }catch(err){
-    const raw=String(err?.message||err||'Unknown error');
-    const lower=raw.toLowerCase();
-
-    let friendly=raw;
-
-    if(
-      lower.includes('plan_status') ||
-      lower.includes('start_time') ||
-      lower.includes('duration_minutes') ||
-      lower.includes('travel_minutes') ||
-      lower.includes('auto_confirmed') ||
-      lower.includes('schema cache')
-    ){
-      friendly=
-        'Planner 数据库字段还没准备完整。请到 Supabase → SQL Editor，运行 V4 ZIP 里的 01_RUN_THIS_SQL_V4.sql。\\n\\n原始错误：'+raw;
-    }else if(lower.includes('row-level security')||lower.includes('rls')){
-      friendly=
-        'Supabase 权限阻止了保存。请确认你仍然是这趟 Trip 的成员。\\n\\n原始错误：'+raw;
-    }else if(lower.includes('storage')||lower.includes('bucket')){
-      friendly=
-        '照片上传失败。可以先不选择照片再保存，或检查 trip-photos Storage bucket。\\n\\n原始错误：'+raw;
+        stats[uid].share+=each;
+      });
     }
+  });
 
-    msgBox.innerHTML=
-      `<div class="saveState error"><b>❌ 保存失败</b><br>${escapeHtml(friendly).replace(/\\n/g,'<br>')}</div>`;
-
-    saveBtn.disabled=false;
-    saveBtn.textContent='再试一次';
-  }
+  Object.values(stats).forEach(row=>row.net=row.paid-row.share);
+  return Object.values(stats);
 }
 
-async function deleteItem(id){
-  const item=items.find(x=>x.id===id);
-  const label=item?.name || '这个地点';
+function renderExpensePeopleOverview(){
+  const box=$('expensePeopleOverview');
+  if(!box) return;
 
-  if(!confirm(`确定删除「${label}」吗？`)) return;
+  const rows=expensePeopleStats();
+  box.innerHTML=rows.length
+    ? rows.map(row=>`
+      <button type="button" class="expensePersonCard ${expensePerson===row.user_id?'active':''}"
+        data-expense-person="${row.user_id}">
+        <div class="expensePersonName">${escapeHtml(row.name)}</div>
+        <div class="expensePersonMetrics">
+          <div><span>Paid</span><b>${money(row.paid)}</b></div>
+          <div><span>Share</span><b>${money(row.share)}</b></div>
+          <div class="${row.net>=0?'netPositive':'netNegative'}">
+            <span>${row.net>=0?'应收':'应付'}</span>
+            <b>${money(Math.abs(row.net))}</b>
+          </div>
+        </div>
+      </button>`).join('')
+    : `<div class="empty">还没有成员花费资料。</div>`;
 
-  const {data:deleted,error}=await sb
-    .from('items')
-    .delete()
-    .eq('id',id)
-    .select('id');
-
-  if(error){
-    toast('删除失败：'+error.message,'err');
-    return;
-  }
-
-  if(!deleted?.length){
-    toast('没有删除成功，请确认权限后再试。','err');
-    return;
-  }
-
-  // Remove locally immediately so the card disappears without waiting for Realtime.
-  items=items.filter(x=>x.id!==id);
-  votes=votes.filter(v=>v.item_id!==id);
-  renderTrip();
-  toast('已删除 ✅');
-
-  // Re-sync once in the background for consistency.
-  refreshTrip();
-}
-
-
-function populateExpenseItemsForDay(dayNo, selectedItemId=''){
-  const itemSelect=$('expenseLinkedItem');
-  const preview=$('expenseLinkedPreview');
-
-  if(!dayNo){
-    itemSelect.disabled=true;
-    itemSelect.innerHTML='<option value="">请先选择 Day</option>';
-    preview.classList.remove('show');
-    preview.textContent='';
-    return;
-  }
-
-  const dayItems=items
-    .filter(i=>i.day_no===dayNo)
-    .sort((a,b)=>{
-      const rank={'⭐ 必去':0,'👍 想去':1,'🙂 有空再去':2};
-      const pr=(rank[a.priority]??9)-(rank[b.priority]??9);
-      if(pr!==0)return pr;
-      return (a.name||'').localeCompare(b.name||'');
+  document.querySelectorAll('[data-expense-person]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const uid=btn.dataset.expensePerson;
+      expensePerson=expensePerson===uid ? '' : uid;
+      if($('expensePersonFilter')) $('expensePersonFilter').value=expensePerson;
+      renderExpenses();
     });
+  });
+}
 
-  itemSelect.disabled=false;
-  itemSelect.innerHTML=
-    '<option value="">不关联行程地点</option>'+
-    dayItems.map(i=>{
-      const budget=Number(i.cost||0)>0 ? ` · ${money(i.cost)}` : '';
-      return `<option value="${i.id}">${escapeHtml(i.category)} · ${escapeHtml(i.name)}${budget}</option>`;
-    }).join('');
+function renderExpenseCategorySummary(){
+  const box=$('expenseCategorySummary');
+  if(!box) return;
 
-  if(selectedItemId && dayItems.some(i=>i.id===selectedItemId)){
-    itemSelect.value=selectedItemId;
-  }else{
-    itemSelect.value='';
+  const totals={};
+  expenses.forEach(exp=>{
+    const category=expenseCategoryName(exp);
+    totals[category]=(totals[category]||0)+rmValue(exp.amount,exp.currency);
+  });
+
+  const rows=Object.entries(totals).sort((a,b)=>b[1]-a[1]);
+  box.innerHTML=rows.length
+    ? rows.map(([cat,total])=>`
+      <button type="button" class="expenseCategoryChip ${expenseCategory===cat?'active':''}"
+        data-expense-category-chip="${escapeHtml(cat)}">
+        <span>${escapeHtml(cat)}</span>
+        <b>${money(total)}</b>
+      </button>`).join('')
+    : `<div class="empty">有 Expense 后会显示 Category Spending。</div>`;
+
+  document.querySelectorAll('[data-expense-category-chip]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const cat=btn.dataset.expenseCategoryChip;
+      expenseCategory=expenseCategory===cat ? '' : cat;
+      if($('expenseCategoryFilter')) $('expenseCategoryFilter').value=expenseCategory;
+      renderExpenses();
+    });
+  });
+}
+
+function filteredExpenses(){
+  let list=[...expenses];
+
+  if(expenseSearch){
+    const q=expenseSearch.toLowerCase();
+    list=list.filter(exp=>[
+      exp.title,
+      exp.note,
+      expenseCategoryName(exp),
+      members.find(m=>m.user_id===exp.paid_by)?.display_name
+    ].join(' ').toLowerCase().includes(q));
   }
 
-  preview.classList.remove('show');
-  preview.textContent='';
+  if(expensePerson){
+    list=list.filter(exp=>
+      exp.paid_by===expensePerson ||
+      expenseShareUserIds(exp.id).includes(expensePerson)
+    );
+  }
+
+  if(expenseDay){
+    list=list.filter(exp=>String(expenseDayNo(exp)||'')===String(expenseDay));
+  }
+
+  if(expenseCategory){
+    list=list.filter(exp=>expenseCategoryName(exp)===expenseCategory);
+  }
+
+  if(expenseCurrency){
+    list=list.filter(exp=>exp.currency===expenseCurrency);
+  }
+
+  list.sort((a,b)=>{
+    if(expenseSort==='oldest'){
+      return new Date(a.spent_at)-new Date(b.spent_at);
+    }
+    if(expenseSort==='high'){
+      return rmValue(b.amount,b.currency)-rmValue(a.amount,a.currency);
+    }
+    if(expenseSort==='low'){
+      return rmValue(a.amount,a.currency)-rmValue(b.amount,b.currency);
+    }
+    return new Date(b.spent_at)-new Date(a.spent_at);
+  });
+
+  return list;
+}
+
+function setupExpenseFilterOptions(){
+  if($('expensePersonFilter')){
+    const current=$('expensePersonFilter').value;
+    $('expensePersonFilter').innerHTML=
+      `<option value="">全部成员</option>`+
+      members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.display_name)}</option>`).join('');
+    $('expensePersonFilter').value=expensePerson||current||'';
+  }
+
+  if($('expenseDayFilter')){
+    $('expenseDayFilter').innerHTML=
+      `<option value="">全部 Day</option>`+
+      Array.from({length:Number(currentTrip?.days||0)},(_,i)=>
+        `<option value="${i+1}">Day ${i+1}</option>`
+      ).join('');
+    $('expenseDayFilter').value=expenseDay||'';
+  }
+
+  if($('expenseCategoryFilter')){
+    $('expenseCategoryFilter').innerHTML=
+      `<option value="">全部 Category</option>`+
+      EXPENSE_CATEGORIES.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+    $('expenseCategoryFilter').value=expenseCategory||'';
+  }
+
+  if($('expenseCurrencyFilter')) $('expenseCurrencyFilter').value=expenseCurrency||'';
+  if($('expenseSortFilter')) $('expenseSortFilter').value=expenseSort||'newest';
+  if($('expenseSearchFilter') && $('expenseSearchFilter').value!==expenseSearch){
+    $('expenseSearchFilter').value=expenseSearch;
+  }
+}
+
+function csvEscape(value){
+  const text=String(value??'');
+  return `"${text.replace(/"/g,'""')}"`;
+}
+
+function exportExpensesCsv(){
+  const memberMap=Object.fromEntries(members.map(m=>[m.user_id,m.display_name]));
+  const list=filteredExpenses();
+
+  if(!list.length){
+    toast('目前筛选结果没有 Expense 可以导出','err');
+    return;
+  }
+
+  const rows=[
+    [
+      'Date','Day','Expense','Category','Currency','Original Amount',
+      'RM Amount','Paid By','Shared With','Per Person RM',
+      'Linked Place','Note'
+    ]
+  ];
+
+  list.forEach(exp=>{
+    const expShares=expenseShareUserIds(exp.id);
+    const rm=rmValue(exp.amount,exp.currency);
+    const each=expShares.length ? rm/expShares.length : 0;
+    const linked=items.find(i=>i.id===exp.linked_item_id);
+
+    rows.push([
+      new Date(exp.spent_at).toLocaleString(),
+      expenseDayNo(exp)||'',
+      exp.title||'',
+      expenseCategoryName(exp),
+      exp.currency||'',
+      Number(exp.amount||0).toFixed(2),
+      rm.toFixed(2),
+      memberMap[exp.paid_by]||'',
+      expShares.map(uid=>memberMap[uid]||uid).join(' | '),
+      each.toFixed(2),
+      linked?.name||'',
+      exp.note||''
+    ]);
+  });
+
+  const csv='\ufeff'+rows.map(row=>row.map(csvEscape).join(',')).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const safeTitle=String(currentTrip?.title||'RoadTrip')
+    .replace(/[\\/:*?"<>|]+/g,'-')
+    .slice(0,60);
+
+  a.href=url;
+  a.download=`${safeTitle}-expenses.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+
+  toast(`已导出 ${list.length} 笔 Expense CSV ✅`);
+}
+
+function renderExpenses(){
+  const memberMap=Object.fromEntries(members.map(m=>[m.user_id,m.display_name]));
+
+  $('expensePaidBy').innerHTML=
+    members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.display_name)}</option>`).join('');
+
+  $('expenseShareMembers').innerHTML=
+    members.map(m=>`
+      <label class="shareUser">
+        <span><input type="checkbox" class="shareMemberChk" value="${m.user_id}" checked> ${escapeHtml(m.display_name)}</span>
+      </label>`).join('');
+
+  setupExpenseFilterOptions();
+  renderExpensePeopleOverview();
+  renderExpenseCategorySummary();
+
+  const list=filteredExpenses();
+  const filteredRm=list.reduce((sum,exp)=>sum+rmValue(exp.amount,exp.currency),0);
+
+  if($('expenseFilterResult')){
+    const activeFilters=[
+      expenseSearch?'Search':null,
+      expensePerson?'成员':null,
+      expenseDay?`Day ${expenseDay}`:null,
+      expenseCategory||null,
+      expenseCurrency||null
+    ].filter(Boolean);
+
+    $('expenseFilterResult').textContent=
+      `${list.length} / ${expenses.length} 笔 · ${money(filteredRm)}`+
+      (activeFilters.length?` · ${activeFilters.join(' / ')}`:'');
+  }
+
+  $('expenseList').innerHTML=list.length
+    ? list.map(exp=>{
+        const expShares=expenseShareUserIds(exp.id);
+        const each=expShares.length
+          ? rmValue(exp.amount,exp.currency)/expShares.length
+          : 0;
+        const day=expenseDayNo(exp);
+        const category=expenseCategoryName(exp);
+        const linked=items.find(i=>i.id===exp.linked_item_id);
+
+        return `
+          <div class="expenseCard appExpenseCard">
+            <div class="expenseHead">
+              <div class="expenseIcon">${escapeHtml(category.split(' ')[0]||'💸')}</div>
+              <div class="expenseMain">
+                <div class="title">${escapeHtml(exp.title)}</div>
+                <div class="expenseMeta">
+                  ${new Date(exp.spent_at).toLocaleString()}
+                  ${day?` · Day ${day}`:''}
+                  <br>💳 ${escapeHtml(memberMap[exp.paid_by]||'')} 付款
+                </div>
+              </div>
+              <div class="expenseAmountWrap">
+                <div class="expenseAmount">${moneyCurr(exp.amount,exp.currency)}</div>
+                <div class="footerMini">≈ ${money(rmValue(exp.amount,exp.currency))}</div>
+              </div>
+            </div>
+
+            ${exp.note?`<div class="note">${escapeHtml(exp.note)}</div>`:''}
+
+            <div class="expensePills">
+              <span class="pill">${escapeHtml(category)}</span>
+              ${day?`<span class="pill">📅 Day ${day}</span>`:''}
+              <span class="pill">👥 ${expShares.length} 人分摊</span>
+              ${expShares.length?`<span class="pill">🧾 每人 ≈ ${money(each)}</span>`:''}
+              <span class="pill">💱 ${escapeHtml(exp.currency)}</span>
+              ${linked?`<span class="pill">📍 ${escapeHtml(linked.name)}</span>`:''}
+            </div>
+
+            <div class="expenseActions">
+              <button class="iconbtn" data-edit-expense="${exp.id}">✏️ 编辑</button>
+              <button class="iconbtn danger" data-del-expense="${exp.id}">⌫ 删除</button>
+            </div>
+          </div>`;
+      }).join('')
+    : `<div class="empty">${
+        expenses.length
+          ? '没有符合目前筛选条件的 Expense。'
+          : '还没有 Expense，先记第一笔油费、酒店或晚餐吧。'
+      }</div>`;
+
+  document.querySelectorAll('[data-edit-expense]').forEach(el=>{
+    el.addEventListener('click',()=>openExpenseDialog(el.dataset.editExpense));
+  });
+
+  document.querySelectorAll('[data-del-expense]').forEach(el=>{
+    el.addEventListener('click',()=>deleteExpense(el.dataset.delExpense));
+  });
 }
 
 function openExpenseDialog(id){
@@ -7305,11 +7416,13 @@ function openExpenseDialog(id){
       return `<option value="${day}">Day ${day}${route?` · ${escapeHtml(route)}`:''}</option>`;
     }).join('');
 
-  const defaultDay=Math.min(Math.max(Number(activeDay||1),1),currentTrip.days);
+  const savedDay=editingExpense ? expenseDayNo(editingExpense) : null;
+  const defaultDay=savedDay || Math.min(Math.max(Number(activeDay||1),1),currentTrip.days);
   daySelect.value=String(defaultDay);
   populateExpenseItemsForDay(defaultDay);
 
   $('expenseTitle').value = editingExpense?.title || '';
+  $('expenseCategory').value = expenseCategoryName(editingExpense);
   $('expenseAmount').value = editingExpense?.amount || '';
   $('expenseCurrency').value = editingExpense?.currency || 'RM';
 
@@ -7327,6 +7440,10 @@ function openExpenseDialog(id){
     : nowLocalInput();
 
   $('expenseNote').value = editingExpense?.note || '';
+
+  if(editingExpense?.linked_item_id){
+    $('expenseLinkedItem').value=editingExpense.linked_item_id;
+  }
 
   const selected = editingExpense
     ? shares.filter(s=>s.expense_id===editingExpense.id).map(s=>s.user_id)
@@ -7349,12 +7466,18 @@ async function saveExpense(e){
   e.preventDefault();
   const selected = [...document.querySelectorAll('.shareMemberChk:checked')].map(c=>c.value);
   if(!selected.length){ toast('至少选择 1 位分摊成员','err'); return; }
+  const linkedDay=Number($('expenseLinkedDay').value||0) || null;
+  const linkedItemId=$('expenseLinkedItem').value || null;
+
   const payload = {
     trip_id:currentTrip.id,
     title:$('expenseTitle').value.trim(),
+    category:$('expenseCategory').value || '🧳 Other',
     amount:Number($('expenseAmount').value||0),
     currency:$('expenseCurrency').value,
     paid_by:$('expensePaidBy').value,
+    day_no:linkedDay,
+    linked_item_id:linkedItemId,
     note:$('expenseNote').value.trim(),
     spent_at:new Date($('expenseDate').value || Date.now()).toISOString()
   };
@@ -7376,7 +7499,8 @@ async function saveExpense(e){
     const {error:shareErr}=await sb.from('expense_shares').insert(shareRows);
     if(shareErr) throw shareErr;
     $('expenseDialog').close();
-    toast('Expense 已保存');
+    await refreshTrip();
+    toast('Expense 已保存 ✅');
   }catch(err){ toast(err.message || String(err),'err'); }
 }
 
