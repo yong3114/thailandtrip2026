@@ -5918,6 +5918,84 @@ body:not([data-theme="dark"]) .homeHero .homeEyebrow{
 }
 </style>
 
+
+<style id="roadTripSheetScrollFix">
+/* =========================================================
+   V5.1.6.1 — Bottom-sheet scroll fix
+   Keep rounded corners, restore native inner vertical scroll.
+   ========================================================= */
+
+dialog{
+  background:transparent !important;
+  overflow:hidden !important;
+  max-height:92dvh !important;
+}
+
+dialog .modal{
+  box-sizing:border-box;
+  width:100%;
+  max-height:92dvh !important;
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-y:contain;
+  touch-action:pan-y !important;
+  background:var(--rt-surface) !important;
+  border-radius:24px !important;
+}
+
+/* Forms themselves must be the scroll container, not clipped by the corner fix */
+dialog form.modal{
+  display:block;
+}
+
+/* Keep actions reachable, but don't cover form fields while scrolling */
+dialog .modalActions{
+  position:sticky;
+  bottom:0;
+  z-index:4;
+  margin-top:16px;
+  padding-top:12px;
+  padding-bottom:max(4px,env(safe-area-inset-bottom));
+  background:
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      var(--rt-surface) 24%,
+      var(--rt-surface) 100%
+    );
+}
+
+/* Drag handle stays visible at top while content scrolls */
+dialog .sheetDragHandle{
+  position:sticky;
+  top:0;
+  z-index:6;
+}
+
+/* Do not let the old white-corner fix clip vertically scrolling content */
+@media(max-width:640px){
+  dialog{
+    top:auto !important;
+    max-height:94dvh !important;
+    border-radius:24px 24px 0 0 !important;
+  }
+
+  dialog .modal{
+    max-height:94dvh !important;
+    min-height:0 !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    border-radius:24px 24px 0 0 !important;
+    padding-bottom:max(16px,env(safe-area-inset-bottom)) !important;
+  }
+
+  dialog .modal > *{
+    position:relative;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -6023,7 +6101,7 @@ body:not([data-theme="dark"]) .homeHero .homeEyebrow{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.6 · HOME UX · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.6.1 · SHEET SCROLL FIX · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
