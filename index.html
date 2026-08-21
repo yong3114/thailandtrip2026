@@ -5578,6 +5578,346 @@ body[data-theme="dark"] .quickAddChoiceChecklist .quickAddIconWrap{
 }
 </style>
 
+
+<style id="roadTripV516HomeUX">
+/* =========================================================
+   V5.1.6 — My Road Trips Home UX
+   ========================================================= */
+
+.homeHero{
+  margin-bottom:14px;
+}
+
+.homeEyebrow{
+  color:var(--travel-sea,#22B8B5);
+  font-size:9px;
+  font-weight:950;
+  letter-spacing:.14em;
+  margin-bottom:4px;
+}
+
+body:not([data-theme="dark"]) .homeHero .homeEyebrow{
+  color:rgba(255,255,255,.72);
+}
+
+.homeTopActions{
+  display:flex;
+  align-items:end;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.homeThemeControl{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  margin:0;
+  min-width:136px;
+}
+
+.homeThemeControl>span{
+  font-size:9px;
+  font-weight:850;
+  color:rgba(255,255,255,.68);
+}
+
+#homeThemeMode{
+  min-height:40px;
+  padding:7px 9px;
+  border-radius:12px;
+}
+
+.homeActionGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
+  margin:14px 0;
+}
+
+.homeActionCard,
+.homeJoinCard{
+  min-width:0;
+  border:1px solid var(--rt-border);
+  border-radius:18px;
+  background:var(--rt-surface);
+  box-shadow:0 5px 16px rgba(37,91,125,.055);
+}
+
+.homeActionCard{
+  width:100%;
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr) 22px;
+  align-items:center;
+  gap:11px;
+  min-height:82px;
+  padding:13px;
+  text-align:left;
+  color:var(--rt-text);
+}
+
+.homeCreateCard{
+  background:
+    radial-gradient(circle at 94% 0%,rgba(255,184,77,.13),transparent 30%),
+    var(--rt-surface);
+}
+
+.homeActionIcon{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  background:var(--travel-blue-soft,#EDF7FF);
+  border:1px solid #D8EBFB;
+  color:var(--travel-sky,#2F80ED);
+  font-size:19px;
+  font-weight:900;
+}
+
+.homeActionCopy{
+  min-width:0;
+}
+
+.homeActionCopy strong{
+  display:block;
+  color:var(--rt-text);
+  font-size:14px;
+  font-weight:900;
+  line-height:1.25;
+}
+
+.homeActionCopy small{
+  display:block;
+  margin-top:4px;
+  color:var(--rt-muted);
+  font-size:10.5px;
+  line-height:1.4;
+}
+
+.homeActionArrow{
+  justify-self:end;
+  color:var(--rt-muted);
+  font-size:22px;
+}
+
+.homeJoinCard{
+  overflow:hidden;
+}
+
+.homeJoinCard summary{
+  list-style:none;
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr) 22px;
+  align-items:center;
+  gap:11px;
+  min-height:82px;
+  padding:13px;
+  cursor:pointer;
+}
+
+.homeJoinCard summary::-webkit-details-marker{display:none}
+.homeJoinCard summary::marker{content:""}
+
+.homeJoinCard[open] .homeActionArrow{
+  transform:rotate(180deg);
+}
+
+.homeJoinBody{
+  padding:0 13px 13px;
+  border-top:1px solid var(--rt-border);
+}
+
+.homeJoinBody form{
+  padding-top:12px;
+}
+
+.homeTripListCard{
+  margin-top:0 !important;
+}
+
+.createTripModal{
+  width:min(640px,100%) !important;
+}
+
+.createTripHead{
+  margin-bottom:14px;
+}
+
+.createTripHead h3{
+  margin:0;
+}
+
+.fxCard{
+  border:1px solid var(--rt-border);
+  border-radius:18px;
+  background:var(--rt-surface-2);
+  padding:13px;
+}
+
+.fxHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:11px;
+}
+
+.fxHead strong{
+  display:block;
+  color:var(--rt-text);
+  font-size:15px;
+}
+
+.fxEyebrow{
+  color:var(--travel-sea,#22B8B5);
+  font-size:8.5px;
+  font-weight:950;
+  letter-spacing:.12em;
+  margin-bottom:2px;
+}
+
+.fxRefreshBtn{
+  min-height:38px !important;
+  padding:7px 10px !important;
+}
+
+.fxPairGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+
+.fxRateDisplay{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:11px 0;
+  padding:11px 12px;
+  border-radius:14px;
+  background:var(--rt-surface);
+  border:1px solid var(--rt-border);
+}
+
+#fxRateMain{
+  display:block;
+  color:var(--rt-text);
+  font-size:15px;
+  font-weight:950;
+  line-height:1.25;
+}
+
+#fxRateReverse{
+  display:block;
+  margin-top:3px;
+  color:var(--rt-muted);
+  font-size:10px;
+}
+
+.fxStatus{
+  flex:0 0 auto;
+  max-width:145px;
+  color:var(--travel-sea,#22B8B5);
+  font-size:9.5px;
+  font-weight:850;
+  text-align:right;
+  line-height:1.35;
+}
+
+.fxStatus.fxLoading{
+  color:var(--travel-sky,#2F80ED);
+}
+
+.fxStatus.fxError{
+  color:var(--rt-amber,#F59E0B);
+}
+
+.fxManualLabel{
+  margin:0 !important;
+}
+
+.fxManualLabel .help{
+  display:block;
+  margin-top:5px;
+  font-weight:500;
+}
+
+@media(max-width:640px){
+  .homeHero{
+    margin-bottom:10px;
+  }
+
+  .homeHero .top{
+    align-items:flex-start !important;
+  }
+
+  .homeTopActions{
+    width:100%;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:end;
+    margin-top:2px;
+  }
+
+  .homeThemeControl{
+    min-width:0;
+  }
+
+  .homeActionGrid{
+    grid-template-columns:1fr;
+    gap:8px;
+    margin:10px 0;
+  }
+
+  .homeActionCard,
+  .homeJoinCard{
+    border-radius:16px;
+  }
+
+  .homeActionCard,
+  .homeJoinCard summary{
+    min-height:70px;
+    padding:11px;
+    grid-template-columns:38px minmax(0,1fr) 20px;
+  }
+
+  .homeActionIcon{
+    width:36px;
+    height:36px;
+    border-radius:12px;
+    font-size:17px;
+  }
+
+  .homeActionCopy strong{
+    font-size:13.5px;
+  }
+
+  .homeActionCopy small{
+    font-size:10px;
+  }
+
+  .createTripModal{
+    padding-top:15px !important;
+  }
+
+  .fxPairGrid{
+    grid-template-columns:1fr;
+  }
+
+  .fxRateDisplay{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:6px;
+  }
+
+  .fxStatus{
+    max-width:none;
+    text-align:left;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -5615,43 +5955,66 @@ body[data-theme="dark"] .quickAddChoiceChecklist .quickAddIconWrap{
   </section>
 
   <section id="homeView" class="hide">
-    <div class="hero">
+    <div class="hero homeHero">
       <div class="top">
         <div>
+          <div class="homeEyebrow">YOUR TRIPS</div>
           <h1>✈️ My Road Trips</h1>
           <div class="sub" id="userEmail"></div>
         </div>
-        <button id="logoutBtn" class="ghost">退出</button>
-      </div>
-    </div>
 
-    <div class="grid2" style="margin-top:14px">
-      <div class="card glass">
-        <h3>＋ 建立新旅行</h3>
-        <form id="createTripForm" class="formGrid">
-          <label class="full">标题<input id="newTitle" value="🇲🇾🚗🇹🇭 Thailand Road Trip 2026"></label>
-          <label>天数<input id="newDays" type="number" min="1" max="30" value="9"></label>
-          <label>人数<input id="newPeople" type="number" min="1" max="20" value="4"></label>
-          <label>共同预算 RM<input id="newBudget" type="number" min="0" value="5500"></label>
-          <label>THB→RM 汇率<input id="newRate" type="number" min="0" step="0.0001" value="0.1300"></label>
-          <div class="help full">例如 THB 100 ≈ RM 13，汇率就填 0.13。</div>
-          <button class="btn primary full" type="submit">建立旅行</button>
-        </form>
-      </div>
-      <div class="card glass">
-        <h3>👥 加入朋友的旅行</h3>
-        <form id="joinTripForm" class="formGrid">
-          <label class="full">Invite Code
-            <input id="joinCode" maxlength="8" placeholder="例如：A1B2C3D4">
+        <div class="homeTopActions">
+          <label class="homeThemeControl" aria-label="主题">
+            <span>主题</span>
+            <select id="homeThemeMode">
+              <option value="system">跟随系统</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
           </label>
-          <button class="btn dark full" type="submit">加入旅行</button>
-        </form>
-        <div class="footerMini">朋友把邀请码或带 ?join=CODE 的链接发给你即可。</div>
+          <button id="logoutBtn" class="ghost">退出</button>
+        </div>
       </div>
     </div>
 
-    <div class="card glass" style="margin-top:14px">
-      <div class="sectionTitle"><h2>你的旅行</h2></div>
+    <div class="homeActionGrid">
+      <button class="homeActionCard homeCreateCard" type="button" id="openCreateTripBtn">
+        <span class="homeActionIcon">＋</span>
+        <span class="homeActionCopy">
+          <strong>建立新旅行</strong>
+          <small>标题、人数、预算与最新汇率</small>
+        </span>
+        <span class="homeActionArrow">›</span>
+      </button>
+
+      <details class="homeJoinCard">
+        <summary>
+          <span class="homeActionIcon">👥</span>
+          <span class="homeActionCopy">
+            <strong>加入朋友的旅行</strong>
+            <small>使用 Invite Code 加入</small>
+          </span>
+          <span class="homeActionArrow">⌄</span>
+        </summary>
+        <div class="homeJoinBody">
+          <form id="joinTripForm" class="formGrid">
+            <label class="full">Invite Code
+              <input id="joinCode" maxlength="8" placeholder="例如：A1B2C3D4">
+            </label>
+            <button class="btn primary full" type="submit">加入旅行</button>
+          </form>
+          <div class="footerMini">朋友把邀请码或带 ?join=CODE 的链接发给你即可。</div>
+        </div>
+      </details>
+    </div>
+
+    <div class="card glass homeTripListCard">
+      <div class="sectionTitle">
+        <div>
+          <h2>你的旅行</h2>
+          <div class="footerMini">所有计划都在这里。</div>
+        </div>
+      </div>
       <div id="tripList"></div>
     </div>
   </section>
@@ -5660,7 +6023,7 @@ body[data-theme="dark"] .quickAddChoiceChecklist .quickAddIconWrap{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.5 FINAL · QUICK ADD · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.6 · HOME UX · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -6058,6 +6421,106 @@ body[data-theme="dark"] .quickAddChoiceChecklist .quickAddIconWrap{
     </div>
   </div>
 
+
+<dialog id="createTripDialog">
+  <form id="createTripForm" class="modal createTripModal">
+    <div class="createTripHead">
+      <div class="homeEyebrow">NEW TRIP</div>
+      <h3>建立新旅行</h3>
+      <div class="footerMini">先建立基本资料，之后都可以再修改。</div>
+    </div>
+
+    <div class="formGrid">
+      <label class="full">标题
+        <input id="newTitle" value="🇲🇾🚗🇹🇭 Thailand Road Trip 2026">
+      </label>
+
+      <label>天数
+        <input id="newDays" type="number" min="1" max="30" value="9">
+      </label>
+
+      <label>人数
+        <input id="newPeople" type="number" min="1" max="20" value="4">
+      </label>
+
+      <label class="full">共同预算 RM
+        <input id="newBudget" type="number" min="0" value="5500">
+      </label>
+
+      <div class="full fxCard">
+        <div class="fxHead">
+          <div>
+            <div class="fxEyebrow">LIVE EXCHANGE RATE</div>
+            <strong>旅行汇率</strong>
+          </div>
+          <button class="ghost fxRefreshBtn" type="button" id="refreshFxBtn">↻ 更新</button>
+        </div>
+
+        <div class="fxPairGrid">
+          <label>旅行消费国家
+            <select id="newFromCurrency">
+              <option value="THB" selected>🇹🇭 Thailand · THB</option>
+              <option value="MYR">🇲🇾 Malaysia · MYR</option>
+              <option value="SGD">🇸🇬 Singapore · SGD</option>
+              <option value="IDR">🇮🇩 Indonesia · IDR</option>
+              <option value="VND">🇻🇳 Vietnam · VND</option>
+              <option value="PHP">🇵🇭 Philippines · PHP</option>
+              <option value="JPY">🇯🇵 Japan · JPY</option>
+              <option value="KRW">🇰🇷 South Korea · KRW</option>
+              <option value="CNY">🇨🇳 China · CNY</option>
+              <option value="TWD">🇹🇼 Taiwan · TWD</option>
+              <option value="HKD">🇭🇰 Hong Kong · HKD</option>
+              <option value="USD">🇺🇸 United States · USD</option>
+              <option value="GBP">🇬🇧 United Kingdom · GBP</option>
+              <option value="EUR">🇪🇺 Europe · EUR</option>
+              <option value="AUD">🇦🇺 Australia · AUD</option>
+              <option value="NZD">🇳🇿 New Zealand · NZD</option>
+            </select>
+          </label>
+
+          <label>记账 / 结算国家
+            <select id="newToCurrency">
+              <option value="MYR" selected>🇲🇾 Malaysia · MYR</option>
+              <option value="THB">🇹🇭 Thailand · THB</option>
+              <option value="SGD">🇸🇬 Singapore · SGD</option>
+              <option value="IDR">🇮🇩 Indonesia · IDR</option>
+              <option value="VND">🇻🇳 Vietnam · VND</option>
+              <option value="PHP">🇵🇭 Philippines · PHP</option>
+              <option value="JPY">🇯🇵 Japan · JPY</option>
+              <option value="KRW">🇰🇷 South Korea · KRW</option>
+              <option value="CNY">🇨🇳 China · CNY</option>
+              <option value="TWD">🇹🇼 Taiwan · TWD</option>
+              <option value="HKD">🇭🇰 Hong Kong · HKD</option>
+              <option value="USD">🇺🇸 United States · USD</option>
+              <option value="GBP">🇬🇧 United Kingdom · GBP</option>
+              <option value="EUR">🇪🇺 Europe · EUR</option>
+              <option value="AUD">🇦🇺 Australia · AUD</option>
+              <option value="NZD">🇳🇿 New Zealand · NZD</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="fxRateDisplay">
+          <div>
+            <span id="fxRateMain">1 THB = — MYR</span>
+            <small id="fxRateReverse">1 MYR = — THB</small>
+          </div>
+          <span class="fxStatus" id="fxStatus">等待更新</span>
+        </div>
+
+        <label class="fxManualLabel">实际使用汇率
+          <input id="newRate" type="number" min="0" step="0.000001" value="0.1300">
+          <span class="help">会自动填最新参考汇率，也可以手动修改成你实际换钱 / 刷卡的汇率。</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="modalActions">
+      <button class="iconbtn" type="button" id="cancelCreateTripBtn">取消</button>
+      <button class="btn primary" type="submit">建立旅行</button>
+    </div>
+  </form>
+</dialog>
 
 <dialog id="checklistDialog">
   <form id="checklistForm" class="modal checklistModal">
@@ -6471,7 +6934,7 @@ function installNativeSheet(dialogId){
 }
 
 // Apply the native interaction to all add/edit sheets.
-['itemDialog','expenseDialog','quickAddDialog','todayDialog','checklistDialog'].forEach(installNativeSheet);
+['itemDialog','expenseDialog','quickAddDialog','todayDialog','checklistDialog','createTripDialog'].forEach(installNativeSheet);
 
 
 
@@ -6637,6 +7100,21 @@ async function init(){
   $('backHomeBtn').addEventListener('click',async()=>{cleanupChannel();currentTrip=null;if(mobileBar) mobileBar.classList.add('hide');await openHome()});
   $('createTripForm').addEventListener('submit',createTrip);
   $('joinTripForm').addEventListener('submit',joinTrip);
+  $('openCreateTripBtn')?.addEventListener('click',openCreateTripDialog);
+  $('cancelCreateTripBtn')?.addEventListener('click',()=>$('createTripDialog').close());
+  $('refreshFxBtn')?.addEventListener('click',refreshCreateTripFx);
+  $('newFromCurrency')?.addEventListener('change',refreshCreateTripFx);
+  $('newToCurrency')?.addEventListener('change',refreshCreateTripFx);
+  $('newRate')?.addEventListener('input',()=>{
+    const {from,to}=fxPair();
+    const rate=Number($('newRate').value||0);
+    $('fxRateMain').textContent=`1 ${from} = ${rate>0?formatFxRate(rate):'—'} ${to}`;
+    $('fxRateReverse').textContent=rate>0
+      ? `1 ${to} = ${formatFxRate(1/rate)} ${from}`
+      : `1 ${to} = — ${from}`;
+    $('fxStatus').textContent='手动汇率';
+    $('fxStatus').classList.remove('fxLoading','fxError');
+  });
 
   const q=new URLSearchParams(location.search).get('join');
   if(q) $('joinCode').value=q.toUpperCase();
@@ -6808,25 +7286,72 @@ async function init(){
     });
   });
 
-  const savedTheme=localStorage.getItem('roadtrip-theme') || 'dark';
-  applyTheme(savedTheme);
+  initThemePreference();
+
   document.querySelectorAll('.themeToggle').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const next=document.body.dataset.theme==='dark'?'light':'dark';
-      applyTheme(next);
-      localStorage.setItem('roadtrip-theme',next);
+      setThemePreference(next);
     });
+  });
+
+  $('homeThemeMode')?.addEventListener('change',e=>{
+    setThemePreference(e.target.value||'system');
   });
 
 
 }
 
+const systemThemeQuery=window.matchMedia('(prefers-color-scheme: dark)');
+
+function effectiveThemeForMode(mode){
+  if(mode==='light' || mode==='dark') return mode;
+  return systemThemeQuery.matches ? 'dark' : 'light';
+}
+
 function applyTheme(theme){
   document.body.dataset.theme=theme;
-  document.querySelectorAll('.themeToggle').forEach(btn=>btn.textContent=theme==='dark'?'☀':'◐');
+
+  document.querySelectorAll('.themeToggle').forEach(btn=>{
+    btn.textContent=theme==='dark'?'☀':'◐';
+  });
+
   const meta=document.querySelector('meta[name="theme-color"]');
-  if(meta) meta.setAttribute('content', theme==='dark' ? '#08111f' : '#111827');
+  if(meta){
+    meta.setAttribute('content',theme==='dark'?'#08111f':'#F4FAFF');
+  }
 }
+
+function currentThemePreference(){
+  return localStorage.getItem('roadtrip-theme-mode') || 'system';
+}
+
+function setThemePreference(mode){
+  const safe=['system','light','dark'].includes(mode)?mode:'system';
+  localStorage.setItem('roadtrip-theme-mode',safe);
+
+  if($('homeThemeMode')){
+    $('homeThemeMode').value=safe;
+  }
+
+  applyTheme(effectiveThemeForMode(safe));
+}
+
+function initThemePreference(){
+  const mode=currentThemePreference();
+
+  if($('homeThemeMode')){
+    $('homeThemeMode').value=mode;
+  }
+
+  applyTheme(effectiveThemeForMode(mode));
+}
+
+systemThemeQuery.addEventListener?.('change',()=>{
+  if(currentThemePreference()==='system'){
+    applyTheme(effectiveThemeForMode('system'));
+  }
+});
 
 async function onAuth(e){
   e.preventDefault();
@@ -6876,8 +7401,84 @@ async function loadTripList(){
   document.querySelectorAll('[data-del-trip]').forEach(b=>b.addEventListener('click',()=>deleteOrLeaveTrip(b.dataset.delTrip, b.dataset.delOwner==='1')));
 }
 
+
+function fxPair(){
+  return {
+    from:$('newFromCurrency')?.value||'THB',
+    to:$('newToCurrency')?.value||'MYR'
+  };
+}
+
+function formatFxRate(rate){
+  const n=Number(rate||0);
+  if(!Number.isFinite(n) || n<=0) return '—';
+  if(n>=100) return n.toFixed(2);
+  if(n>=10) return n.toFixed(3);
+  if(n>=1) return n.toFixed(4);
+  if(n>=0.1) return n.toFixed(5);
+  return n.toFixed(6);
+}
+
+async function refreshCreateTripFx(){
+  const {from,to}=fxPair();
+
+  if(!$('fxRateMain') || !$('newRate')) return;
+
+  if(from===to){
+    $('newRate').value='1';
+    $('fxRateMain').textContent=`1 ${from} = 1 ${to}`;
+    $('fxRateReverse').textContent=`1 ${to} = 1 ${from}`;
+    $('fxStatus').textContent='同一货币';
+    $('fxStatus').classList.remove('fxError','fxLoading');
+    return;
+  }
+
+  $('fxStatus').textContent='更新中…';
+  $('fxStatus').classList.remove('fxError');
+  $('fxStatus').classList.add('fxLoading');
+
+  try{
+    const url=`https://api.frankfurter.dev/v2/rate/${encodeURIComponent(from)}/${encodeURIComponent(to)}`;
+    const response=await fetch(url,{cache:'no-store'});
+
+    if(!response.ok){
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data=await response.json();
+    const rate=Number(data.rate);
+
+    if(!Number.isFinite(rate) || rate<=0){
+      throw new Error('Invalid rate');
+    }
+
+    $('newRate').value=String(rate);
+    $('fxRateMain').textContent=`1 ${from} = ${formatFxRate(rate)} ${to}`;
+    $('fxRateReverse').textContent=`1 ${to} = ${formatFxRate(1/rate)} ${from}`;
+    $('fxStatus').textContent=data.date?`参考价 · ${data.date}`:'最新参考价';
+    $('fxStatus').classList.remove('fxLoading','fxError');
+  }catch(err){
+    $('fxStatus').textContent='暂时无法更新 · 可手动填写';
+    $('fxStatus').classList.remove('fxLoading');
+    $('fxStatus').classList.add('fxError');
+
+    const manual=Number($('newRate').value||0);
+    $('fxRateMain').textContent=`1 ${from} = ${manual>0?formatFxRate(manual):'—'} ${to}`;
+    $('fxRateReverse').textContent=
+      manual>0
+        ? `1 ${to} = ${formatFxRate(1/manual)} ${from}`
+        : `1 ${to} = — ${from}`;
+  }
+}
+
+function openCreateTripDialog(){
+  $('createTripDialog').showModal();
+  requestAnimationFrame(()=>refreshCreateTripFx());
+}
+
 async function createTrip(e){
   e.preventDefault();
+
   const {data,error}=await sb.rpc('create_trip',{
     p_title:$('newTitle').value.trim(),
     p_days:Number($('newDays').value||9),
@@ -6885,9 +7486,20 @@ async function createTrip(e){
     p_people:Number($('newPeople').value||4),
     p_name:displayName()
   });
-  if(error){ toast(error.message,'err'); return; }
+
+  if(error){
+    toast(error.message,'err');
+    return;
+  }
+
   const row=Array.isArray(data)?data[0]:data;
-  await sb.from('trips').update({thb_rate:Number($('newRate').value||0.13)}).eq('id',row.trip_id);
+  const rate=Number($('newRate').value||0.13);
+
+  await sb.from('trips')
+    .update({thb_rate:rate})
+    .eq('id',row.trip_id);
+
+  $('createTripDialog')?.close();
   await openTrip(row.trip_id);
 }
 
