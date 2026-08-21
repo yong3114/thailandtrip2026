@@ -2924,160 +2924,9 @@ body:not([data-theme="dark"]) .insightCard b{
 }
 </style>
 
-
-<style id="roadTripV47SafetyUX">
-/* =========================================================
-   V4.7 — Safety & UX
-   ========================================================= */
-.syncStatusRow{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:7px;
-}
-.syncPill{
-  display:inline-flex;
-  align-items:center;
-  min-height:27px;
-  padding:5px 9px;
-  border-radius:999px;
-  font-size:10.5px;
-  font-weight:900;
-  border:1px solid #334155;
-  background:#111c2e;
-  color:#cbd5e1;
-}
-.syncPill.online{
-  border-color:#166534;
-  background:#0d2b21;
-  color:#bbf7d0;
-}
-.syncPill.offline{
-  border-color:#991b1b;
-  background:#321313;
-  color:#fecaca;
-}
-.syncPill.syncing{
-  border-color:#1d4ed8;
-  background:#142452;
-  color:#bfdbfe;
-}
-.syncPill.error{
-  border-color:#b45309;
-  background:#38220d;
-  color:#fde68a;
-}
-.lastSyncText{
-  color:var(--muted);
-  font-size:10.5px;
-  line-height:1.35;
-}
-
-/* Undo toasts stack above the mobile nav */
-.undoToastStack{
-  position:fixed;
-  right:16px;
-  bottom:18px;
-  z-index:10050;
-  display:grid;
-  gap:9px;
-  width:min(390px,calc(100vw - 32px));
-  pointer-events:none;
-}
-.undoToast{
-  pointer-events:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  min-height:54px;
-  padding:10px 11px 10px 14px;
-  border-radius:17px;
-  border:1px solid #475569;
-  background:#111c2e;
-  box-shadow:0 16px 44px rgba(0,0,0,.34);
-  color:#f8fafc;
-}
-.undoToastText{
-  min-width:0;
-  font-size:12px;
-  font-weight:800;
-  line-height:1.35;
-  overflow-wrap:anywhere;
-}
-.undoToast button{
-  flex:0 0 auto;
-  min-height:38px;
-  padding:7px 11px;
-  border-radius:12px;
-  border:1px solid #4f46e5;
-  background:#312e81;
-  color:#eef2ff;
-  font-weight:900;
-}
-.undoCountdown{
-  display:block;
-  margin-top:3px;
-  color:#94a3b8;
-  font-size:9.5px;
-  font-weight:700;
-}
-
-/* A small visual signal when a form is dirty */
-dialog[data-dirty="1"] .sheetDragHandle::before{
-  background:#f59e0b !important;
-  opacity:.9 !important;
-}
-dialog[data-dirty="1"] .sheetDragHandle::after{
-  content:"未保存";
-  position:absolute;
-  margin-top:25px;
-  color:#fbbf24;
-  font-size:9px;
-  font-weight:900;
-}
-
-body:not([data-theme="dark"]) .undoToast{
-  background:#fff;
-  color:#0f172a;
-  border-color:#cbd5e1;
-}
-body:not([data-theme="dark"]) .undoToast button{
-  background:#eef2ff;
-  color:#3730a3;
-}
-
-@media(max-width:640px){
-  .syncStatusRow{
-    gap:6px;
-    margin-top:6px;
-  }
-  .syncPill,.lastSyncText{
-    font-size:9.5px;
-  }
-  .undoToastStack{
-    left:12px;
-    right:12px;
-    width:auto;
-    bottom:calc(84px + env(safe-area-inset-bottom));
-  }
-  .undoToast{
-    border-radius:16px;
-    min-height:56px;
-  }
-}
+<style id="roadTripV472StableRecovery">
+.appV2Badge{letter-spacing:.04em}
 </style>
-
-
-<style id="roadTripV471OpenTripHotfix">
-#tripList [data-trip]:disabled{
-  opacity:.72;
-  cursor:wait;
-  filter:saturate(.8);
-}
-</style>
-
 </head>
 <body>
 <div class="wrap">
@@ -3160,11 +3009,7 @@ body:not([data-theme="dark"]) .undoToast button{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V4.7.1 · LIVE SYNC</div>
-          <div class="syncStatusRow" aria-live="polite">
-            <span class="syncPill" id="networkStatusPill">● 检查网络…</span>
-            <span class="lastSyncText" id="lastSyncText">尚未同步</span>
-          </div>
+          <div class="appV2Badge">✦ ROADTRIP V4.7.2 · STABLE RECOVERY</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -3532,9 +3377,6 @@ let sb=null, user=null, authMode='login';
 let currentTrip=null, members=[], items=[], votes=[], expenses=[], shares=[], trips=[];
 let activeDay=1, editingItem=null, editingExpense=null, channel=null;
 let itemSearch='', itemCategoryFilter='全部', itemSortMode='default', itineraryMode='timeline';
-let lastSuccessfulSyncAt=null;
-const pendingItemDeletes=new Map();
-const pendingExpenseDeletes=new Map();
 const mobileBar=$('mobileBar'), mobileAddBtn=$('mobileAddBtn');
 
 if(!configured){
@@ -3543,303 +3385,6 @@ if(!configured){
   setupView.classList.add('hide');
   sb=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
   
-
-// ============================================================
-// V4.7 Safety helpers
-// ============================================================
-function friendlyErrorMessage(err,context='操作'){
-  const raw=String(err?.message||err||'未知错误');
-  const lower=raw.toLowerCase();
-
-  if(!navigator.onLine){
-    return `目前网络状态不稳定。${context}尚未同步，但现有资料不会被删除。`;
-  }
-  if(lower.includes('failed to fetch') || lower.includes('network')){
-    return `网络连接不稳定，${context}暂时没有完成。`;
-  }
-  if(lower.includes('jwt') || lower.includes('auth') || lower.includes('session')){
-    return `登录状态可能已过期。请回旅行列表后重新进入，再试一次。`;
-  }
-  if(lower.includes('row-level security') || lower.includes('permission') || lower.includes('policy')){
-    return `目前没有权限完成${context}。请确认你仍然是这趟 Trip 的成员。`;
-  }
-  if(lower.includes('schema cache') || lower.includes('column')){
-    return `数据库版本可能未同步完成。请确认已运行这个版本要求的 SQL。`;
-  }
-  return `${context}失败：${raw}`;
-}
-
-function setSyncState(state,message=''){
-  const pill=$('networkStatusPill');
-  const text=$('lastSyncText');
-  if(!pill || !text) return;
-
-  pill.classList.remove('online','offline','syncing','error');
-
-  if(state==='offline'){
-    pill.classList.add('offline');
-    pill.textContent='● 离线';
-    text.textContent=message || '修改可能无法同步';
-    return;
-  }
-  if(state==='syncing'){
-    pill.classList.add('syncing');
-    pill.textContent='● 同步中';
-    if(message) text.textContent=message;
-    return;
-  }
-  if(state==='error'){
-    pill.classList.add('error');
-    pill.textContent='● 同步异常';
-    text.textContent=message || '请检查网络';
-    return;
-  }
-
-  pill.classList.add('online');
-  pill.textContent='● 已联网';
-  updateLastSyncLabel();
-}
-
-function markSyncSuccess(){
-  lastSuccessfulSyncAt=Date.now();
-  if(currentTrip?.id){
-    try{
-      localStorage.setItem(`roadtrip-last-sync-${currentTrip.id}`,String(lastSuccessfulSyncAt));
-    }catch(_){}
-  }
-  setSyncState('online');
-}
-
-function restoreLastSyncTime(){
-  if(!currentTrip?.id) return;
-  try{
-    const saved=Number(localStorage.getItem(`roadtrip-last-sync-${currentTrip.id}`)||0);
-    if(saved>0) lastSuccessfulSyncAt=saved;
-  }catch(_){}
-  updateLastSyncLabel();
-}
-
-function updateLastSyncLabel(){
-  const text=$('lastSyncText');
-  if(!text) return;
-
-  if(!navigator.onLine){
-    text.textContent=lastSuccessfulSyncAt
-      ? `上次同步 ${formatRelativeSync(lastSuccessfulSyncAt)}`
-      : '尚未成功同步';
-    return;
-  }
-
-  if(!lastSuccessfulSyncAt){
-    text.textContent='等待首次同步';
-    return;
-  }
-  text.textContent=`最后同步 ${formatRelativeSync(lastSuccessfulSyncAt)}`;
-}
-
-function formatRelativeSync(ts){
-  const seconds=Math.max(0,Math.floor((Date.now()-Number(ts))/1000));
-  if(seconds<10) return '刚刚';
-  if(seconds<60) return `${seconds}秒前`;
-  const minutes=Math.floor(seconds/60);
-  if(minutes<60) return `${minutes}分钟前`;
-  const hours=Math.floor(minutes/60);
-  if(hours<24) return `${hours}小时前`;
-  return new Date(Number(ts)).toLocaleDateString();
-}
-
-function updateNetworkState(){
-  if(navigator.onLine){
-    setSyncState('online');
-  }else{
-    setSyncState('offline');
-  }
-}
-
-function serializeDialogState(dialog){
-  if(!dialog) return '';
-  const controls=[...dialog.querySelectorAll('input,select,textarea')];
-  const state=controls.map((el,idx)=>{
-    const key=el.id || el.name || `${el.type||el.tagName}-${idx}`;
-    let value='';
-    if(el.type==='checkbox' || el.type==='radio'){
-      value=el.checked ? '1':'0';
-    }else if(el.type==='file'){
-      value=[...el.files].map(f=>`${f.name}:${f.size}:${f.lastModified}`).join('|');
-    }else{
-      value=el.value;
-    }
-    return [key,value];
-  });
-  return JSON.stringify(state);
-}
-
-function markDialogClean(dialogId){
-  const dialog=$(dialogId);
-  if(!dialog) return;
-  dialog.dataset.cleanSnapshot=serializeDialogState(dialog);
-  dialog.dataset.dirty='0';
-}
-
-function dialogHasUnsavedChanges(dialog){
-  if(!dialog || !dialog.open) return false;
-  if(!['itemDialog','expenseDialog'].includes(dialog.id)) return false;
-  const baseline=dialog.dataset.cleanSnapshot||'';
-  const current=serializeDialogState(dialog);
-  const dirty=!!baseline && baseline!==current;
-  dialog.dataset.dirty=dirty?'1':'0';
-  return dirty;
-}
-
-function refreshDirtyIndicator(dialog){
-  if(!dialog?.open) return;
-  dialogHasUnsavedChanges(dialog);
-}
-
-function confirmDiscardDialog(dialog){
-  if(!dialogHasUnsavedChanges(dialog)) return true;
-  return confirm('还有未保存的修改。\n\n确定要放弃这些修改吗？');
-}
-
-function requestDialogClose(dialogId){
-  const dialog=$(dialogId);
-  if(!dialog?.open) return true;
-  if(!confirmDiscardDialog(dialog)) return false;
-  markDialogClean(dialogId);
-  dialog.close();
-  return true;
-}
-
-function installDialogSafety(dialogId){
-  const dialog=$(dialogId);
-  if(!dialog || dialog.dataset.safetyReady==='1') return;
-  dialog.dataset.safetyReady='1';
-
-  dialog.addEventListener('input',()=>refreshDirtyIndicator(dialog));
-  dialog.addEventListener('change',()=>refreshDirtyIndicator(dialog));
-
-  // ESC key on desktop / hardware keyboard
-  dialog.addEventListener('cancel',(e)=>{
-    e.preventDefault();
-    requestDialogClose(dialogId);
-  });
-
-  // Tap the backdrop
-  dialog.addEventListener('click',(e)=>{
-    if(e.target===dialog){
-      requestDialogClose(dialogId);
-    }
-  });
-
-  dialog.addEventListener('close',()=>{
-    dialog.dataset.dirty='0';
-  });
-}
-
-function ensureUndoToastStack(){
-  let stack=document.querySelector('.undoToastStack');
-  if(stack) return stack;
-  stack=document.createElement('div');
-  stack.className='undoToastStack';
-  stack.setAttribute('aria-live','polite');
-  document.body.appendChild(stack);
-  return stack;
-}
-
-function createUndoWindow({message,onUndo,onCommit,duration=7000}){
-  const stack=ensureUndoToastStack();
-  const toastEl=document.createElement('div');
-  toastEl.className='undoToast';
-
-  const text=document.createElement('div');
-  text.className='undoToastText';
-  text.textContent=message;
-
-  const countdown=document.createElement('span');
-  countdown.className='undoCountdown';
-  text.appendChild(countdown);
-
-  const button=document.createElement('button');
-  button.type='button';
-  button.textContent='撤销';
-
-  toastEl.append(text,button);
-  stack.appendChild(toastEl);
-
-  let finished=false;
-  const started=Date.now();
-
-  const updateCountdown=()=>{
-    if(finished) return;
-    const left=Math.max(0,Math.ceil((duration-(Date.now()-started))/1000));
-    countdown.textContent=`${left} 秒内可撤销`;
-  };
-  updateCountdown();
-  const interval=setInterval(updateCountdown,250);
-
-  const cleanup=()=>{
-    clearInterval(interval);
-    toastEl.remove();
-    if(!stack.children.length) stack.remove();
-  };
-
-  const timer=setTimeout(async()=>{
-    if(finished) return;
-    finished=true;
-    cleanup();
-    try{
-      await onCommit?.();
-    }catch(err){
-      console.error('Deferred delete failed',err);
-    }
-  },duration);
-
-  button.addEventListener('click',async()=>{
-    if(finished) return;
-    finished=true;
-    clearTimeout(timer);
-    cleanup();
-    try{
-      await onUndo?.();
-    }catch(err){
-      console.error('Undo failed',err);
-    }
-  });
-
-  return {
-    cancel(){
-      if(finished) return;
-      finished=true;
-      clearTimeout(timer);
-      cleanup();
-    }
-  };
-}
-
-window.addEventListener('online',()=>{
-  updateNetworkState();
-  if(currentTrip){
-    toast('网络已恢复，正在重新同步…');
-    refreshTrip({silent:true});
-  }
-});
-window.addEventListener('offline',()=>{
-  updateNetworkState();
-  toast('目前离线，资料暂时无法同步','err');
-});
-setInterval(updateLastSyncLabel,30000);
-
-window.addEventListener('beforeunload',(e)=>{
-  const hasDirty=['itemDialog','expenseDialog']
-    .map(id=>$(id))
-    .some(dialog=>dialogHasUnsavedChanges(dialog));
-  if(hasDirty){
-    e.preventDefault();
-    e.returnValue='';
-  }
-});
-
-
 // ============================================================
 // V4.5 Native pull-down-to-cancel bottom sheets
 // ============================================================
@@ -3898,12 +3443,6 @@ function installNativeSheet(dialogId){
   }
 
   function dismissSheet(distance){
-    if(!confirmDiscardDialog(dialog)){
-      resetSheet(false);
-      return;
-    }
-
-    markDialogClean(dialogId);
     tracking=false;
     dragging=false;
     hint.classList.remove('visible');
@@ -4010,31 +3549,12 @@ function installNativeSheet(dialogId){
   dialog.addEventListener('close',()=>resetSheet(true));
 }
 
-// Apply native interaction + safety guard to all sheets.
+// Apply the native interaction to all add/edit sheets.
 ['itemDialog','expenseDialog','quickAddDialog'].forEach(installNativeSheet);
-['itemDialog','expenseDialog'].forEach(installDialogSafety);
 
 
 init();
 }
-
-let lastUnexpectedErrorNoticeAt=0;
-window.addEventListener('unhandledrejection',(event)=>{
-  console.error('Unexpected async error',event.reason);
-  const now=Date.now();
-  if(now-lastUnexpectedErrorNoticeAt<8000) return;
-  lastUnexpectedErrorNoticeAt=now;
-
-  if(!navigator.onLine){
-    setSyncState('offline');
-    return;
-  }
-
-  if(currentTrip){
-    toast('刚刚有一项操作没有完成。资料不会自动删除，可以再试一次。','err');
-  }
-});
-
 
 function show(view){[authView,homeView,tripView].forEach(v=>v.classList.add('hide'));view.classList.remove('hide')}
 function toast(msg,type='ok'){
@@ -4096,10 +3616,10 @@ async function init(){
     btn.addEventListener('click',()=>switchPanel(btn.dataset.panel));
   });
   $('addItemBtn').addEventListener('click',()=>openItemDialog(null));
-  $('cancelItemBtn').addEventListener('click',()=>requestDialogClose('itemDialog'));
+  $('cancelItemBtn').addEventListener('click',()=>$('itemDialog').close());
   $('itemForm').addEventListener('submit',saveItem);
   $('addExpenseBtn').addEventListener('click',()=>openExpenseDialog(null));
-  $('cancelExpenseBtn').addEventListener('click',()=>requestDialogClose('expenseDialog'));
+  $('cancelExpenseBtn').addEventListener('click',()=>$('expenseDialog').close());
   $('expenseForm').addEventListener('submit',saveExpense);
   $('settingsForm').addEventListener('submit',saveSettings);
   $('copyShareBtn').addEventListener('click',copyInvite);
@@ -4189,7 +3709,6 @@ async function init(){
 
   const savedTheme=localStorage.getItem('roadtrip-theme') || 'dark';
   applyTheme(savedTheme);
-  updateNetworkState();
   document.querySelectorAll('.themeToggle').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const next=document.body.dataset.theme==='dark'?'light':'dark';
@@ -4252,21 +3771,7 @@ async function loadTripList(){
         </div>
       </div>
     </div>`).join('');
-  document.querySelectorAll('[data-trip]').forEach(b=>{
-    b.addEventListener('click',async()=>{
-      if(b.disabled) return;
-      const original=b.textContent;
-      b.disabled=true;
-      b.textContent='打开中…';
-      try{
-        await openTrip(b.dataset.trip);
-      }finally{
-        // Button may now be hidden because Trip opened; safe to restore anyway.
-        b.disabled=false;
-        b.textContent=original;
-      }
-    });
-  });
+  document.querySelectorAll('[data-trip]').forEach(b=>b.addEventListener('click',()=>openTrip(b.dataset.trip)));
   document.querySelectorAll('[data-del-trip]').forEach(b=>b.addEventListener('click',()=>deleteOrLeaveTrip(b.dataset.delTrip, b.dataset.delOwner==='1')));
 }
 
@@ -4374,128 +3879,35 @@ async function deleteOrLeaveTrip(tripId,isOwner){
 }
 
 async function openTrip(id){
-  // IMPORTANT:
-  // navigator.onLine is only a hint. Never use it to block opening a Trip.
-  const listCopy=trips.find(t=>t.id===id) || null;
-
-  try{
-    // If the Trip is already visible in "你的旅行", open that known copy immediately.
-    // This makes the UI responsive even when the network check is temporarily wrong.
-    if(listCopy){
-      currentTrip={...listCopy};
-      activeDay=Math.min(Math.max(Number(activeDay||1),1),Number(currentTrip.days||1));
-      restoreLastSyncTime();
-
-      show(tripView);
-      if(mobileBar) mobileBar.classList.remove('hide');
-      renderTrip();
-      switchPanel('overview');
-    }
-
-    setSyncState('syncing','正在同步 Trip…');
-
-    // Always ATTEMPT Supabase. Do not pre-block using navigator.onLine.
-    const {data,error}=await sb.from('trips').select('*').eq('id',id).single();
-
-    if(error){
-      if(listCopy){
-        // Already opened from the known list. Keep the user inside the Trip.
-        setSyncState(
-          navigator.onLine ? 'error' : 'offline',
-          '已打开现有资料；最新内容暂时未同步'
-        );
-        toast('已打开 Trip；最新资料暂时无法同步','err');
-        return;
-      }
-      throw error;
-    }
-
-    currentTrip=data;
-    activeDay=Math.min(Math.max(Number(activeDay||1),1),Number(currentTrip.days||1));
-    restoreLastSyncTime();
-
-    // If we did not have a list copy, reveal the Trip now.
-    if(tripView.classList.contains('hide')){
-      show(tripView);
-      if(mobileBar) mobileBar.classList.remove('hide');
-    }
-
-    const synced=await refreshTrip({silent:true});
-    subscribeTrip();
-    switchPanel('overview');
-
-    if(!synced){
-      // refreshTrip already shows the correct sync state.
-      renderTrip();
-    }
-
-  }catch(err){
-    console.error('openTrip failed',err);
-
-    // If we had a local list copy, never kick the user back out.
-    if(listCopy && currentTrip?.id===id){
-      setSyncState('error','Trip 已打开，但同步失败');
-      toast('Trip 已打开，但同步失败。可以继续查看现有资料。','err');
-      return;
-    }
-
-    setSyncState('error',friendlyErrorMessage(err,'打开 Trip'));
-    toast(friendlyErrorMessage(err,'打开 Trip'),'err');
-  }
+  const {data,error}=await sb.from('trips').select('*').eq('id',id).single();
+  if(error){ toast(error.message,'err'); return; }
+  currentTrip=data; activeDay=Math.min(activeDay,currentTrip.days)||1;
+  show(tripView);
+  if(mobileBar) mobileBar.classList.remove('hide');
+  await refreshTrip();
+  subscribeTrip();
+  switchPanel('overview');
 }
 
-async function refreshTrip({silent=false}={}){
-  if(!currentTrip) return false;
-
-  // navigator.onLine is advisory only; still attempt Supabase.
-  // Browsers can report false negatives, especially on iPhone/Safari.
-  if(!navigator.onLine){
-    setSyncState('offline','正在尝试连接服务器…');
-  }else{
-    setSyncState('syncing','正在同步最新资料…');
-  }
-
-  try{
-    const [tripRes, membersRes, itemsRes, votesRes, expensesRes, sharesRes] = await Promise.all([
-      sb.from('trips').select('*').eq('id',currentTrip.id).single(),
-      sb.from('trip_members').select('*').eq('trip_id',currentTrip.id).order('joined_at'),
-      sb.from('items').select('*').eq('trip_id',currentTrip.id).order('created_at',{ascending:false}),
-      sb.from('item_votes').select('item_id,user_id,created_at'),
-      sb.from('expenses').select('*').eq('trip_id',currentTrip.id).order('spent_at',{ascending:false}),
-      sb.from('expense_shares').select('expense_id,user_id')
-    ]);
-
-    const firstError=[
-      tripRes.error,membersRes.error,itemsRes.error,votesRes.error,
-      expensesRes.error,sharesRes.error
-    ].find(Boolean);
-
-    if(firstError) throw firstError;
-
-    if(tripRes.data) currentTrip=tripRes.data;
-    members=(membersRes.data||[]);
-
-    // Pending undo-deletes stay visually hidden even if Realtime refreshes
-    // before their 7-second commit window expires.
-    items=(itemsRes.data||[]).filter(i=>!pendingItemDeletes.has(i.id));
-
-    const itemIds=new Set(items.map(i=>i.id));
-    votes=(votesRes.data||[]).filter(v=>itemIds.has(v.item_id));
-
-    expenses=(expensesRes.data||[]).filter(e=>!pendingExpenseDeletes.has(e.id));
-    const expenseIds=new Set(expenses.map(e=>e.id));
-    shares=(sharesRes.data||[]).filter(s=>expenseIds.has(s.expense_id));
-
-    renderTrip();
-    markSyncSuccess();
-    return true;
-
-  }catch(err){
-    console.error('refreshTrip failed',err);
-    setSyncState('error',friendlyErrorMessage(err,'同步'));
-    if(!silent) toast(friendlyErrorMessage(err,'同步'),'err');
-    return false;
-  }
+async function refreshTrip(){
+  if(!currentTrip) return;
+  const [tripRes, membersRes, itemsRes, votesRes, expensesRes, sharesRes] = await Promise.all([
+    sb.from('trips').select('*').eq('id',currentTrip.id).single(),
+    sb.from('trip_members').select('*').eq('trip_id',currentTrip.id).order('joined_at'),
+    sb.from('items').select('*').eq('trip_id',currentTrip.id).order('created_at',{ascending:false}),
+    sb.from('item_votes').select('item_id,user_id,created_at'),
+    sb.from('expenses').select('*').eq('trip_id',currentTrip.id).order('spent_at',{ascending:false}),
+    sb.from('expense_shares').select('expense_id,user_id')
+  ]);
+  if(tripRes.data) currentTrip=tripRes.data;
+  members=(membersRes.data||[]);
+  items=(itemsRes.data||[]);
+  const itemIds = new Set(items.map(i=>i.id));
+  votes=(votesRes.data||[]).filter(v=>itemIds.has(v.item_id));
+  const expenseIds = new Set((expensesRes.data||[]).map(e=>e.id));
+  expenses=(expensesRes.data||[]);
+  shares=(sharesRes.data||[]).filter(s=>expenseIds.has(s.expense_id));
+  renderTrip();
 }
 
 function subscribeTrip(){
@@ -5412,7 +4824,6 @@ function openItemDialog(id){
   $('itemPhoto').value = '';
   $('currentPhotoBox').innerHTML = editingItem?.image_url ? `当前照片：<a href="${escapeHtml(editingItem.image_url)}" target="_blank">查看</a>` : '当前没有照片';
   $('itemDialog').showModal();
-  requestAnimationFrame(()=>markDialogClean('itemDialog'));
 }
 
 async function uploadPhoto(file){
@@ -5510,7 +4921,6 @@ async function saveItem(e){
     await refreshTrip();
 
     setTimeout(()=>{
-      markDialogClean('itemDialog');
       $('itemDialog').close();
 
       if(savedAsBudget){
@@ -5574,102 +4984,37 @@ async function saveItem(e){
 }
 
 async function deleteItem(id){
-  if(pendingItemDeletes.has(id)) return;
+  const item=items.find(x=>x.id===id);
+  const label=item?.name || '这个地点';
 
-  const index=items.findIndex(x=>x.id===id);
-  const item=index>=0 ? items[index] : null;
-  if(!item) return;
+  if(!confirm(`确定删除「${label}」吗？`)) return;
 
-  const label=item.name || '这个地点';
-  if(!confirm(`确定删除「${label}」吗？\n\n删除后有 7 秒可以撤销。`)) return;
+  const {data:deleted,error}=await sb
+    .from('items')
+    .delete()
+    .eq('id',id)
+    .select('id');
 
-  const backupVotes=votes.filter(v=>v.item_id===id);
-  const backup={
-    item:{...item},
-    votes:backupVotes.map(v=>({...v})),
-    index,
-    tripId:currentTrip?.id
-  };
+  if(error){
+    toast('删除失败：'+error.message,'err');
+    return;
+  }
 
-  pendingItemDeletes.set(id,backup);
+  if(!deleted?.length){
+    toast('没有删除成功，请确认权限后再试。','err');
+    return;
+  }
 
+  // Remove locally immediately so the card disappears without waiting for Realtime.
   items=items.filter(x=>x.id!==id);
   votes=votes.filter(v=>v.item_id!==id);
   renderTrip();
+  toast('已删除 ✅');
 
-  createUndoWindow({
-    message:`已删除「${label}」`,
-    duration:7000,
-
-    onUndo:async()=>{
-      const saved=pendingItemDeletes.get(id);
-      pendingItemDeletes.delete(id);
-      if(!saved) return;
-
-      if(currentTrip?.id===saved.tripId){
-        const restored=[...items];
-        const insertAt=Math.max(0,Math.min(saved.index,restored.length));
-        restored.splice(insertAt,0,saved.item);
-        items=restored;
-
-        const existingVoteKeys=new Set(votes.map(v=>`${v.item_id}:${v.user_id}`));
-        const restoredVotes=saved.votes.filter(v=>!existingVoteKeys.has(`${v.item_id}:${v.user_id}`));
-        votes=[...votes,...restoredVotes];
-
-        renderTrip();
-      }
-      toast('已撤销删除 ↩️');
-    },
-
-    onCommit:async()=>{
-      const saved=pendingItemDeletes.get(id);
-      if(!saved) return;
-
-      if(!navigator.onLine){
-        pendingItemDeletes.delete(id);
-
-        if(currentTrip?.id===saved.tripId){
-          const restored=[...items];
-          const insertAt=Math.max(0,Math.min(saved.index,restored.length));
-          restored.splice(insertAt,0,saved.item);
-          items=restored;
-          votes=[...votes,...saved.votes];
-          renderTrip();
-        }
-
-        toast('因为目前离线，删除没有同步，项目已恢复','err');
-        return;
-      }
-
-      const {data:deleted,error}=await sb
-        .from('items')
-        .delete()
-        .eq('id',id)
-        .select('id');
-
-      if(error || !deleted?.length){
-        pendingItemDeletes.delete(id);
-
-        if(currentTrip?.id===saved.tripId){
-          await refreshTrip({silent:true});
-        }
-
-        toast(
-          error
-            ? friendlyErrorMessage(error,'删除地点')
-            : '删除没有成功，项目已恢复。',
-          'err'
-        );
-        return;
-      }
-
-      pendingItemDeletes.delete(id);
-      if(currentTrip?.id===saved.tripId){
-        await refreshTrip({silent:true});
-      }
-    }
-  });
+  // Re-sync once in the background for consistency.
+  refreshTrip();
 }
+
 
 function populateExpenseItemsForDay(dayNo, selectedItemId=''){
   const itemSelect=$('expenseLinkedItem');
@@ -5762,7 +5107,6 @@ function openExpenseDialog(id){
     `).join('');
 
   $('expenseDialog').showModal();
-  requestAnimationFrame(()=>markDialogClean('expenseDialog'));
 }
 
 async function saveExpense(e){
@@ -5795,109 +5139,39 @@ async function saveExpense(e){
     const shareRows = selected.map(uid=>({expense_id:expenseId,user_id:uid}));
     const {error:shareErr}=await sb.from('expense_shares').insert(shareRows);
     if(shareErr) throw shareErr;
-    markDialogClean('expenseDialog');
     $('expenseDialog').close();
-    await refreshTrip({silent:true});
-    toast('Expense 已保存 ✅');
-  }catch(err){ toast(friendlyErrorMessage(err,'保存 Expense'),'err'); }
+    toast('Expense 已保存');
+  }catch(err){ toast(err.message || String(err),'err'); }
 }
 
 async function deleteExpense(id){
-  if(pendingExpenseDeletes.has(id)) return;
+  const exp=expenses.find(x=>x.id===id);
+  const label=exp?.title || '这笔 Expense';
 
-  const index=expenses.findIndex(x=>x.id===id);
-  const exp=index>=0 ? expenses[index] : null;
-  if(!exp) return;
+  if(!confirm(`确定删除「${label}」吗？`)) return;
 
-  const label=exp.title || '这笔 Expense';
-  if(!confirm(`确定删除「${label}」吗？\n\n删除后有 7 秒可以撤销。`)) return;
+  const {data:deleted,error}=await sb
+    .from('expenses')
+    .delete()
+    .eq('id',id)
+    .select('id');
 
-  const backupShares=shares.filter(s=>s.expense_id===id);
-  const backup={
-    expense:{...exp},
-    shares:backupShares.map(s=>({...s})),
-    index,
-    tripId:currentTrip?.id
-  };
+  if(error){
+    toast('删除失败：'+error.message,'err');
+    return;
+  }
 
-  pendingExpenseDeletes.set(id,backup);
+  if(!deleted?.length){
+    toast('没有删除成功，请确认权限后再试。','err');
+    return;
+  }
 
   expenses=expenses.filter(x=>x.id!==id);
   shares=shares.filter(s=>s.expense_id!==id);
   renderTrip();
+  toast('Expense 已删除 ✅');
 
-  createUndoWindow({
-    message:`已删除 Expense「${label}」`,
-    duration:7000,
-
-    onUndo:async()=>{
-      const saved=pendingExpenseDeletes.get(id);
-      pendingExpenseDeletes.delete(id);
-      if(!saved) return;
-
-      if(currentTrip?.id===saved.tripId){
-        const restored=[...expenses];
-        const insertAt=Math.max(0,Math.min(saved.index,restored.length));
-        restored.splice(insertAt,0,saved.expense);
-        expenses=restored;
-
-        const existingShareKeys=new Set(shares.map(s=>`${s.expense_id}:${s.user_id}`));
-        const restoredShares=saved.shares.filter(s=>!existingShareKeys.has(`${s.expense_id}:${s.user_id}`));
-        shares=[...shares,...restoredShares];
-
-        renderTrip();
-      }
-      toast('已撤销 Expense 删除 ↩️');
-    },
-
-    onCommit:async()=>{
-      const saved=pendingExpenseDeletes.get(id);
-      if(!saved) return;
-
-      if(!navigator.onLine){
-        pendingExpenseDeletes.delete(id);
-
-        if(currentTrip?.id===saved.tripId){
-          const restored=[...expenses];
-          const insertAt=Math.max(0,Math.min(saved.index,restored.length));
-          restored.splice(insertAt,0,saved.expense);
-          expenses=restored;
-          shares=[...shares,...saved.shares];
-          renderTrip();
-        }
-
-        toast('因为目前离线，删除没有同步，Expense 已恢复','err');
-        return;
-      }
-
-      const {data:deleted,error}=await sb
-        .from('expenses')
-        .delete()
-        .eq('id',id)
-        .select('id');
-
-      if(error || !deleted?.length){
-        pendingExpenseDeletes.delete(id);
-
-        if(currentTrip?.id===saved.tripId){
-          await refreshTrip({silent:true});
-        }
-
-        toast(
-          error
-            ? friendlyErrorMessage(error,'删除 Expense')
-            : 'Expense 删除没有成功，记录已恢复。',
-          'err'
-        );
-        return;
-      }
-
-      pendingExpenseDeletes.delete(id);
-      if(currentTrip?.id===saved.tripId){
-        await refreshTrip({silent:true});
-      }
-    }
-  });
+  refreshTrip();
 }
 
 function buildSettlements(){
@@ -5944,12 +5218,8 @@ async function saveSettings(e){
     routes:r
   };
   const {error}=await sb.from('trips').update(payload).eq('id',currentTrip.id);
-  if(error){
-    toast(friendlyErrorMessage(error,'保存旅行设置'),'err');
-  }else{
-    await refreshTrip({silent:true});
-    toast('旅行设置已更新 ✅');
-  }
+  if(error) toast(error.message,'err');
+  else toast('旅行设置已更新');
 }
 
 async function copyInvite(){
