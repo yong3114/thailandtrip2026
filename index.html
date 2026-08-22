@@ -7949,7 +7949,7 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.6.5 · WHITE SCREEN HOTFIX · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.6.6 · STABLE MOBILE BACK</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -9348,89 +9348,85 @@ function ownerMember(){ return members.find(m=>m.role==='owner') }
 
 
 
+
 let appHistoryHandling=false;
 let appHistoryReady=false;
 
-function buildHistoryState(view='home',panel='overview',tripId=null){
-  return {
-    roadtrip:true,
-    view,
-    panel,
-    tripId,
-    ts:Date.now()
-  };
+function makeAppHistoryState(view='home',tripId=null,panel='overview'){
+  return {roadtrip:true,view,tripId,panel};
 }
 
-function seedAppHistory(){
+function initAppHistory(){
   if(appHistoryReady) return;
 
-  const existing=history.state;
-
-  // Put a permanent in-app HOME state under the current page.
-  // This gives Android/iPhone browser Back somewhere inside the app
-  // to return to instead of immediately leaving the site.
-  if(!existing?.roadtrip){
-    history.replaceState(buildHistoryState('home'),'');
-    history.pushState(buildHistoryState('home'),'');
-  }
+  // One clean Home state as the browser baseline.
+  history.replaceState(
+    makeAppHistoryState('home'),
+    '',
+    location.href
+  );
 
   appHistoryReady=true;
 }
 
-function pushTripHistory(panel='overview',replace=false){
+function pushTripOverviewHistory(){
   if(appHistoryHandling || !currentTrip) return;
 
-  const state=buildHistoryState('trip',panel,currentTrip.id);
+  const state=makeAppHistoryState('trip',currentTrip.id,'overview');
+  const cur=history.state;
 
-  try{
-    if(replace){
-      history.replaceState(state,'');
-    }else{
-      history.pushState(state,'');
-    }
-  }catch(err){
-    console.warn('Trip history write failed',err);
+  if(
+    cur?.roadtrip &&
+    cur.view==='trip' &&
+    String(cur.tripId||'')===String(currentTrip.id) &&
+    cur.panel==='overview'
+  ){
+    history.replaceState(state,'',location.href);
+    return;
   }
+
+  history.pushState(state,'',location.href);
 }
 
-function pushHomeHistory(replace=false){
+function pushTripPanelHistory(panel){
+  if(appHistoryHandling || !currentTrip) return;
+
+  const cur=history.state;
+
+  if(
+    cur?.roadtrip &&
+    cur.view==='trip' &&
+    String(cur.tripId||'')===String(currentTrip.id) &&
+    cur.panel===panel
+  ){
+    return;
+  }
+
+  history.pushState(
+    makeAppHistoryState('trip',currentTrip.id,panel),
+    '',
+    location.href
+  );
+}
+
+function replaceWithHomeHistory(){
   if(appHistoryHandling) return;
 
-  const state=buildHistoryState('home');
-
-  try{
-    if(replace){
-      history.replaceState(state,'');
-    }else{
-      history.pushState(state,'');
-    }
-  }catch(err){
-    console.warn('Home history write failed',err);
-  }
+  history.replaceState(
+    makeAppHistoryState('home'),
+    '',
+    location.href
+  );
 }
 
-async function restoreHistoryState(state){
+async function restoreAppHistory(state){
   appHistoryHandling=true;
 
   try{
-    // If browser lands on a non-app state, keep the user inside RoadTrip first.
-    if(!state?.roadtrip){
+    if(!state?.roadtrip || state.view==='home'){
       cleanupChannel();
       currentTrip=null;
-
-      if(mobileBar){
-        mobileBar.classList.add('hide');
-      }
-
-      await openHome({fromHistory:true});
-
-      history.pushState(buildHistoryState('home'),'');
-      return;
-    }
-
-    if(state.view==='home'){
-      cleanupChannel();
-      currentTrip=null;
+      currentVisiblePanel='overview';
 
       if(mobileBar){
         mobileBar.classList.add('hide');
@@ -9441,21 +9437,32 @@ async function restoreHistoryState(state){
     }
 
     if(state.view==='trip' && state.tripId){
-      if(!currentTrip || String(currentTrip.id)!==String(state.tripId)){
-        await openTrip(state.tripId,{fromHistory:true});
+      if(
+        !currentTrip ||
+        String(currentTrip.id)!==String(state.tripId)
+      ){
+        await openTrip(
+          state.tripId,
+          {
+            fromHistory:true,
+            panel:state.panel||'overview'
+          }
+        );
+      }else{
+        switchPanel(
+          state.panel||'overview',
+          {
+            fromHistory:true,
+            preserveScroll:true
+          }
+        );
       }
-
-      switchPanel(
-        state.panel||'overview',
-        {
-          fromHistory:true,
-          preserveScroll:true
-        }
-      );
-
       return;
     }
 
+    cleanupChannel();
+    currentTrip=null;
+    currentVisiblePanel='overview';
     await openHome({fromHistory:true});
 
   }catch(err){
@@ -9466,11 +9473,11 @@ async function restoreHistoryState(state){
 }
 
 window.addEventListener('popstate',event=>{
-  restoreHistoryState(event.state);
+  restoreAppHistory(event.state);
 });
 
 async function init(){
-  seedAppHistory();
+  initAppHistory();
 
   const {data:{session}}=await sb.auth.getSession();
   user=session?.user||null;
@@ -9491,7 +9498,7 @@ async function init(){
 
   $('authForm').addEventListener('submit',onAuth);
   $('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut()});
-  $('backHomeBtn').addEventListener('click',async()=>{ if(currentTrip){ await openHome(); } else { await openHome({replaceHistory:true}); } });
+  $('backHomeBtn').addEventListener('click',async()=>{ await openHome(); });
   $('createTripForm').addEventListener('submit',createTrip);
 
   $('settingsForm')?.addEventListener('submit',async()=>{
@@ -9847,29 +9854,35 @@ async function onAuth(e){
 }
 
 async function openHome(options={}){
-  // Home must never keep a Draft from the previously opened Trip.
   aiDrafts=[];
   aiGeneratedPlan=null;
   aiCurrentDraftId=null;
   aiCurrentRequest=null;
+  aiDraftLoadError='';
+  currentVisiblePanel='overview';
 
   const draftsCard=$('aiDraftsCard');
   const draftsList=$('aiDraftsList');
-  if(draftsCard) draftsCard.classList.remove('hide');
-  if(draftsList){
-    draftsList.innerHTML='<div class="aiWorkspaceLoading">正在载入这个 Trip 的 AI Workspace…</div>';
+
+  if(draftsCard){
+    draftsCard.classList.add('hide');
   }
-  aiDraftLoadError='';
+
+  if(draftsList){
+    draftsList.innerHTML='';
+  }
 
   show(homeView);
 
-  if(mobileBar) mobileBar.classList.add('hide');
+  if(mobileBar){
+    mobileBar.classList.add('hide');
+  }
 
   $('userEmail').textContent=user.email||'';
   await loadTripList();
 
   if(!options.fromHistory){
-    pushHomeHistory(!!options.replaceHistory);
+    replaceWithHomeHistory();
   }
 }
 
@@ -10710,35 +10723,69 @@ async function deleteOrLeaveTrip(tripId,isOwner){
 }
 
 async function openTrip(id,options={}){
-  // Clear every AI draft visual/state BEFORE switching Trip.
-  // This prevents the previous Trip's Draft rows remaining on screen
-  // while the new Trip is loading.
   aiDrafts=[];
   aiGeneratedPlan=null;
   aiCurrentDraftId=null;
   aiCurrentRequest=null;
+  aiDraftLoadError='';
 
   const draftsCard=$('aiDraftsCard');
   const draftsList=$('aiDraftsList');
-  if(draftsCard) draftsCard.classList.add('hide');
-  if(draftsList) draftsList.innerHTML='';
 
-  const {data,error}=await sb.from('trips').select('*').eq('id',id).single();
-  if(error){ toast(error.message,'err'); return; }
+  if(draftsCard){
+    draftsCard.classList.remove('hide');
+  }
+
+  if(draftsList){
+    draftsList.innerHTML='<div class="aiWorkspaceLoading">正在载入这个 Trip 的 AI Workspace…</div>';
+  }
+
+  const {data,error}=await sb
+    .from('trips')
+    .select('*')
+    .eq('id',id)
+    .single();
+
+  if(error){
+    toast(error.message,'err');
+    return;
+  }
 
   currentTrip=data;
-  activeDay=Math.min(activeDay,currentTrip.days)||1;
+
+  if(!options.fromHistory){
+    resetMobilePanelScroll();
+    activeDay=1;
+  }else{
+    activeDay=Math.min(activeDay,currentTrip.days)||1;
+  }
 
   show(tripView);
 
-  if(mobileBar) mobileBar.classList.remove('hide');
+  if(mobileBar){
+    mobileBar.classList.remove('hide');
+  }
 
   await refreshTrip();
   subscribeTrip();
-  switchPanel('overview',{fromHistory:true});
+
+  const initialPanel=
+    options.fromHistory
+      ? (options.panel||'overview')
+      : 'overview';
+
+  currentVisiblePanel=initialPanel;
+
+  switchPanel(
+    initialPanel,
+    {
+      fromHistory:true,
+      preserveScroll:false
+    }
+  );
 
   if(!options.fromHistory){
-    pushTripHistory('overview');
+    pushTripOverviewHistory();
   }
 }
 
@@ -10803,6 +10850,11 @@ function subscribeTrip(){
 function cleanupChannel(){ if(channel && sb){ sb.removeChannel(channel); channel=null; } }
 
 const mobilePanelScroll={overview:0,itinerary:0,expenses:0,shared:0};
+function resetMobilePanelScroll(){
+  Object.keys(mobilePanelScroll).forEach(key=>{
+    mobilePanelScroll[key]=0;
+  });
+}
 let currentVisiblePanel='overview';
 
 function updateMobilePanelChrome(panel){
@@ -10854,7 +10906,7 @@ function switchPanel(panel,options={}){
   updateMobilePanelChrome(panel);
 
   if(options.pushHistory && currentTrip && !options.fromHistory){
-    pushTripHistory(panel);
+    pushTripPanelHistory(panel);
   }
 
   requestAnimationFrame(()=>{
