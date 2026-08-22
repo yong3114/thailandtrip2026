@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="zh-Hans">
 <head>
+  <meta name="roadtrip-build" content="6.6.7">
+  <!-- RoadTrip internal build: 6.6.7 -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -7777,6 +7779,26 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
 }
 </style>
 
+
+<style id="roadTripV667HeaderCleanup">
+/* Production-style Trip header: no visible development/build badge. */
+.tripHero .eyebrow:empty,
+.tripHero .buildTag:empty,
+.tripHero .versionTag:empty,
+.hero .eyebrow:empty,
+.hero .buildTag:empty,
+.hero .versionTag:empty{
+  display:none !important;
+}
+
+@media(max-width:640px){
+  .tripHero,
+  .hero{
+    padding-top:18px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -7949,7 +7971,7 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.6.6 · STABLE MOBILE BACK</div>
+          
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
