@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="zh-Hans">
 <head>
-  <meta name="roadtrip-build" content="6.6.8">
-  <!-- RoadTrip internal build: 6.6.8 -->
+  <meta name="roadtrip-build" content="6.7.0">
+  <!-- RoadTrip internal build: 6.7.0 -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -7845,6 +7845,18 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
 }
 </style>
 
+
+<style id="roadTripV67LocationSystem">
+.multiStopRowV67{
+  grid-template-columns:28px minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) 34px;
+}
+@media(max-width:640px){
+  .multiStopRowV67{grid-template-columns:26px minmax(0,1fr) 34px}
+  .multiStopRowV67 label{grid-column:2}
+  .multiStopRowV67 .multiStopOrder{grid-column:1;grid-row:1 / span 3}
+  .multiStopRowV67 .multiStopRemoveBtn{grid-column:3;grid-row:1 / span 3;align-self:center}
+}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -8441,9 +8453,11 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
 
                 <div class="tripProfileGrid">
                   <label>出发国家 / 地区<select id="setOriginCountry"></select></label>
-                  <label>出发城市<select id="setOriginCity"></select></label>
+                  <label>州 / 省 / 地区<select id="setOriginRegion"></select></label>
+                  <label class="full">出发城市<select id="setOriginCity"></select></label>
                   <label>目的国家 / 地区<select id="setDestinationCountry"></select></label>
-                  <label>目的城市<select id="setDestinationCity"></select></label>
+                  <label>州 / 省 / 地区<select id="setDestinationRegion"></select></label>
+                  <label class="full">目的城市<select id="setDestinationCity"></select></label>
                   <div class="full multiStopBlock">
                     <div class="multiStopHead">
                       <div>
@@ -8694,27 +8708,23 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
 
         <div class="tripProfileGrid">
           <label>出发国家 / 地区
-            <select id="newOriginCountry">
-              <option value="">还没决定</option>
-            </select>
+            <select id="newOriginCountry"><option value="">还没决定</option></select>
           </label>
-
-          <label>出发城市
-            <select id="newOriginCity">
-              <option value="">先选国家</option>
-            </select>
+          <label>州 / 省 / 地区
+            <select id="newOriginRegion"><option value="">先选国家</option></select>
+          </label>
+          <label class="full">出发城市
+            <select id="newOriginCity"><option value="">先选地区</option></select>
           </label>
 
           <label>目的国家 / 地区
-            <select id="newDestinationCountry">
-              <option value="">还没决定</option>
-            </select>
+            <select id="newDestinationCountry"><option value="">还没决定</option></select>
           </label>
-
-          <label>目的城市
-            <select id="newDestinationCity">
-              <option value="">先选国家</option>
-            </select>
+          <label>州 / 省 / 地区
+            <select id="newDestinationRegion"><option value="">先选国家</option></select>
+          </label>
+          <label class="full">目的城市
+            <select id="newDestinationCity"><option value="">先选地区</option></select>
           </label>
 
           <div class="full multiStopBlock">
@@ -9056,6 +9066,7 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
 
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+import { Country, State, City } from 'https://esm.sh/country-state-city@3.2.1';
 
 const SUPABASE_URL = window.ROADTRIP_CONFIG?.SUPABASE_URL || '';
 const SUPABASE_PUBLISHABLE_KEY = window.ROADTRIP_CONFIG?.SUPABASE_KEY || '';
@@ -9583,8 +9594,10 @@ async function init(){
 
     const patch={
       origin_country:$('setOriginCountry')?.value||null,
+      origin_region:$('setOriginRegion')?.value||null,
       origin_city:$('setOriginCity')?.value||null,
       destination_country:$('setDestinationCountry')?.value||null,
+      destination_region:$('setDestinationRegion')?.value||null,
       destination_city:$('setDestinationCity')?.value||null,
       extra_destinations:currentSetExtraDestinations(),
       transport_mode:$('setTransportMode')?.value||'undecided',
@@ -9607,32 +9620,6 @@ async function init(){
   });
 
 
-  $('setOriginCountry')?.addEventListener('change',()=>{
-    populateCitySelect('setOriginCity',$('setOriginCountry').value);
-    updateSharedTripProfileHint();
-  });
-  $('setOriginCity')?.addEventListener('change',updateSharedTripProfileHint);
-
-  $('setDestinationCountry')?.addEventListener('change',()=>{
-    populateCitySelect('setDestinationCity',$('setDestinationCountry').value);
-
-    const currency=countryCurrency($('setDestinationCountry').value);
-
-    if(currency && $('setSpendCurrency')){
-      $('setSpendCurrency').value=currency;
-    }
-
-    if($('setSettleCurrency') && !$('setSettleCurrency').value){
-      $('setSettleCurrency').value='MYR';
-    }
-
-    updateSharedTripProfileHint();
-
-    requestAnimationFrame(()=>{
-      refreshSharedTripFx();
-    });
-  });
-  $('setDestinationCity')?.addEventListener('change',updateSharedTripProfileHint);
   $('setTransportMode')?.addEventListener('change',updateSharedTripProfileHint);
 
   $('setSpendCurrency')?.addEventListener('change',refreshSharedTripFx);
@@ -10119,84 +10106,16 @@ async function refreshCreateTripFx(){
 
 
 
-const TRIP_LOCATIONS = {
-  "Malaysia": {
-    currency:"MYR",
-    cities:["Johor Bahru","Kuala Lumpur","Melaka","Ipoh","Penang","Kota Kinabalu","Kuching","Cameron Highlands","Langkawi","Genting Highlands"]
-  },
-  "Thailand": {
-    currency:"THB",
-    cities:["Bangkok","Hat Yai","Krabi","Phuket","Chiang Mai","Pattaya","Songkhla","Hua Hin","Koh Samui"]
-  },
-  "Singapore": {
-    currency:"SGD",
-    cities:["Singapore"]
-  },
-  "Japan": {
-    currency:"JPY",
-    cities:["Tokyo","Osaka","Kyoto","Sapporo","Fukuoka","Nagoya","Okinawa","Kobe","Nara"]
-  },
-  "South Korea": {
-    currency:"KRW",
-    cities:["Seoul","Busan","Jeju","Incheon","Daegu"]
-  },
-  "Indonesia": {
-    currency:"IDR",
-    cities:["Bali","Jakarta","Bandung","Yogyakarta","Surabaya","Lombok"]
-  },
-  "Vietnam": {
-    currency:"VND",
-    cities:["Ho Chi Minh City","Hanoi","Da Nang","Hoi An","Nha Trang","Phu Quoc"]
-  },
-  "China": {
-    currency:"CNY",
-    cities:["Shanghai","Beijing","Guangzhou","Shenzhen","Chengdu","Chongqing","Hangzhou","Qingdao"]
-  },
-  "Taiwan": {
-    currency:"TWD",
-    cities:["Taipei","Taichung","Kaohsiung","Tainan","Hualien"]
-  },
-  "Hong Kong": {
-    currency:"HKD",
-    cities:["Hong Kong"]
-  },
-  "Australia": {
-    currency:"AUD",
-    cities:["Sydney","Melbourne","Perth","Brisbane","Gold Coast"]
-  },
-  "New Zealand": {
-    currency:"NZD",
-    cities:["Auckland","Queenstown","Christchurch","Wellington"]
-  },
-  "United Kingdom": {
-    currency:"GBP",
-    cities:["London","Manchester","Edinburgh","Liverpool"]
-  },
-  "United States": {
-    currency:"USD",
-    cities:["New York","Los Angeles","San Francisco","Las Vegas","Honolulu","Orlando"]
-  },
-  "France": {
-    currency:"EUR",
-    cities:["Paris","Nice","Lyon"]
-  },
-  "Italy": {
-    currency:"EUR",
-    cities:["Rome","Milan","Venice","Florence"]
-  },
-  "Spain": {
-    currency:"EUR",
-    cities:["Barcelona","Madrid","Seville"]
-  },
-  "Germany": {
-    currency:"EUR",
-    cities:["Berlin","Munich","Frankfurt"]
-  },
-  "Other / Custom": {
-    currency:"",
-    cities:["Other / Custom"]
-  }
+
+const COUNTRY_CURRENCY_FALLBACK={
+  MY:"MYR",TH:"THB",SG:"SGD",JP:"JPY",KR:"KRW",ID:"IDR",VN:"VND",CN:"CNY",TW:"TWD",HK:"HKD",
+  AU:"AUD",NZ:"NZD",GB:"GBP",US:"USD",FR:"EUR",IT:"EUR",ES:"EUR",DE:"EUR",PH:"PHP",CA:"CAD",
+  CH:"CHF",AE:"AED",IN:"INR",TR:"TRY",SA:"SAR",QA:"QAR",NL:"EUR",BE:"EUR",AT:"EUR",PT:"EUR",
+  GR:"EUR",IE:"EUR",FI:"EUR",NO:"NOK",SE:"SEK",DK:"DKK",CZ:"CZK",PL:"PLN",HU:"HUF",MX:"MXN",
+  BR:"BRL",AR:"ARS",ZA:"ZAR",EG:"EGP"
 };
+let LOCATION_COUNTRIES=[];
+let LOCATION_COUNTRY_BY_NAME=new Map();
 
 const TRANSPORT_TO_AI = {
   undecided:"auto",
@@ -10207,51 +10126,119 @@ const TRANSPORT_TO_AI = {
 };
 
 
+
 let newExtraDestinations=[];
 let setExtraDestinations=[];
 
-function sanitizeExtraDestinations(value){
-  if(!Array.isArray(value)) return [];
-  return value
-    .map(x=>({
-      country:String(x?.country||'').trim(),
-      city:String(x?.city||'').trim()
-    }))
-    .filter(x=>x.country||x.city);
+function initLocationDataset(){
+  LOCATION_COUNTRIES=(Country.getAllCountries()||[])
+    .slice()
+    .sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+  LOCATION_COUNTRY_BY_NAME=new Map(LOCATION_COUNTRIES.map(c=>[String(c.name),c]));
+}
+
+function resolveCountry(name){
+  return LOCATION_COUNTRY_BY_NAME.get(String(name||''))||null;
+}
+
+function getRegionsForCountry(countryName){
+  const c=resolveCountry(countryName);
+  if(!c) return [];
+  return (State.getStatesOfCountry(c.isoCode)||[])
+    .slice()
+    .sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+}
+
+function getCitiesForLocation(countryName,regionName=''){
+  const c=resolveCountry(countryName);
+  if(!c) return [];
+
+  if(regionName){
+    const region=getRegionsForCountry(countryName).find(s=>String(s.name)===String(regionName));
+    if(region){
+      return (City.getCitiesOfState(c.isoCode,region.isoCode)||[])
+        .slice()
+        .sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+    }
+  }
+
+  return (City.getCitiesOfCountry(c.isoCode)||[])
+    .slice()
+    .sort((a,b)=>String(a.name).localeCompare(String(b.name)));
 }
 
 function countryOptionsHtml(selected=''){
   return '<option value="">还没决定</option>'+
-    Object.keys(TRIP_LOCATIONS).map(country=>
-      `<option value="${escapeHtml(country)}"${country===selected?' selected':''}>${escapeHtml(country)}</option>`
+    LOCATION_COUNTRIES.map(c=>
+      `<option value="${escapeHtml(c.name)}"${c.name===selected?' selected':''}>${escapeHtml(c.flag?`${c.flag} ${c.name}`:c.name)}</option>`
     ).join('');
 }
 
-function cityOptionsHtml(country,selected=''){
-  if(!country){
-    return '<option value="">先选国家</option>';
-  }
-  const cities=TRIP_LOCATIONS[country]?.cities||['Other / Custom'];
+function regionOptionsHtml(countryName,selected=''){
+  if(!countryName) return '<option value="">先选国家</option>';
+  const rows=getRegionsForCountry(countryName);
+  if(!rows.length) return '<option value="">无州 / 省层级，可直接选城市</option>';
   return '<option value="">还没决定</option>'+
-    cities.map(city=>
-      `<option value="${escapeHtml(city)}"${city===selected?' selected':''}>${escapeHtml(city)}</option>`
-    ).join('');
+    rows.map(r=>`<option value="${escapeHtml(r.name)}"${r.name===selected?' selected':''}>${escapeHtml(r.name)}</option>`).join('');
+}
+
+function cityOptionsHtml(countryName,regionName='',selected=''){
+  if(!countryName) return '<option value="">先选国家</option>';
+  const rows=getCitiesForLocation(countryName,regionName);
+  if(!rows.length) return '<option value="">没有找到城市</option>';
+  return '<option value="">还没决定</option>'+
+    rows.map(c=>`<option value="${escapeHtml(c.name)}"${c.name===selected?' selected':''}>${escapeHtml(c.name)}</option>`).join('');
+}
+
+function populateCountrySelect(selectId,selected=''){
+  const el=$(selectId);
+  if(!el) return;
+  el.innerHTML=countryOptionsHtml(selected);
+  el.value=selected||'';
+}
+
+function populateRegionSelect(selectId,countryName,selected=''){
+  const el=$(selectId);
+  if(!el) return;
+  el.innerHTML=regionOptionsHtml(countryName,selected);
+  el.value=selected||'';
+}
+
+function populateCitySelect(selectId,countryName,regionName='',selected=''){
+  const el=$(selectId);
+  if(!el) return;
+  el.innerHTML=cityOptionsHtml(countryName,regionName,selected);
+  el.value=selected||'';
+}
+
+function countryCurrency(countryName){
+  const c=resolveCountry(countryName);
+  if(!c) return '';
+  return String(c.currency||COUNTRY_CURRENCY_FALLBACK[c.isoCode]||'').toUpperCase();
+}
+
+function sanitizeExtraDestinations(value){
+  if(!Array.isArray(value)) return [];
+  return value.map(x=>({
+    country:String(x?.country||'').trim(),
+    region:String(x?.region||'').trim(),
+    city:String(x?.city||'').trim()
+  })).filter(x=>x.country||x.region||x.city);
 }
 
 function extraDestinationRowHtml(item,index,scope){
-  return `<div class="multiStopRow" data-extra-stop-row="${scope}-${index}">
+  return `<div class="multiStopRow multiStopRowV67" data-extra-stop-row="${scope}-${index}">
     <div class="multiStopOrder">${index+2}</div>
     <label>国家 / 地区
-      <select data-extra-country="${scope}" data-extra-index="${index}">
-        ${countryOptionsHtml(item.country||'')}
-      </select>
+      <select data-extra-country="${scope}" data-extra-index="${index}">${countryOptionsHtml(item.country||'')}</select>
+    </label>
+    <label>州 / 省 / 地区
+      <select data-extra-region="${scope}" data-extra-index="${index}">${regionOptionsHtml(item.country||'',item.region||'')}</select>
     </label>
     <label>城市
-      <select data-extra-city="${scope}" data-extra-index="${index}">
-        ${cityOptionsHtml(item.country||'',item.city||'')}
-      </select>
+      <select data-extra-city="${scope}" data-extra-index="${index}">${cityOptionsHtml(item.country||'',item.region||'',item.city||'')}</select>
     </label>
-    <button type="button" class="ghost multiStopRemoveBtn" data-extra-remove="${scope}" data-extra-index="${index}" aria-label="删除目的地">✕</button>
+    <button type="button" class="ghost multiStopRemoveBtn" data-extra-remove="${scope}" data-extra-index="${index}">✕</button>
   </div>`;
 }
 
@@ -10267,48 +10254,42 @@ function renderExtraDestinations(scope){
 
   host.querySelectorAll(`[data-extra-country="${scope}"]`).forEach(select=>{
     select.addEventListener('change',()=>{
-      const index=Number(select.dataset.extraIndex);
-      const arr=isNew?newExtraDestinations:setExtraDestinations;
-      if(!arr[index]) return;
-      arr[index].country=select.value;
-      arr[index].city='';
+      const i=Number(select.dataset.extraIndex), arr=isNew?newExtraDestinations:setExtraDestinations;
+      if(!arr[i]) return;
+      arr[i].country=select.value;
+      arr[i].region='';
+      arr[i].city='';
       renderExtraDestinations(scope);
+      isNew?updateCreateTripProfileHint():updateSharedTripProfileHint();
+    });
+  });
 
-      if(isNew){
-        updateCreateTripProfileHint();
-      }else{
-        updateSharedTripProfileHint();
-      }
+  host.querySelectorAll(`[data-extra-region="${scope}"]`).forEach(select=>{
+    select.addEventListener('change',()=>{
+      const i=Number(select.dataset.extraIndex), arr=isNew?newExtraDestinations:setExtraDestinations;
+      if(!arr[i]) return;
+      arr[i].region=select.value;
+      arr[i].city='';
+      renderExtraDestinations(scope);
+      isNew?updateCreateTripProfileHint():updateSharedTripProfileHint();
     });
   });
 
   host.querySelectorAll(`[data-extra-city="${scope}"]`).forEach(select=>{
     select.addEventListener('change',()=>{
-      const index=Number(select.dataset.extraIndex);
-      const arr=isNew?newExtraDestinations:setExtraDestinations;
-      if(!arr[index]) return;
-      arr[index].city=select.value;
-
-      if(isNew){
-        updateCreateTripProfileHint();
-      }else{
-        updateSharedTripProfileHint();
-      }
+      const i=Number(select.dataset.extraIndex), arr=isNew?newExtraDestinations:setExtraDestinations;
+      if(!arr[i]) return;
+      arr[i].city=select.value;
+      isNew?updateCreateTripProfileHint():updateSharedTripProfileHint();
     });
   });
 
   host.querySelectorAll(`[data-extra-remove="${scope}"]`).forEach(btn=>{
     btn.addEventListener('click',()=>{
-      const index=Number(btn.dataset.extraIndex);
-      const arr=isNew?newExtraDestinations:setExtraDestinations;
-      arr.splice(index,1);
+      const i=Number(btn.dataset.extraIndex), arr=isNew?newExtraDestinations:setExtraDestinations;
+      arr.splice(i,1);
       renderExtraDestinations(scope);
-
-      if(isNew){
-        updateCreateTripProfileHint();
-      }else{
-        updateSharedTripProfileHint();
-      }
+      isNew?updateCreateTripProfileHint():updateSharedTripProfileHint();
     });
   });
 }
@@ -10317,29 +10298,26 @@ function addExtraDestination(scope,preset=null){
   const arr=scope==='new'?newExtraDestinations:setExtraDestinations;
   arr.push({
     country:String(preset?.country||''),
+    region:String(preset?.region||''),
     city:String(preset?.city||'')
   });
   renderExtraDestinations(scope);
 }
 
 function destinationLabel(item){
-  return [item?.city,item?.country].filter(Boolean).join(', ');
+  return [item?.city,item?.region,item?.country].filter(Boolean).join(', ');
 }
 
-function buildTripRouteLabels(originCountry,originCity,destinationCountry,destinationCity,extras=[]){
+function buildTripRouteLabels(originCountry,originRegion,originCity,destinationCountry,destinationRegion,destinationCity,extras=[]){
   const route=[];
-
-  const origin=[originCity,originCountry].filter(Boolean).join(', ');
-  const primary=[destinationCity,destinationCountry].filter(Boolean).join(', ');
-
+  const origin=[originCity,originRegion,originCountry].filter(Boolean).join(', ');
+  const primary=[destinationCity,destinationRegion,destinationCountry].filter(Boolean).join(', ');
   if(origin) route.push(origin);
   if(primary) route.push(primary);
-
   sanitizeExtraDestinations(extras).forEach(stop=>{
     const label=destinationLabel(stop);
     if(label) route.push(label);
   });
-
   return route;
 }
 
@@ -10349,36 +10327,6 @@ function currentCreateExtraDestinations(){
 
 function currentSetExtraDestinations(){
   return sanitizeExtraDestinations(setExtraDestinations);
-}
-
-function populateCountrySelect(selectId,selected=''){
-  const el=$(selectId);
-  if(!el) return;
-  el.innerHTML='<option value="">还没决定</option>'+
-    Object.keys(TRIP_LOCATIONS).map(country=>
-      `<option value="${escapeHtml(country)}">${escapeHtml(country)}</option>`
-    ).join('');
-  el.value=selected||'';
-}
-
-function populateCitySelect(selectId,country,selected=''){
-  const el=$(selectId);
-  if(!el) return;
-
-  if(!country){
-    el.innerHTML='<option value="">先选国家</option>';
-    el.value='';
-    return;
-  }
-
-  const cities=TRIP_LOCATIONS[country]?.cities||["Other / Custom"];
-  el.innerHTML='<option value="">还没决定</option>'+
-    cities.map(city=>`<option value="${escapeHtml(city)}">${escapeHtml(city)}</option>`).join('');
-  el.value=cities.includes(selected)?selected:'';
-}
-
-function countryCurrency(country){
-  return TRIP_LOCATIONS[country]?.currency||'';
 }
 
 function syncCreateTripCurrencyFromDestination(){
@@ -10400,63 +10348,66 @@ function syncCreateTripCurrencyFromDestination(){
 }
 
 function updateCreateTripProfileHint(){
-  const oCountry=$('newOriginCountry')?.value||'';
-  const oCity=$('newOriginCity')?.value||'';
-  const dCountry=$('newDestinationCountry')?.value||'';
-  const dCity=$('newDestinationCity')?.value||'';
-  const transport=$('newTransportMode')?.value||'undecided';
-
-  const labels={
-    undecided:'交通未决定',
-    self_drive:'🚗 自驾',
-    flight:'✈️ 飞机',
-    public_transport:'🚆 公共交通',
-    mixed:'🔀 Mixed'
-  };
-
   const route=buildTripRouteLabels(
-    oCountry,oCity,dCountry,dCity,currentCreateExtraDestinations()
+    $('newOriginCountry')?.value||'',
+    $('newOriginRegion')?.value||'',
+    $('newOriginCity')?.value||'',
+    $('newDestinationCountry')?.value||'',
+    $('newDestinationRegion')?.value||'',
+    $('newDestinationCity')?.value||'',
+    currentCreateExtraDestinations()
   );
-
-  const hint=$('tripProfileHint');
-  if(!hint) return;
-
-  if(!route.length){
-    hint.textContent='不选也可以直接建立 Blank Trip；以后可以在 Trip Info 修改。';
-    return;
-  }
-
-  hint.textContent=`${route.join(' → ')} · ${labels[transport]||'交通未决定'}`;
+  const labels={undecided:'交通未决定',self_drive:'🚗 自驾',flight:'✈️ 飞机',public_transport:'🚆 公共交通',mixed:'🔀 Mixed'};
+  const hint=$('tripProfileHint'); if(!hint) return;
+  hint.textContent=route.length
+    ? `${route.join(' → ')} · ${labels[$('newTransportMode')?.value||'undecided']}`
+    : '不选也可以直接建立 Blank Trip；以后可以在 Trip Info 修改。';
 }
 
 function initTripProfileControls(){
+  initLocationDataset();
+
   ['newOriginCountry','newDestinationCountry','setOriginCountry','setDestinationCountry']
     .forEach(id=>populateCountrySelect(id));
 
-  populateCitySelect('newOriginCity','');
-  populateCitySelect('newDestinationCity','');
-  populateCitySelect('setOriginCity','');
-  populateCitySelect('setDestinationCity','');
+  ['newOriginRegion','newDestinationRegion','setOriginRegion','setDestinationRegion']
+    .forEach(id=>populateRegionSelect(id,''));
+
+  populateCitySelect('newOriginCity','','');
+  populateCitySelect('newDestinationCity','','');
+  populateCitySelect('setOriginCity','','');
+  populateCitySelect('setDestinationCity','','');
 
   $('addNewExtraDestinationBtn')?.addEventListener('click',()=>{
     addExtraDestination('new');
     updateCreateTripProfileHint();
   });
-
   $('addSetExtraDestinationBtn')?.addEventListener('click',()=>{
     addExtraDestination('set');
     updateSharedTripProfileHint();
   });
 
   $('newOriginCountry')?.addEventListener('change',()=>{
-    populateCitySelect('newOriginCity',$('newOriginCountry').value);
+    const c=$('newOriginCountry').value;
+    populateRegionSelect('newOriginRegion',c);
+    populateCitySelect('newOriginCity',c,'');
+    updateCreateTripProfileHint();
+  });
+  $('newOriginRegion')?.addEventListener('change',()=>{
+    populateCitySelect('newOriginCity',$('newOriginCountry').value,$('newOriginRegion').value);
     updateCreateTripProfileHint();
   });
   $('newOriginCity')?.addEventListener('change',updateCreateTripProfileHint);
 
   $('newDestinationCountry')?.addEventListener('change',()=>{
-    populateCitySelect('newDestinationCity',$('newDestinationCountry').value);
+    const c=$('newDestinationCountry').value;
+    populateRegionSelect('newDestinationRegion',c);
+    populateCitySelect('newDestinationCity',c,'');
     syncCreateTripCurrencyFromDestination();
+    updateCreateTripProfileHint();
+  });
+  $('newDestinationRegion')?.addEventListener('change',()=>{
+    populateCitySelect('newDestinationCity',$('newDestinationCountry').value,$('newDestinationRegion').value);
     updateCreateTripProfileHint();
   });
   $('newDestinationCity')?.addEventListener('change',updateCreateTripProfileHint);
@@ -10469,37 +10420,47 @@ function initTripProfileControls(){
   });
 
   $('setOriginCountry')?.addEventListener('change',()=>{
-    populateCitySelect('setOriginCity',$('setOriginCountry').value);
+    const c=$('setOriginCountry').value;
+    populateRegionSelect('setOriginRegion',c);
+    populateCitySelect('setOriginCity',c,'');
+    updateSharedTripProfileHint();
   });
+  $('setOriginRegion')?.addEventListener('change',()=>{
+    populateCitySelect('setOriginCity',$('setOriginCountry').value,$('setOriginRegion').value);
+    updateSharedTripProfileHint();
+  });
+  $('setOriginCity')?.addEventListener('change',updateSharedTripProfileHint);
+
   $('setDestinationCountry')?.addEventListener('change',()=>{
-    populateCitySelect('setDestinationCity',$('setDestinationCountry').value);
+    const c=$('setDestinationCountry').value;
+    populateRegionSelect('setDestinationRegion',c);
+    populateCitySelect('setDestinationCity',c,'');
+    const currency=countryCurrency(c);
+    if(currency && $('setSpendCurrency')) $('setSpendCurrency').value=currency;
+    updateSharedTripProfileHint();
+    requestAnimationFrame(refreshSharedTripFx);
   });
+  $('setDestinationRegion')?.addEventListener('change',()=>{
+    populateCitySelect('setDestinationCity',$('setDestinationCountry').value,$('setDestinationRegion').value);
+    updateSharedTripProfileHint();
+  });
+  $('setDestinationCity')?.addEventListener('change',updateSharedTripProfileHint);
 }
 
 
 function updateSharedTripProfileHint(){
-  const oCountry=$('setOriginCountry')?.value||currentTrip?.origin_country||'';
-  const oCity=$('setOriginCity')?.value||currentTrip?.origin_city||'';
-  const dCountry=$('setDestinationCountry')?.value||currentTrip?.destination_country||'';
-  const dCity=$('setDestinationCity')?.value||currentTrip?.destination_city||'';
-  const transport=$('setTransportMode')?.value||currentTrip?.transport_mode||'undecided';
-
-  const labels={
-    undecided:'交通未决定',
-    self_drive:'🚗 自驾',
-    flight:'✈️ 飞机',
-    public_transport:'🚆 公共交通',
-    mixed:'🔀 Mixed'
-  };
-
   const route=buildTripRouteLabels(
-    oCountry,oCity,dCountry,dCity,currentSetExtraDestinations()
+    $('setOriginCountry')?.value||currentTrip?.origin_country||'',
+    $('setOriginRegion')?.value||currentTrip?.origin_region||'',
+    $('setOriginCity')?.value||currentTrip?.origin_city||'',
+    $('setDestinationCountry')?.value||currentTrip?.destination_country||'',
+    $('setDestinationRegion')?.value||currentTrip?.destination_region||'',
+    $('setDestinationCity')?.value||currentTrip?.destination_city||'',
+    currentSetExtraDestinations()
   );
-
-  const hint=$('setTripProfileHint');
-  if(!hint) return;
-
-  hint.textContent=`${route.length?route.join(' → '):'尚未设定路线'} · ${labels[transport]||'交通未决定'}`;
+  const labels={undecided:'交通未决定',self_drive:'🚗 自驾',flight:'✈️ 飞机',public_transport:'🚆 公共交通',mixed:'🔀 Mixed'};
+  const hint=$('setTripProfileHint'); if(!hint) return;
+  hint.textContent=`${route.length?route.join(' → '):'尚未设定路线'} · ${labels[$('setTransportMode')?.value||currentTrip?.transport_mode||'undecided']}`;
 }
 
 async function refreshSharedTripFx(){
@@ -10527,34 +10488,22 @@ async function refreshSharedTripFx(){
 
 function fillTripSettingsProfile(){
   if(!currentTrip) return;
-
   populateCountrySelect('setOriginCountry',currentTrip.origin_country||'');
-  populateCitySelect('setOriginCity',currentTrip.origin_country||'',currentTrip.origin_city||'');
+  populateRegionSelect('setOriginRegion',currentTrip.origin_country||'',currentTrip.origin_region||'');
+  populateCitySelect('setOriginCity',currentTrip.origin_country||'',currentTrip.origin_region||'',currentTrip.origin_city||'');
   populateCountrySelect('setDestinationCountry',currentTrip.destination_country||'');
-  populateCitySelect('setDestinationCity',currentTrip.destination_country||'',currentTrip.destination_city||'');
+  populateRegionSelect('setDestinationRegion',currentTrip.destination_country||'',currentTrip.destination_region||'');
+  populateCitySelect('setDestinationCity',currentTrip.destination_country||'',currentTrip.destination_region||'',currentTrip.destination_city||'');
 
   setExtraDestinations=sanitizeExtraDestinations(currentTrip.extra_destinations||[]);
   renderExtraDestinations('set');
 
-  if($('setTransportMode')){
-    $('setTransportMode').value=currentTrip.transport_mode||'undecided';
-  }
-  if($('setTripStartDate')){
-    $('setTripStartDate').value=currentTrip.start_date||'';
-  }
-  if($('setTripEndDate')){
-    $('setTripEndDate').value=currentTrip.end_date||'';
-  }
-  if($('setSpendCurrency')){
-    $('setSpendCurrency').value=currentTrip.spend_currency||countryCurrency(currentTrip.destination_country||'')||'';
-  }
-  if($('setSettleCurrency')){
-    $('setSettleCurrency').value=currentTrip.settle_currency||'MYR';
-  }
-  if($('setTripRate')){
-    $('setTripRate').value=Number(currentTrip.thb_rate||0);
-  }
-
+  if($('setTransportMode')) $('setTransportMode').value=currentTrip.transport_mode||'undecided';
+  if($('setTripStartDate')) $('setTripStartDate').value=currentTrip.start_date||'';
+  if($('setTripEndDate')) $('setTripEndDate').value=currentTrip.end_date||'';
+  if($('setSpendCurrency')) $('setSpendCurrency').value=currentTrip.spend_currency||countryCurrency(currentTrip.destination_country||'')||'';
+  if($('setSettleCurrency')) $('setSettleCurrency').value=currentTrip.settle_currency||'MYR';
+  if($('setTripRate')) $('setTripRate').value=Number(currentTrip.thb_rate||0);
   updateSharedTripProfileHint();
 }
 
@@ -10617,9 +10566,11 @@ function applyHomeTripTemplate(key){
   $('newBudget').value=preset.budget;
 
   populateCountrySelect('newOriginCountry',preset.originCountry);
-  populateCitySelect('newOriginCity',preset.originCountry,preset.originCity);
+  populateRegionSelect('newOriginRegion',preset.originCountry,preset.originRegion||'');
+  populateCitySelect('newOriginCity',preset.originCountry,preset.originRegion||'',preset.originCity);
   populateCountrySelect('newDestinationCountry',preset.destinationCountry);
-  populateCitySelect('newDestinationCity',preset.destinationCountry,preset.destinationCity);
+  populateRegionSelect('newDestinationRegion',preset.destinationCountry,preset.destinationRegion||'');
+  populateCitySelect('newDestinationCity',preset.destinationCountry,preset.destinationRegion||'',preset.destinationCity);
 
   newExtraDestinations=sanitizeExtraDestinations(preset.extras||[]);
   renderExtraDestinations('new');
@@ -10637,9 +10588,11 @@ function applyHomeTripTemplate(key){
 
 function openCreateTripDialog(){
   populateCountrySelect('newOriginCountry','');
-  populateCitySelect('newOriginCity','');
+  populateRegionSelect('newOriginRegion','','');
+  populateCitySelect('newOriginCity','','','');
   populateCountrySelect('newDestinationCountry','');
-  populateCitySelect('newDestinationCity','');
+  populateRegionSelect('newDestinationRegion','','');
+  populateCitySelect('newDestinationCity','','','');
 
   newExtraDestinations=[];
   renderExtraDestinations('new');
@@ -10687,8 +10640,10 @@ async function createTrip(e){
   const patch={
     thb_rate:rate,
     origin_country:$('newOriginCountry')?.value||null,
+    origin_region:$('newOriginRegion')?.value||null,
     origin_city:$('newOriginCity')?.value||null,
     destination_country:$('newDestinationCountry')?.value||null,
+    destination_region:$('newDestinationRegion')?.value||null,
     destination_city:$('newDestinationCity')?.value||null,
     extra_destinations:currentCreateExtraDestinations(),
     transport_mode:$('newTransportMode')?.value||'undecided',
@@ -11659,13 +11614,16 @@ function openNewAIPlanner(){
 
   const origin=[
     currentTrip.origin_city,
+    currentTrip.origin_region,
     currentTrip.origin_country
   ].filter(Boolean).join(', ');
 
   const destinationRoute=buildTripRouteLabels(
     '',
     '',
+    '',
     currentTrip.destination_country,
+    currentTrip.destination_region,
     currentTrip.destination_city,
     currentTrip.extra_destinations||[]
   );
