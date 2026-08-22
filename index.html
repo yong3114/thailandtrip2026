@@ -7570,6 +7570,129 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 }
 </style>
 
+
+<style id="roadTripV66UxFixes">
+/* 1. Shared Checklist: remove empty horizontal divider under the title. */
+.sharedChecklistBody{
+  border-top:0 !important;
+}
+.sharedChecklistBody > .checklistProgress:first-child{
+  margin-top:6px !important;
+}
+
+/* 4. Recent itinerary empty state must remain readable in dark mode. */
+#recentItems .recentItemsEmpty{
+  background:var(--rt-surface-2) !important;
+  color:var(--rt-muted) !important;
+  border:1px dashed var(--rt-border-strong) !important;
+  opacity:1 !important;
+  border-radius:14px;
+  padding:14px;
+}
+body[data-theme="dark"] #recentItems .recentItemsEmpty{
+  background:#101c2e !important;
+  color:#c7d2e1 !important;
+  border-color:#40536d !important;
+}
+
+/* AI readiness */
+.aiReadinessGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px;
+  margin-top:8px;
+}
+.aiReadinessCard{
+  min-width:0;
+  padding:9px;
+  border:1px solid var(--rt-border);
+  border-radius:11px;
+  background:var(--rt-surface);
+}
+.aiReadinessCard strong{
+  display:block;
+  margin-bottom:5px;
+  color:var(--rt-text);
+  font-size:10px;
+}
+.aiReadinessCard span{
+  display:block;
+  margin-top:3px;
+  color:var(--rt-muted);
+  font-size:9px;
+  line-height:1.42;
+}
+
+/* 6. Mobile control sizing / spacing audit. */
+@media(max-width:640px){
+  button,
+  .btn,
+  .ghost,
+  .iconbtn{
+    min-height:42px;
+  }
+
+  .modalActions{
+    gap:8px !important;
+    padding-top:10px !important;
+  }
+
+  .modalActions > button{
+    flex:0 1 auto !important;
+    min-width:88px;
+    padding:9px 12px !important;
+  }
+
+  .toolbar{
+    gap:7px !important;
+  }
+
+  .toolbar button{
+    min-height:40px !important;
+    padding:8px 10px !important;
+  }
+
+  .overviewChecklistActions,
+  .checklistPrimaryActions,
+  .blankTripStarterActions,
+  .aiWorkspaceToolbarActions{
+    gap:8px !important;
+  }
+
+  .overviewChecklistActions button,
+  .checklistPrimaryActions button{
+    width:100%;
+  }
+
+  .plannerModeSwitch{
+    gap:7px !important;
+  }
+
+  .plannerModeBtn{
+    min-height:44px !important;
+    padding:8px 9px !important;
+  }
+
+  .mobileBarGrid{
+    gap:2px !important;
+  }
+
+  .mobileTab{
+    min-height:48px !important;
+  }
+
+  .mobileCenterAdd{
+    width:52px !important;
+    height:52px !important;
+    min-height:52px !important;
+  }
+
+  .aiReadinessGrid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -7742,7 +7865,7 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.5.2 · WORKSPACE PERSISTENCE FIX · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.6 · UX + SMART CHECKLIST + AI V3 · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -7856,11 +7979,11 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
               <div class="safeChecklistFilterRow">
                 <select id="overviewChecklistFilter" class="safeChecklistFilter" aria-label="Checklist 分类">
                   <option value="all">全部</option>
-                  <option value="👤 Personal">👤 Personal</option>
-                  <option value="🚗 Car">🚗 Car</option>
-                  <option value="🇹🇭 Border">🇹🇭 Border</option>
-                  <option value="🏨 Booking">🏨 Booking</option>
-                  <option value="🧳 Other">🧳 Other</option>
+                  <option value="personal">👤 Personal</option>
+                  <option value="car">🚗 Vehicle / Transport</option>
+                  <option value="border">🌏 Entry / Border</option>
+                  <option value="booking">🏨 Booking</option>
+                  <option value="other">🧳 Other</option>
                 </select>
                 <span id="overviewChecklistFilterCount" class="safeChecklistFilterCount"></span>
               </div>
@@ -7900,8 +8023,8 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
             </div>
             <div class="card">
               <h3>汇率</h3>
-              <div class="title" id="rateText">1 THB = RM 0.13</div>
-              <div class="footerMini">Expenses 里用 THB 记录时，会自动换算成 RM 做总预算统计。</div>
+              <div class="title" id="rateText">—</div>
+              <div class="footerMini">按照这趟 Trip 的消费币种 → 结算币种换算预算与 Expenses。</div>
             </div>
             <div class="card">
               <h3>最受欢迎</h3>
@@ -8114,11 +8237,11 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
               <div class="safeChecklistFilterRow">
                 <select id="sharedChecklistFilter" class="safeChecklistFilter" aria-label="Checklist 分类">
                   <option value="all">全部</option>
-                  <option value="👤 Personal">👤 Personal</option>
-                  <option value="🚗 Car">🚗 Car</option>
-                  <option value="🇹🇭 Border">🇹🇭 Border</option>
-                  <option value="🏨 Booking">🏨 Booking</option>
-                  <option value="🧳 Other">🧳 Other</option>
+                  <option value="personal">👤 Personal</option>
+                  <option value="car">🚗 Vehicle / Transport</option>
+                  <option value="border">🌏 Entry / Border</option>
+                  <option value="booking">🏨 Booking</option>
+                  <option value="other">🧳 Other</option>
                 </select>
                 <span id="sharedChecklistFilterCount" class="safeChecklistFilterCount"></span>
               </div>
@@ -8260,9 +8383,9 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
     <div class="aiPlannerHead">
       <div class="aiPlannerSpark">✨</div>
       <div>
-        <div class="todayEyebrow">AI TRIP PLANNER V2</div>
+        <div class="todayEyebrow">AI TRIP PLANNER V3</div>
         <h3>让 AI 帮你规划这趟旅行</h3>
-        <div class="footerMini">会分析交通方式、季节、预算、Checklist 与候选行程。生成后会自动保存为 Review Draft。</div>
+        <div class="footerMini">会分析路线、预算、入境/文件、预订、支付、网络、天气、健康安全、Shared Checklist 与候选行程。</div>
       </div>
     </div>
 
@@ -8553,11 +8676,11 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
     <div class="formGrid">
       <label>类别
         <select id="checklistCategory" aria-label="Checklist 类别">
-          <option>👤 Personal</option>
-          <option>🚗 Car</option>
-          <option>🇹🇭 Border</option>
-          <option>🏨 Booking</option>
-          <option>🧳 Other</option>
+          <option value="👤 Personal">👤 Personal</option>
+          <option value="🚗 Vehicle / Transport">🚗 Vehicle / Transport</option>
+          <option value="🌏 Entry / Border">🌏 Entry / Border</option>
+          <option value="🏨 Booking">🏨 Booking</option>
+          <option value="🧳 Other">🧳 Other</option>
         </select>
       </label>
       <label class="full">内容
@@ -8973,17 +9096,39 @@ let safeChecklistFilterValue='all';
 
 function safeChecklistCategoryFromCard(card){
   const meta=card?.querySelector('.checklistItemMeta');
-  const text=String(meta?.textContent||'').trim();
+  const text=String(meta?.textContent||'').trim().toLowerCase();
 
-  if(text.includes('👤 Personal')) return '👤 Personal';
-  if(text.includes('🚗 Car')) return '🚗 Car';
-  if(text.includes('🇹🇭 Border')) return '🇹🇭 Border';
-  if(text.includes('🏨 Booking')) return '🏨 Booking';
-  if(text.includes('🧳 Other')) return '🧳 Other';
-
-  return '🧳 Other';
+  if(/personal|document|health|packing|connectivity|money/.test(text)) return 'personal';
+  if(/car|vehicle|transport|drive/.test(text)) return 'car';
+  if(/border|entry|immigration|customs|visa|入境|出境/.test(text)) return 'border';
+  if(/booking|hotel|reservation/.test(text)) return 'booking';
+  return 'other';
 }
 
+function destinationChecklistLabel(){
+  const country=currentTrip?.destination_country||'';
+  const flags={
+    Malaysia:'🇲🇾',Thailand:'🇹🇭',Singapore:'🇸🇬',Japan:'🇯🇵',
+    'South Korea':'🇰🇷',Indonesia:'🇮🇩',Vietnam:'🇻🇳',China:'🇨🇳',
+    Taiwan:'🇹🇼','Hong Kong':'🇭🇰',Australia:'🇦🇺','New Zealand':'🇳🇿',
+    'United Kingdom':'🇬🇧','United States':'🇺🇸',France:'🇫🇷',
+    Italy:'🇮🇹',Spain:'🇪🇸',Germany:'🇩🇪'
+  };
+  return country ? `${flags[country]||'🌏'} ${country} Entry / Border` : '🌏 Entry / Border';
+}
+
+function updateChecklistFilterLabels(){
+  const label=destinationChecklistLabel();
+  ['overviewChecklistFilter','sharedChecklistFilter'].forEach(id=>{
+    const select=$(id);
+    const option=select?.querySelector('option[value="border"]');
+    if(option) option.textContent=label;
+  });
+
+  const cat=$('checklistCategory');
+  const entry=cat?.querySelector('option[value="🌏 Entry / Border"]');
+  if(entry) entry.textContent=label;
+}
 function applySafeChecklistFilter(){
   const overviewSelect=$('overviewChecklistFilter');
   const sharedSelect=$('sharedChecklistFilter');
@@ -9093,8 +9238,18 @@ function routes(){
   return r;
 }
 function rmValue(amount,currency){
-  const rate=Number(currentTrip?.thb_rate||0.13);
-  return currency==='THB' ? Number(amount||0)*rate : Number(amount||0);
+  const spend=String(currentTrip?.spend_currency||'THB').toUpperCase();
+  const settle=String(currentTrip?.settle_currency||'MYR').toUpperCase();
+  const cur=String(currency||settle).toUpperCase();
+  const rate=Number(currentTrip?.thb_rate||1);
+
+  if(cur===settle) return Number(amount||0);
+  if(cur===spend) return Number(amount||0)*rate;
+
+  // Legacy compatibility for older THB trips.
+  if(cur==='THB' && settle==='MYR') return Number(amount||0)*rate;
+
+  return Number(amount||0);
 }
 function nowLocalInput(){
   const d=new Date();
@@ -9103,6 +9258,53 @@ function nowLocalInput(){
   return local.toISOString().slice(0,16);
 }
 function ownerMember(){ return members.find(m=>m.role==='owner') }
+
+
+let appHistoryHandling=false;
+
+function currentAppHistoryState(){
+  if(currentTrip){
+    return {roadtrip:true,view:'trip',tripId:currentTrip.id,panel:currentVisiblePanel||'overview'};
+  }
+  return {roadtrip:true,view:'home'};
+}
+
+function pushAppHistory(state,replace=false){
+  if(appHistoryHandling) return;
+  try{
+    if(replace) history.replaceState(state,'',location.href);
+    else history.pushState(state,'',location.href);
+  }catch(err){
+    console.warn('History state failed',err);
+  }
+}
+
+async function handleAppBackState(state){
+  appHistoryHandling=true;
+  try{
+    if(state?.roadtrip && state.view==='trip' && state.tripId){
+      if(!currentTrip || String(currentTrip.id)!==String(state.tripId)){
+        await openTrip(state.tripId,{fromHistory:true});
+      }
+      switchPanel(state.panel||'overview',{fromHistory:true,preserveScroll:true});
+      return;
+    }
+
+    if(state?.roadtrip && state.view==='home'){
+      cleanupChannel();
+      currentTrip=null;
+      if(mobileBar) mobileBar.classList.add('hide');
+      await openHome({fromHistory:true});
+      return;
+    }
+  }finally{
+    appHistoryHandling=false;
+  }
+}
+
+window.addEventListener('popstate',event=>{
+  handleAppBackState(event.state);
+});
 
 async function init(){
   const {data:{session}}=await sb.auth.getSession();
@@ -9124,7 +9326,7 @@ async function init(){
 
   $('authForm').addEventListener('submit',onAuth);
   $('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut()});
-  $('backHomeBtn').addEventListener('click',async()=>{cleanupChannel();currentTrip=null;if(mobileBar) mobileBar.classList.add('hide');await openHome()});
+  $('backHomeBtn').addEventListener('click',()=>{ if(currentTrip) history.back(); else openHome(); });
   $('createTripForm').addEventListener('submit',createTrip);
 
   $('settingsForm')?.addEventListener('submit',async()=>{
@@ -9212,7 +9414,7 @@ async function init(){
   if(q) $('joinCode').value=q.toUpperCase();
 
   document.querySelectorAll('.navbtn').forEach(btn=>{
-    btn.addEventListener('click',()=>switchPanel(btn.dataset.panel));
+    btn.addEventListener('click',()=>switchPanel(btn.dataset.panel,{pushHistory:true,preserveScroll:true}));
   });
   $('addItemBtn').addEventListener('click',()=>openItemDialog(null));
   $('cancelItemBtn').addEventListener('click',()=>$('itemDialog').close());
@@ -9248,6 +9450,7 @@ async function init(){
   renderBlankTripStarter();
   renderAIDrafts();
   fillTripSettingsProfile();
+  updateChecklistFilterLabels();
   });
   $('cancelExpenseBtn').addEventListener('click',()=>$('expenseDialog').close());
   $('expenseForm').addEventListener('submit',saveExpense);
@@ -9306,7 +9509,7 @@ async function init(){
   });
 
   document.querySelectorAll('.mobileTab').forEach(btn=>{
-    btn.addEventListener('click',()=>switchPanel(btn.dataset.panel));
+    btn.addEventListener('click',()=>switchPanel(btn.dataset.panel,{pushHistory:true,preserveScroll:true}));
   });
   if(mobileAddBtn){
     mobileAddBtn.addEventListener('click',()=>{
@@ -9478,7 +9681,7 @@ async function onAuth(e){
   }catch(err){ setMsg($('authMsg'), err.message || String(err), 'err'); }
 }
 
-async function openHome(){
+async function openHome(options={}){
   // Home must never keep a Draft from the previously opened Trip.
   aiDrafts=[];
   aiGeneratedPlan=null;
@@ -9499,6 +9702,10 @@ async function openHome(){
 
   $('userEmail').textContent=user.email||'';
   await loadTripList();
+
+  if(!options.fromHistory){
+    pushAppHistory({roadtrip:true,view:'home'},true);
+  }
 }
 
 async function loadTripList(){
@@ -10337,7 +10544,7 @@ async function deleteOrLeaveTrip(tripId,isOwner){
   }
 }
 
-async function openTrip(id){
+async function openTrip(id,options={}){
   // Clear every AI draft visual/state BEFORE switching Trip.
   // This prevents the previous Trip's Draft rows remaining on screen
   // while the new Trip is loading.
@@ -10363,7 +10570,11 @@ async function openTrip(id){
 
   await refreshTrip();
   subscribeTrip();
-  switchPanel('overview');
+  switchPanel('overview',{fromHistory:true});
+
+  if(!options.fromHistory){
+    pushAppHistory({roadtrip:true,view:'trip',tripId:currentTrip.id,panel:'overview'});
+  }
 }
 
 async function refreshTrip(){
@@ -10476,6 +10687,10 @@ function switchPanel(panel,options={}){
   }
 
   updateMobilePanelChrome(panel);
+
+  if(options.pushHistory && currentTrip && !options.fromHistory){
+    pushAppHistory({roadtrip:true,view:'trip',tripId:currentTrip.id,panel});
+  }
 
   requestAnimationFrame(()=>{
     if(isMobile && preserveScroll){
@@ -10869,9 +11084,12 @@ function aiPriorityToItem(priority){
 
 function aiChecklistCategory(category){
   const key=String(category||'').toLowerCase();
+
   if(['personal','documents','health','packing','connectivity','money'].includes(key)) return '👤 Personal';
-  if(['vehicle','transport'].includes(key)) return '🚗 Car';
+  if(['vehicle','transport'].includes(key)) return '🚗 Vehicle / Transport';
+  if(['border','entry','visa','immigration'].includes(key)) return '🌏 Entry / Border';
   if(['booking'].includes(key)) return '🏨 Booking';
+
   return '🧳 Other';
 }
 
@@ -11281,6 +11499,27 @@ function renderAIPlanPreview(plan){
         <p>${escapeHtml(flight.note||'')}</p>
       </div>
     </div>
+
+    ${plan.preparation_summary?`
+      <details class="aiPlanningNotes aiReadinessNotes" open>
+        <summary>🧳 AI Trip Readiness</summary>
+        <div class="aiReadinessGrid">
+          ${[
+            ['🛂 Entry / Documents',plan.preparation_summary.entry_documents],
+            ['🏨 Booking / Reservations',plan.preparation_summary.booking_reservations],
+            ['🚦 Transport',plan.preparation_summary.transport_setup],
+            ['💳 Money / Payment',plan.preparation_summary.money_payment],
+            ['📶 Connectivity',plan.preparation_summary.connectivity],
+            ['🌦 Weather / Packing',plan.preparation_summary.weather_packing],
+            ['🩹 Health / Safety',plan.preparation_summary.health_safety],
+            ['🆘 Emergency / Local Tips',plan.preparation_summary.emergency_local]
+          ].map(([label,arr])=>Array.isArray(arr)&&arr.length?`
+            <div class="aiReadinessCard">
+              <strong>${label}</strong>
+              ${arr.map(x=>`<span>• ${escapeHtml(x)}</span>`).join('')}
+            </div>`:'').join('')}
+        </div>
+      </details>`:''}
 
     ${warnings.length?`
       <details class="aiPlanningNotes aiWarningNotes" open>
@@ -12262,7 +12501,12 @@ function renderTrip(){
   const pct=currentTrip.budget_target>0?Math.min(100, actual/Number(currentTrip.budget_target)*100):0;
   $('budgetBar').style.width=pct+'%';
   $('budgetText').textContent=`实际 ${money(actual)} / 预算 ${money(currentTrip.budget_target)} · ${remain>=0?'剩余':'超出'} ${money(Math.abs(remain))}`;
-  $('rateText').textContent=`1 THB = RM ${Number(currentTrip.thb_rate||0.13).toFixed(4)}`;
+  {
+    const spend=String(currentTrip.spend_currency||countryCurrency(currentTrip.destination_country||'')||'THB').toUpperCase();
+    const settle=String(currentTrip.settle_currency||'MYR').toUpperCase();
+    const rate=Number(currentTrip.thb_rate||1);
+    $('rateText').textContent=`1 ${spend} = ${formatFxRate(rate)} ${settle}`;
+  }
   renderBudgetHub(actual,remain);
 
   const top=topVotedItems(4);
@@ -12289,7 +12533,7 @@ function renderTrip(){
         <span class="recentEditMeta">${escapeHtml(i.category)} · Day ${i.day_no} · ${isBudgetItem(i)?'💰 Info':planStatusLabel(i.plan_status)} · ❤️ ${itemVoteCount(i.id)}</span>
       </span>
       <span class="recentEditArrow">›</span>
-    </button>`).join(''):'<div class="empty">还没有行程项目</div>';
+    </button>`).join(''):'<div class="empty recentItemsEmpty">还没有行程项目</div>';
   document.querySelectorAll('[data-recent-edit]').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const item=items.find(x=>x.id===btn.dataset.recentEdit);
@@ -12367,7 +12611,6 @@ function renderTrip(){
   $('setDays').value=currentTrip.days;
   $('setPeople').value=currentTrip.people;
   $('setBudget').value=currentTrip.budget_target;
-  $('setRate').value=currentTrip.thb_rate || 0.13;
   $('setCurrentRoute').value=r[activeDay-1] || '';
 
   renderTravelUX();
