@@ -7237,6 +7237,79 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 .aiCompareDays{display:grid;gap:7px;margin-top:8px}.aiCompareDay{padding:8px;border:1px solid var(--rt-border);border-radius:11px;background:var(--rt-surface)}.aiCompareDay>strong{display:block;margin-bottom:5px;font-size:10px}.aiCompareDay>div{display:grid;grid-template-columns:34px minmax(0,1fr);gap:6px;margin-top:3px;font-size:9px}.aiCompareDay span{color:var(--rt-muted)}.aiCompareFoot{margin-top:10px;color:var(--rt-muted);font-size:9px;text-align:center}
 @media(max-width:640px){.aiWorkspaceToolbar{align-items:flex-start}.aiVersionRow{grid-template-columns:24px minmax(0,1fr)}.aiCompareMetric{grid-template-columns:92px minmax(0,1fr) minmax(0,1fr)}.aiCompareMetric>*{padding:7px 6px;font-size:8.7px}.aiCompareHero{grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);padding:9px}.aiCompareVs{width:30px;height:30px}}
 </style>
+
+<style id="roadTripV64TripProfile">
+.tripProfileCard{
+  padding:13px;
+  border:1px solid var(--rt-border);
+  border-radius:18px;
+  background:var(--rt-surface-2);
+}
+.tripProfileHead{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:11px;
+}
+.tripProfileHead strong{display:block;color:var(--rt-text);font-size:14px}
+.tripProfileOptional{
+  padding:4px 7px;border-radius:999px;background:var(--rt-surface);
+  border:1px solid var(--rt-border);color:var(--rt-muted);font-size:8.5px;font-weight:800;
+}
+.tripProfileGrid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;
+}
+.tripProfileHint{
+  margin-top:10px;padding:8px 10px;border-radius:11px;background:var(--rt-surface);
+  color:var(--rt-muted);font-size:9.5px;line-height:1.45;border:1px solid var(--rt-border);
+}
+.tripSettingsProfile{
+  padding:11px;border:1px solid var(--rt-border);border-radius:14px;background:var(--rt-surface-2);
+}
+
+/* Cleaner home template cards */
+.homeTemplatesCard{
+  padding:14px !important;
+}
+.homeTemplateGrid{
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:8px !important;
+}
+.homeTemplateCard{
+  grid-template-columns:38px minmax(0,1fr) 16px !important;
+  min-height:82px;
+  padding:10px !important;
+  border-radius:14px !important;
+  align-items:start !important;
+}
+.homeTemplateEmoji{
+  width:36px !important;height:36px !important;border-radius:11px !important;
+  font-size:17px !important;
+  background:var(--rt-surface) !important;
+}
+.homeTemplateCopy strong{
+  font-size:11.5px !important;line-height:1.25 !important;
+}
+.homeTemplateCopy small{
+  margin-top:3px !important;font-size:8.8px !important;line-height:1.35 !important;
+  white-space:normal !important;display:-webkit-box !important;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
+.homeTemplateCopy>span{
+  display:inline-block !important;margin-top:6px !important;padding:3px 6px !important;
+  border-radius:999px !important;background:var(--rt-surface) !important;border:1px solid var(--rt-border);
+  color:var(--rt-muted) !important;font-size:8px !important;
+}
+.homeTemplateArrow{
+  align-self:center !important;font-size:16px !important;
+}
+
+@media(max-width:760px){
+  .tripProfileGrid{grid-template-columns:1fr}
+  .homeTemplateGrid{grid-template-columns:1fr !important}
+  .homeTemplateCard{
+    grid-template-columns:38px minmax(0,1fr) 16px !important;
+    min-height:70px;padding:9px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -7341,61 +7414,61 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 
       <div class="homeTemplateGrid">
         <button class="homeTemplateCard" type="button" data-home-template="malaysia_drive">
-          <span class="homeTemplateEmoji">🇲🇾🚗</span>
+          <span class="homeTemplateEmoji">🚗</span>
           <span class="homeTemplateCopy">
             <strong>Malaysia Road Trip</strong>
             <small>JB → Melaka → KL → Ipoh → Penang</small>
-            <span>6D5N · 国内自驾</span>
+            <span>Self Drive · 6D5N</span>
           </span>
           <span class="homeTemplateArrow">›</span>
         </button>
 
         <button class="homeTemplateCard" type="button" data-home-template="thailand_drive">
-          <span class="homeTemplateEmoji">🇲🇾🚗🇹🇭</span>
+          <span class="homeTemplateEmoji">🌏</span>
           <span class="homeTemplateCopy">
             <strong>Thailand Cross-border Drive</strong>
             <small>JB → Ipoh → Hat Yai → Krabi → Cameron</small>
-            <span>9D8N · 跨境自驾</span>
+            <span>Cross-border · 9D8N</span>
           </span>
           <span class="homeTemplateArrow">›</span>
         </button>
 
         <button class="homeTemplateCard" type="button" data-home-template="tokyo_flight">
-          <span class="homeTemplateEmoji">✈️🇯🇵</span>
+          <span class="homeTemplateEmoji">✈️</span>
           <span class="homeTemplateCopy">
             <strong>Tokyo City Trip</strong>
             <small>Flight + Train / Metro</small>
-            <span>7D6N · 飞机出国</span>
+            <span>Flight · 7D6N</span>
           </span>
           <span class="homeTemplateArrow">›</span>
         </button>
 
         <button class="homeTemplateCard" type="button" data-home-template="bali_island">
-          <span class="homeTemplateEmoji">✈️🏝️</span>
+          <span class="homeTemplateEmoji">🏝️</span>
           <span class="homeTemplateCopy">
             <strong>Bali Island Trip</strong>
             <small>Beach · Cafe · Culture · Driver / Grab</small>
-            <span>5D4N · 海岛度假</span>
+            <span>Island · 5D4N</span>
           </span>
           <span class="homeTemplateArrow">›</span>
         </button>
 
         <button class="homeTemplateCard" type="button" data-home-template="singapore_weekend">
-          <span class="homeTemplateEmoji">🇸🇬🚆</span>
+          <span class="homeTemplateEmoji">🚆</span>
           <span class="homeTemplateCopy">
             <strong>Singapore Weekend</strong>
             <small>Public Transport · Food · Shopping</small>
-            <span>3D2N · 短途城市游</span>
+            <span>City Break · 3D2N</span>
           </span>
           <span class="homeTemplateArrow">›</span>
         </button>
 
         <button class="homeTemplateCard" type="button" data-home-template="family_flight">
-          <span class="homeTemplateEmoji">👨‍👩‍👧✈️</span>
+          <span class="homeTemplateEmoji">👨‍👩‍👧</span>
           <span class="homeTemplateCopy">
             <strong>Family Overseas Trip</strong>
             <small>轻松节奏 · Kids-friendly · 少走路</small>
-            <span>6D5N · 家庭旅行</span>
+            <span>Family · 6D5N</span>
           </span>
           <span class="homeTemplateArrow">›</span>
         </button>
@@ -7409,7 +7482,7 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.3 · AI PLANNING WORKSPACE · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.4 · TRIP PROFILE + SMART LOCATION · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -7810,6 +7883,26 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
               <label>人数<input id="setPeople" type="number" min="1" max="20"></label>
               <label>共同预算 RM<input id="setBudget" type="number" min="0"></label>
               <label>THB→RM 汇率<input id="setRate" type="number" min="0" step="0.0001"></label>
+              <div class="full tripSettingsProfile">
+                <div class="todayEyebrow">TRIP PROFILE</div>
+                <div class="tripProfileGrid">
+                  <label>出发国家 / 地区<select id="setOriginCountry"></select></label>
+                  <label>出发城市<select id="setOriginCity"></select></label>
+                  <label>目的国家 / 地区<select id="setDestinationCountry"></select></label>
+                  <label>目的城市<select id="setDestinationCity"></select></label>
+                  <label>交通方式
+                    <select id="setTransportMode">
+                      <option value="undecided">🤔 还没决定</option>
+                      <option value="self_drive">🚗 自驾</option>
+                      <option value="flight">✈️ 飞机</option>
+                      <option value="public_transport">🚆 公共交通</option>
+                      <option value="mixed">🔀 Mixed</option>
+                    </select>
+                  </label>
+                  <label>开始日期<input id="setTripStartDate" type="date"></label>
+                  <label>结束日期<input id="setTripEndDate" type="date"></label>
+                </div>
+              </div>
               <label class="full">当前 Day 路线<input id="setCurrentRoute"></label>
               <button class="btn primary full" type="submit">保存设置</button>
             </form>
@@ -7971,6 +8064,71 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
         <input id="newBudget" type="number" min="0" value="5500">
       </label>
 
+      <div class="full tripProfileCard">
+        <div class="tripProfileHead">
+          <div>
+            <div class="fxEyebrow">TRIP PROFILE</div>
+            <strong>这趟旅行从哪里去哪里？</strong>
+          </div>
+          <span class="tripProfileOptional">可留空</span>
+        </div>
+
+        <div class="tripProfileGrid">
+          <label>出发国家 / 地区
+            <select id="newOriginCountry">
+              <option value="">还没决定</option>
+            </select>
+          </label>
+
+          <label>出发城市
+            <select id="newOriginCity">
+              <option value="">先选国家</option>
+            </select>
+          </label>
+
+          <label>目的国家 / 地区
+            <select id="newDestinationCountry">
+              <option value="">还没决定</option>
+            </select>
+          </label>
+
+          <label>目的城市
+            <select id="newDestinationCity">
+              <option value="">先选国家</option>
+            </select>
+          </label>
+
+          <label>主要交通方式
+            <select id="newTransportMode">
+              <option value="undecided" selected>🤔 还没决定</option>
+              <option value="self_drive">🚗 自驾</option>
+              <option value="flight">✈️ 飞机</option>
+              <option value="public_transport">🚆 公共交通</option>
+              <option value="mixed">🔀 Mixed</option>
+            </select>
+          </label>
+
+          <label>日期
+            <select id="newTripDateMode">
+              <option value="none" selected>还没决定</option>
+              <option value="fixed">📅 已确定</option>
+            </select>
+          </label>
+
+          <label class="tripProfileDate hide" id="newTripStartWrap">出发日期
+            <input id="newTripStartDate" type="date">
+          </label>
+
+          <label class="tripProfileDate hide" id="newTripEndWrap">结束日期
+            <input id="newTripEndDate" type="date">
+          </label>
+        </div>
+
+        <div class="tripProfileHint" id="tripProfileHint">
+          不选也可以直接建立 Blank Trip；以后可以在 Trip Info 修改。
+        </div>
+      </div>
+
       <div class="full fxCard">
         <div class="fxHead">
           <div>
@@ -7981,7 +8139,7 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
         </div>
 
         <div class="fxPairGrid">
-          <label>旅行消费国家
+          <label>目的地消费币种
             <select id="newFromCurrency">
               <option value="THB" selected>🇹🇭 Thailand · THB</option>
               <option value="MYR">🇲🇾 Malaysia · MYR</option>
@@ -8002,7 +8160,7 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
             </select>
           </label>
 
-          <label>记账 / 结算国家
+          <label>记账 / 结算币种
             <select id="newToCurrency">
               <option value="MYR" selected>🇲🇾 Malaysia · MYR</option>
               <option value="THB">🇹🇭 Thailand · THB</option>
@@ -8624,6 +8782,30 @@ async function init(){
   $('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut()});
   $('backHomeBtn').addEventListener('click',async()=>{cleanupChannel();currentTrip=null;if(mobileBar) mobileBar.classList.add('hide');await openHome()});
   $('createTripForm').addEventListener('submit',createTrip);
+
+  $('settingsForm')?.addEventListener('submit',async()=>{
+    if(!currentTrip) return;
+
+    const patch={
+      origin_country:$('setOriginCountry')?.value||null,
+      origin_city:$('setOriginCity')?.value||null,
+      destination_country:$('setDestinationCountry')?.value||null,
+      destination_city:$('setDestinationCity')?.value||null,
+      transport_mode:$('setTransportMode')?.value||'undecided',
+      start_date:$('setTripStartDate')?.value||null,
+      end_date:$('setTripEndDate')?.value||null
+    };
+
+    const {error}=await sb.from('trips').update(patch).eq('id',currentTrip.id);
+
+    if(error){
+      toast('Trip Profile 保存失败：'+error.message,'err');
+      return;
+    }
+
+    Object.assign(currentTrip,patch);
+  });
+
   $('joinTripForm').addEventListener('submit',joinTrip);
   $('openCreateTripBtn')?.addEventListener('click',openCreateTripDialog);
   document.querySelectorAll('[data-home-template]').forEach(btn=>{
@@ -8683,6 +8865,7 @@ async function init(){
     renderBudgetHub(actual,remain);
   renderBlankTripStarter();
   renderAIDrafts();
+  fillTripSettingsProfile();
   });
   $('cancelExpenseBtn').addEventListener('click',()=>$('expenseDialog').close());
   $('expenseForm').addEventListener('submit',saveExpense);
@@ -8828,6 +9011,7 @@ async function init(){
   });
 
   initThemePreference();
+  initTripProfileControls();
 
   document.querySelectorAll('.themeToggle').forEach(btn=>{
     btn.addEventListener('click',()=>{
@@ -9025,60 +9209,262 @@ async function refreshCreateTripFx(){
 }
 
 
+
+const TRIP_LOCATIONS = {
+  "Malaysia": {
+    currency:"MYR",
+    cities:["Johor Bahru","Kuala Lumpur","Melaka","Ipoh","Penang","Kota Kinabalu","Kuching","Cameron Highlands","Langkawi","Genting Highlands"]
+  },
+  "Thailand": {
+    currency:"THB",
+    cities:["Bangkok","Hat Yai","Krabi","Phuket","Chiang Mai","Pattaya","Songkhla","Hua Hin","Koh Samui"]
+  },
+  "Singapore": {
+    currency:"SGD",
+    cities:["Singapore"]
+  },
+  "Japan": {
+    currency:"JPY",
+    cities:["Tokyo","Osaka","Kyoto","Sapporo","Fukuoka","Nagoya","Okinawa","Kobe","Nara"]
+  },
+  "South Korea": {
+    currency:"KRW",
+    cities:["Seoul","Busan","Jeju","Incheon","Daegu"]
+  },
+  "Indonesia": {
+    currency:"IDR",
+    cities:["Bali","Jakarta","Bandung","Yogyakarta","Surabaya","Lombok"]
+  },
+  "Vietnam": {
+    currency:"VND",
+    cities:["Ho Chi Minh City","Hanoi","Da Nang","Hoi An","Nha Trang","Phu Quoc"]
+  },
+  "China": {
+    currency:"CNY",
+    cities:["Shanghai","Beijing","Guangzhou","Shenzhen","Chengdu","Chongqing","Hangzhou","Qingdao"]
+  },
+  "Taiwan": {
+    currency:"TWD",
+    cities:["Taipei","Taichung","Kaohsiung","Tainan","Hualien"]
+  },
+  "Hong Kong": {
+    currency:"HKD",
+    cities:["Hong Kong"]
+  },
+  "Australia": {
+    currency:"AUD",
+    cities:["Sydney","Melbourne","Perth","Brisbane","Gold Coast"]
+  },
+  "New Zealand": {
+    currency:"NZD",
+    cities:["Auckland","Queenstown","Christchurch","Wellington"]
+  },
+  "United Kingdom": {
+    currency:"GBP",
+    cities:["London","Manchester","Edinburgh","Liverpool"]
+  },
+  "United States": {
+    currency:"USD",
+    cities:["New York","Los Angeles","San Francisco","Las Vegas","Honolulu","Orlando"]
+  },
+  "France": {
+    currency:"EUR",
+    cities:["Paris","Nice","Lyon"]
+  },
+  "Italy": {
+    currency:"EUR",
+    cities:["Rome","Milan","Venice","Florence"]
+  },
+  "Spain": {
+    currency:"EUR",
+    cities:["Barcelona","Madrid","Seville"]
+  },
+  "Germany": {
+    currency:"EUR",
+    cities:["Berlin","Munich","Frankfurt"]
+  },
+  "Other / Custom": {
+    currency:"",
+    cities:["Other / Custom"]
+  }
+};
+
+const TRANSPORT_TO_AI = {
+  undecided:"auto",
+  self_drive:"self_drive",
+  flight:"flight",
+  public_transport:"public_transport",
+  mixed:"mixed"
+};
+
+function populateCountrySelect(selectId,selected=''){
+  const el=$(selectId);
+  if(!el) return;
+  el.innerHTML='<option value="">还没决定</option>'+
+    Object.keys(TRIP_LOCATIONS).map(country=>
+      `<option value="${escapeHtml(country)}">${escapeHtml(country)}</option>`
+    ).join('');
+  el.value=selected||'';
+}
+
+function populateCitySelect(selectId,country,selected=''){
+  const el=$(selectId);
+  if(!el) return;
+
+  if(!country){
+    el.innerHTML='<option value="">先选国家</option>';
+    el.value='';
+    return;
+  }
+
+  const cities=TRIP_LOCATIONS[country]?.cities||["Other / Custom"];
+  el.innerHTML='<option value="">还没决定</option>'+
+    cities.map(city=>`<option value="${escapeHtml(city)}">${escapeHtml(city)}</option>`).join('');
+  el.value=cities.includes(selected)?selected:'';
+}
+
+function countryCurrency(country){
+  return TRIP_LOCATIONS[country]?.currency||'';
+}
+
+function syncCreateTripCurrencyFromDestination(){
+  const country=$('newDestinationCountry')?.value||'';
+  const currency=countryCurrency(country);
+
+  if(currency && $('newFromCurrency')){
+    $('newFromCurrency').value=currency;
+  }
+
+  // For this app the user's accounting/base currency defaults to MYR.
+  if($('newToCurrency')){
+    $('newToCurrency').value='MYR';
+  }
+
+  if(currency){
+    refreshCreateTripFx();
+  }
+}
+
+function updateCreateTripProfileHint(){
+  const oCountry=$('newOriginCountry')?.value||'';
+  const oCity=$('newOriginCity')?.value||'';
+  const dCountry=$('newDestinationCountry')?.value||'';
+  const dCity=$('newDestinationCity')?.value||'';
+  const transport=$('newTransportMode')?.value||'undecided';
+
+  const labels={
+    undecided:'交通未决定',
+    self_drive:'🚗 自驾',
+    flight:'✈️ 飞机',
+    public_transport:'🚆 公共交通',
+    mixed:'🔀 Mixed'
+  };
+
+  const origin=[oCity,oCountry].filter(Boolean).join(', ');
+  const destination=[dCity,dCountry].filter(Boolean).join(', ');
+  const hint=$('tripProfileHint');
+  if(!hint) return;
+
+  if(!origin && !destination){
+    hint.textContent='不选也可以直接建立 Blank Trip；以后可以在 Trip Info 修改。';
+    return;
+  }
+
+  hint.textContent=`${origin||'未定'} → ${destination||'未定'} · ${labels[transport]||'交通未决定'}`;
+}
+
+function initTripProfileControls(){
+  ['newOriginCountry','newDestinationCountry','setOriginCountry','setDestinationCountry']
+    .forEach(id=>populateCountrySelect(id));
+
+  populateCitySelect('newOriginCity','');
+  populateCitySelect('newDestinationCity','');
+  populateCitySelect('setOriginCity','');
+  populateCitySelect('setDestinationCity','');
+
+  $('newOriginCountry')?.addEventListener('change',()=>{
+    populateCitySelect('newOriginCity',$('newOriginCountry').value);
+    updateCreateTripProfileHint();
+  });
+  $('newOriginCity')?.addEventListener('change',updateCreateTripProfileHint);
+
+  $('newDestinationCountry')?.addEventListener('change',()=>{
+    populateCitySelect('newDestinationCity',$('newDestinationCountry').value);
+    syncCreateTripCurrencyFromDestination();
+    updateCreateTripProfileHint();
+  });
+  $('newDestinationCity')?.addEventListener('change',updateCreateTripProfileHint);
+  $('newTransportMode')?.addEventListener('change',updateCreateTripProfileHint);
+
+  $('newTripDateMode')?.addEventListener('change',()=>{
+    const fixed=$('newTripDateMode').value==='fixed';
+    $('newTripStartWrap')?.classList.toggle('hide',!fixed);
+    $('newTripEndWrap')?.classList.toggle('hide',!fixed);
+  });
+
+  $('setOriginCountry')?.addEventListener('change',()=>{
+    populateCitySelect('setOriginCity',$('setOriginCountry').value);
+  });
+  $('setDestinationCountry')?.addEventListener('change',()=>{
+    populateCitySelect('setDestinationCity',$('setDestinationCountry').value);
+  });
+}
+
+function fillTripSettingsProfile(){
+  if(!currentTrip) return;
+
+  populateCountrySelect('setOriginCountry',currentTrip.origin_country||'');
+  populateCitySelect('setOriginCity',currentTrip.origin_country||'',currentTrip.origin_city||'');
+  populateCountrySelect('setDestinationCountry',currentTrip.destination_country||'');
+  populateCitySelect('setDestinationCity',currentTrip.destination_country||'',currentTrip.destination_city||'');
+
+  if($('setTransportMode')){
+    $('setTransportMode').value=currentTrip.transport_mode||'undecided';
+  }
+  if($('setTripStartDate')){
+    $('setTripStartDate').value=currentTrip.start_date||'';
+  }
+  if($('setTripEndDate')){
+    $('setTripEndDate').value=currentTrip.end_date||'';
+  }
+}
+
 const HOME_TRIP_TEMPLATES={
   malaysia_drive:{
-    title:'🇲🇾 Malaysia Road Trip',
-    days:6,
-    people:4,
-    budget:4500,
-    spendCurrency:'MYR',
-    settleCurrency:'MYR',
-    rate:1
+    title:'🇲🇾 Malaysia Road Trip',days:6,people:4,budget:4500,
+    originCountry:'Malaysia',originCity:'Johor Bahru',
+    destinationCountry:'Malaysia',destinationCity:'Penang',
+    transport:'self_drive'
   },
   thailand_drive:{
-    title:'🇲🇾🚗🇹🇭 Thailand Cross-border Road Trip',
-    days:9,
-    people:4,
-    budget:6000,
-    spendCurrency:'THB',
-    settleCurrency:'MYR',
-    rate:0.13
+    title:'🇹🇭 Thailand Cross-border Trip',days:9,people:4,budget:6000,
+    originCountry:'Malaysia',originCity:'Johor Bahru',
+    destinationCountry:'Thailand',destinationCity:'Krabi',
+    transport:'self_drive'
   },
   tokyo_flight:{
-    title:'✈️🇯🇵 Tokyo City Trip',
-    days:7,
-    people:4,
-    budget:9000,
-    spendCurrency:'JPY',
-    settleCurrency:'MYR',
-    rate:0.03
+    title:'🇯🇵 Tokyo City Trip',days:7,people:4,budget:9000,
+    originCountry:'Malaysia',originCity:'Johor Bahru',
+    destinationCountry:'Japan',destinationCity:'Tokyo',
+    transport:'flight'
   },
   bali_island:{
-    title:'✈️🏝️ Bali Island Trip',
-    days:5,
-    people:4,
-    budget:6500,
-    spendCurrency:'IDR',
-    settleCurrency:'MYR',
-    rate:0.00028
+    title:'🏝️ Bali Island Trip',days:5,people:4,budget:6500,
+    originCountry:'Malaysia',originCity:'Johor Bahru',
+    destinationCountry:'Indonesia',destinationCity:'Bali',
+    transport:'flight'
   },
   singapore_weekend:{
-    title:'🇸🇬 Singapore Weekend Trip',
-    days:3,
-    people:4,
-    budget:3000,
-    spendCurrency:'SGD',
-    settleCurrency:'MYR',
-    rate:3.3
+    title:'🇸🇬 Singapore Weekend',days:3,people:4,budget:3000,
+    originCountry:'Malaysia',originCity:'Johor Bahru',
+    destinationCountry:'Singapore',destinationCity:'Singapore',
+    transport:'public_transport'
   },
   family_flight:{
-    title:'👨‍👩‍👧 Family Overseas Trip',
-    days:6,
-    people:4,
-    budget:9000,
-    spendCurrency:'JPY',
-    settleCurrency:'MYR',
-    rate:0.03
+    title:'👨‍👩‍👧 Family Overseas Trip',days:6,people:4,budget:9000,
+    originCountry:'Malaysia',originCity:'Johor Bahru',
+    destinationCountry:'Japan',destinationCity:'Osaka',
+    transport:'flight'
   }
 };
 
@@ -9091,24 +9477,37 @@ function applyHomeTripTemplate(key){
   $('newPeople').value=preset.people;
   $('newBudget').value=preset.budget;
 
-  if($('newFromCurrency')){
-    $('newFromCurrency').value=preset.spendCurrency;
-  }
-  if($('newToCurrency')){
-    $('newToCurrency').value=preset.settleCurrency;
-  }
-  if($('newRate')){
-    $('newRate').value=String(preset.rate);
-  }
+  populateCountrySelect('newOriginCountry',preset.originCountry);
+  populateCitySelect('newOriginCity',preset.originCountry,preset.originCity);
+  populateCountrySelect('newDestinationCountry',preset.destinationCountry);
+  populateCitySelect('newDestinationCity',preset.destinationCountry,preset.destinationCity);
+
+  $('newTransportMode').value=preset.transport||'undecided';
+  $('newTripDateMode').value='none';
+  $('newTripStartWrap')?.classList.add('hide');
+  $('newTripEndWrap')?.classList.add('hide');
+
+  syncCreateTripCurrencyFromDestination();
+  updateCreateTripProfileHint();
 
   $('createTripDialog').showModal();
-
-  requestAnimationFrame(()=>{
-    refreshCreateTripFx();
-  });
 }
 
 function openCreateTripDialog(){
+  populateCountrySelect('newOriginCountry','');
+  populateCitySelect('newOriginCity','');
+  populateCountrySelect('newDestinationCountry','');
+  populateCitySelect('newDestinationCity','');
+
+  if($('newTransportMode')) $('newTransportMode').value='undecided';
+  if($('newTripDateMode')) $('newTripDateMode').value='none';
+  $('newTripStartWrap')?.classList.add('hide');
+  $('newTripEndWrap')?.classList.add('hide');
+  if($('newTripStartDate')) $('newTripStartDate').value='';
+  if($('newTripEndDate')) $('newTripEndDate').value='';
+
+  updateCreateTripProfileHint();
+
   $('createTripDialog').showModal();
   requestAnimationFrame(()=>refreshCreateTripFx());
 }
@@ -9132,9 +9531,35 @@ async function createTrip(e){
   const row=Array.isArray(data)?data[0]:data;
   const rate=Number($('newRate').value||0.13);
 
-  await sb.from('trips')
-    .update({thb_rate:rate})
+  const startDate=$('newTripDateMode')?.value==='fixed'
+    ? ($('newTripStartDate')?.value||null)
+    : null;
+
+  const endDate=$('newTripDateMode')?.value==='fixed'
+    ? ($('newTripEndDate')?.value||null)
+    : null;
+
+  const patch={
+    thb_rate:rate,
+    origin_country:$('newOriginCountry')?.value||null,
+    origin_city:$('newOriginCity')?.value||null,
+    destination_country:$('newDestinationCountry')?.value||null,
+    destination_city:$('newDestinationCity')?.value||null,
+    transport_mode:$('newTransportMode')?.value||'undecided',
+    start_date:startDate,
+    end_date:endDate,
+    spend_currency:$('newFromCurrency')?.value||null,
+    settle_currency:$('newToCurrency')?.value||'MYR'
+  };
+
+  const {error:updateError}=await sb
+    .from('trips')
+    .update(patch)
     .eq('id',row.trip_id);
+
+  if(updateError){
+    toast('Trip 已建立，但 Profile 保存失败：'+updateError.message,'err');
+  }
 
   $('createTripDialog')?.close();
   await openTrip(row.trip_id);
@@ -9984,8 +10409,45 @@ function openAIDraft(id){
 
 function openAIPlanner(){
   if(!currentTrip) return;
+
   resetAIPlannerUi();
-  fillAIPlannerForm({});
+
+  const origin=[
+    currentTrip.origin_city,
+    currentTrip.origin_country
+  ].filter(Boolean).join(', ');
+
+  const destination=[
+    currentTrip.destination_city,
+    currentTrip.destination_country
+  ].filter(Boolean).join(', ');
+
+  const transport=TRANSPORT_TO_AI[currentTrip.transport_mode||'undecided']||'auto';
+
+  const request={
+    origin,
+    destination,
+    days:Number(currentTrip.days||1),
+    people:Number(currentTrip.people||1),
+    budget_rm:Number(currentTrip.budget_target||0),
+    style:'balanced',
+    transport_mode:transport,
+    date_mode:(currentTrip.start_date||currentTrip.end_date)?'fixed':'ai_recommend',
+    start_date:currentTrip.start_date||'',
+    end_date:currentTrip.end_date||'',
+    preferred_month:'',
+    hotel_level:'mid_range',
+    interests:['food'],
+    avoid:[]
+  };
+
+  fillAIPlannerForm(request);
+
+  $('aiPlannerState').innerHTML=
+    (origin||destination)
+      ? '<div class="saveState success">📍 已自动读取这趟 Trip 的出发地 / 目的地 / 交通方式。你仍然可以在这里临时修改。</div>'
+      : '<div class="saveState saving">这趟 Trip 还没有设定地区。可以先在 AI Planner 选择，或之后去 Trip Info 设置。</div>';
+
   $('aiPlannerDialog').showModal();
 }
 
