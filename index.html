@@ -7366,6 +7366,112 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 }
 </style>
 
+
+<style id="roadTripV65MultiStop">
+.multiStopBlock{
+  padding:10px;
+  border:1px solid var(--rt-border);
+  border-radius:14px;
+  background:var(--rt-surface);
+}
+
+.multiStopHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+
+.multiStopHead strong{
+  display:block;
+  margin-top:2px;
+  color:var(--rt-text);
+  font-size:12px;
+}
+
+.multiStopAddBtn{
+  flex:0 0 auto;
+  min-height:34px;
+  padding:6px 9px;
+  font-size:9px;
+}
+
+.multiStopList{
+  display:grid;
+  gap:7px;
+}
+
+.multiStopEmpty{
+  padding:9px;
+  border:1px dashed var(--rt-border);
+  border-radius:11px;
+  color:var(--rt-muted);
+  font-size:9px;
+  text-align:center;
+}
+
+.multiStopRow{
+  display:grid;
+  grid-template-columns:28px minmax(0,1fr) minmax(0,1fr) 34px;
+  align-items:end;
+  gap:7px;
+  padding:8px;
+  border:1px solid var(--rt-border);
+  border-radius:12px;
+  background:var(--rt-surface-2);
+}
+
+.multiStopOrder{
+  width:26px;
+  height:26px;
+  display:grid;
+  place-items:center;
+  align-self:center;
+  border-radius:9px;
+  background:var(--rt-surface);
+  border:1px solid var(--rt-border);
+  color:var(--rt-muted);
+  font-size:9px;
+  font-weight:900;
+}
+
+.multiStopRow label{
+  margin:0;
+}
+
+.multiStopRemoveBtn{
+  width:34px;
+  min-width:34px;
+  height:40px;
+  padding:0;
+  align-self:end;
+  color:#d54a5c;
+}
+
+@media(max-width:640px){
+  .multiStopRow{
+    grid-template-columns:26px minmax(0,1fr) 34px;
+  }
+
+  .multiStopRow label:nth-of-type(1),
+  .multiStopRow label:nth-of-type(2){
+    grid-column:2;
+  }
+
+  .multiStopRemoveBtn{
+    grid-column:3;
+    grid-row:1 / span 2;
+    align-self:center;
+  }
+
+  .multiStopOrder{
+    grid-column:1;
+    grid-row:1 / span 2;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -7538,7 +7644,7 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.4.2 · AUTO FX FIX · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.5 · MULTI-STOP TRIPS · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -7952,6 +8058,16 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
                   <label>出发城市<select id="setOriginCity"></select></label>
                   <label>目的国家 / 地区<select id="setDestinationCountry"></select></label>
                   <label>目的城市<select id="setDestinationCity"></select></label>
+                  <div class="full multiStopBlock">
+                    <div class="multiStopHead">
+                      <div>
+                        <div class="todayEyebrow">EXTRA STOPS</div>
+                        <strong>额外目的地 / 中途站</strong>
+                      </div>
+                      <button class="ghost multiStopAddBtn" type="button" id="addSetExtraDestinationBtn">＋ 添加</button>
+                    </div>
+                    <div class="multiStopList" id="setExtraDestinationsList"></div>
+                  </div>
 
                   <label>主要交通方式
                     <select id="setTransportMode">
@@ -8214,6 +8330,18 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
               <option value="">先选国家</option>
             </select>
           </label>
+
+          <div class="full multiStopBlock">
+            <div class="multiStopHead">
+              <div>
+                <div class="fxEyebrow">EXTRA STOPS</div>
+                <strong>额外目的地 / 中途站</strong>
+              </div>
+              <button class="ghost multiStopAddBtn" type="button" id="addNewExtraDestinationBtn">＋ 添加</button>
+            </div>
+            <div class="multiStopList" id="newExtraDestinationsList"></div>
+            <div class="tripProfileHint">可以加多个国家或城市，顺序就是旅行路线顺序。</div>
+          </div>
 
           <label>主要交通方式
             <select id="newTransportMode">
@@ -8908,6 +9036,7 @@ async function init(){
       origin_city:$('setOriginCity')?.value||null,
       destination_country:$('setDestinationCountry')?.value||null,
       destination_city:$('setDestinationCity')?.value||null,
+      extra_destinations:currentSetExtraDestinations(),
       transport_mode:$('setTransportMode')?.value||'undecided',
       start_date:$('setTripStartDate')?.value||null,
       end_date:$('setTripEndDate')?.value||null,
@@ -9513,6 +9642,151 @@ const TRANSPORT_TO_AI = {
   mixed:"mixed"
 };
 
+
+let newExtraDestinations=[];
+let setExtraDestinations=[];
+
+function sanitizeExtraDestinations(value){
+  if(!Array.isArray(value)) return [];
+  return value
+    .map(x=>({
+      country:String(x?.country||'').trim(),
+      city:String(x?.city||'').trim()
+    }))
+    .filter(x=>x.country||x.city);
+}
+
+function countryOptionsHtml(selected=''){
+  return '<option value="">还没决定</option>'+
+    Object.keys(TRIP_LOCATIONS).map(country=>
+      `<option value="${escapeHtml(country)}"${country===selected?' selected':''}>${escapeHtml(country)}</option>`
+    ).join('');
+}
+
+function cityOptionsHtml(country,selected=''){
+  if(!country){
+    return '<option value="">先选国家</option>';
+  }
+  const cities=TRIP_LOCATIONS[country]?.cities||['Other / Custom'];
+  return '<option value="">还没决定</option>'+
+    cities.map(city=>
+      `<option value="${escapeHtml(city)}"${city===selected?' selected':''}>${escapeHtml(city)}</option>`
+    ).join('');
+}
+
+function extraDestinationRowHtml(item,index,scope){
+  return `<div class="multiStopRow" data-extra-stop-row="${scope}-${index}">
+    <div class="multiStopOrder">${index+2}</div>
+    <label>国家 / 地区
+      <select data-extra-country="${scope}" data-extra-index="${index}">
+        ${countryOptionsHtml(item.country||'')}
+      </select>
+    </label>
+    <label>城市
+      <select data-extra-city="${scope}" data-extra-index="${index}">
+        ${cityOptionsHtml(item.country||'',item.city||'')}
+      </select>
+    </label>
+    <button type="button" class="ghost multiStopRemoveBtn" data-extra-remove="${scope}" data-extra-index="${index}" aria-label="删除目的地">✕</button>
+  </div>`;
+}
+
+function renderExtraDestinations(scope){
+  const isNew=scope==='new';
+  const list=isNew?newExtraDestinations:setExtraDestinations;
+  const host=$(isNew?'newExtraDestinationsList':'setExtraDestinationsList');
+  if(!host) return;
+
+  host.innerHTML=list.length
+    ? list.map((item,index)=>extraDestinationRowHtml(item,index,scope)).join('')
+    : '<div class="multiStopEmpty">还没有额外目的地。</div>';
+
+  host.querySelectorAll(`[data-extra-country="${scope}"]`).forEach(select=>{
+    select.addEventListener('change',()=>{
+      const index=Number(select.dataset.extraIndex);
+      const arr=isNew?newExtraDestinations:setExtraDestinations;
+      if(!arr[index]) return;
+      arr[index].country=select.value;
+      arr[index].city='';
+      renderExtraDestinations(scope);
+
+      if(isNew){
+        updateCreateTripProfileHint();
+      }else{
+        updateSharedTripProfileHint();
+      }
+    });
+  });
+
+  host.querySelectorAll(`[data-extra-city="${scope}"]`).forEach(select=>{
+    select.addEventListener('change',()=>{
+      const index=Number(select.dataset.extraIndex);
+      const arr=isNew?newExtraDestinations:setExtraDestinations;
+      if(!arr[index]) return;
+      arr[index].city=select.value;
+
+      if(isNew){
+        updateCreateTripProfileHint();
+      }else{
+        updateSharedTripProfileHint();
+      }
+    });
+  });
+
+  host.querySelectorAll(`[data-extra-remove="${scope}"]`).forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const index=Number(btn.dataset.extraIndex);
+      const arr=isNew?newExtraDestinations:setExtraDestinations;
+      arr.splice(index,1);
+      renderExtraDestinations(scope);
+
+      if(isNew){
+        updateCreateTripProfileHint();
+      }else{
+        updateSharedTripProfileHint();
+      }
+    });
+  });
+}
+
+function addExtraDestination(scope,preset=null){
+  const arr=scope==='new'?newExtraDestinations:setExtraDestinations;
+  arr.push({
+    country:String(preset?.country||''),
+    city:String(preset?.city||'')
+  });
+  renderExtraDestinations(scope);
+}
+
+function destinationLabel(item){
+  return [item?.city,item?.country].filter(Boolean).join(', ');
+}
+
+function buildTripRouteLabels(originCountry,originCity,destinationCountry,destinationCity,extras=[]){
+  const route=[];
+
+  const origin=[originCity,originCountry].filter(Boolean).join(', ');
+  const primary=[destinationCity,destinationCountry].filter(Boolean).join(', ');
+
+  if(origin) route.push(origin);
+  if(primary) route.push(primary);
+
+  sanitizeExtraDestinations(extras).forEach(stop=>{
+    const label=destinationLabel(stop);
+    if(label) route.push(label);
+  });
+
+  return route;
+}
+
+function currentCreateExtraDestinations(){
+  return sanitizeExtraDestinations(newExtraDestinations);
+}
+
+function currentSetExtraDestinations(){
+  return sanitizeExtraDestinations(setExtraDestinations);
+}
+
 function populateCountrySelect(selectId,selected=''){
   const el=$(selectId);
   if(!el) return;
@@ -9576,17 +9850,19 @@ function updateCreateTripProfileHint(){
     mixed:'🔀 Mixed'
   };
 
-  const origin=[oCity,oCountry].filter(Boolean).join(', ');
-  const destination=[dCity,dCountry].filter(Boolean).join(', ');
+  const route=buildTripRouteLabels(
+    oCountry,oCity,dCountry,dCity,currentCreateExtraDestinations()
+  );
+
   const hint=$('tripProfileHint');
   if(!hint) return;
 
-  if(!origin && !destination){
+  if(!route.length){
     hint.textContent='不选也可以直接建立 Blank Trip；以后可以在 Trip Info 修改。';
     return;
   }
 
-  hint.textContent=`${origin||'未定'} → ${destination||'未定'} · ${labels[transport]||'交通未决定'}`;
+  hint.textContent=`${route.join(' → ')} · ${labels[transport]||'交通未决定'}`;
 }
 
 function initTripProfileControls(){
@@ -9597,6 +9873,16 @@ function initTripProfileControls(){
   populateCitySelect('newDestinationCity','');
   populateCitySelect('setOriginCity','');
   populateCitySelect('setDestinationCity','');
+
+  $('addNewExtraDestinationBtn')?.addEventListener('click',()=>{
+    addExtraDestination('new');
+    updateCreateTripProfileHint();
+  });
+
+  $('addSetExtraDestinationBtn')?.addEventListener('click',()=>{
+    addExtraDestination('set');
+    updateSharedTripProfileHint();
+  });
 
   $('newOriginCountry')?.addEventListener('change',()=>{
     populateCitySelect('newOriginCity',$('newOriginCountry').value);
@@ -9642,12 +9928,14 @@ function updateSharedTripProfileHint(){
     mixed:'🔀 Mixed'
   };
 
-  const origin=[oCity,oCountry].filter(Boolean).join(', ');
-  const destination=[dCity,dCountry].filter(Boolean).join(', ');
+  const route=buildTripRouteLabels(
+    oCountry,oCity,dCountry,dCity,currentSetExtraDestinations()
+  );
+
   const hint=$('setTripProfileHint');
   if(!hint) return;
 
-  hint.textContent=`${origin||'未设定出发地'} → ${destination||'未设定目的地'} · ${labels[transport]||'交通未决定'}`;
+  hint.textContent=`${route.length?route.join(' → '):'尚未设定路线'} · ${labels[transport]||'交通未决定'}`;
 }
 
 async function refreshSharedTripFx(){
@@ -9681,6 +9969,9 @@ function fillTripSettingsProfile(){
   populateCountrySelect('setDestinationCountry',currentTrip.destination_country||'');
   populateCitySelect('setDestinationCity',currentTrip.destination_country||'',currentTrip.destination_city||'');
 
+  setExtraDestinations=sanitizeExtraDestinations(currentTrip.extra_destinations||[]);
+  renderExtraDestinations('set');
+
   if($('setTransportMode')){
     $('setTransportMode').value=currentTrip.transport_mode||'undecided';
   }
@@ -9707,13 +9998,23 @@ const HOME_TRIP_TEMPLATES={
   malaysia_drive:{
     title:'🇲🇾 Malaysia Road Trip',days:6,people:4,budget:4500,
     originCountry:'Malaysia',originCity:'Johor Bahru',
-    destinationCountry:'Malaysia',destinationCity:'Penang',
+    destinationCountry:'Malaysia',destinationCity:'Melaka',
+    extras:[
+      {country:'Malaysia',city:'Kuala Lumpur'},
+      {country:'Malaysia',city:'Ipoh'},
+      {country:'Malaysia',city:'Penang'}
+    ],
     transport:'self_drive'
   },
   thailand_drive:{
     title:'🇹🇭 Thailand Cross-border Trip',days:9,people:4,budget:6000,
     originCountry:'Malaysia',originCity:'Johor Bahru',
-    destinationCountry:'Thailand',destinationCity:'Krabi',
+    destinationCountry:'Malaysia',destinationCity:'Ipoh',
+    extras:[
+      {country:'Thailand',city:'Hat Yai'},
+      {country:'Thailand',city:'Krabi'},
+      {country:'Malaysia',city:'Cameron Highlands'}
+    ],
     transport:'self_drive'
   },
   tokyo_flight:{
@@ -9756,6 +10057,9 @@ function applyHomeTripTemplate(key){
   populateCountrySelect('newDestinationCountry',preset.destinationCountry);
   populateCitySelect('newDestinationCity',preset.destinationCountry,preset.destinationCity);
 
+  newExtraDestinations=sanitizeExtraDestinations(preset.extras||[]);
+  renderExtraDestinations('new');
+
   $('newTransportMode').value=preset.transport||'undecided';
   $('newTripDateMode').value='none';
   $('newTripStartWrap')?.classList.add('hide');
@@ -9772,6 +10076,9 @@ function openCreateTripDialog(){
   populateCitySelect('newOriginCity','');
   populateCountrySelect('newDestinationCountry','');
   populateCitySelect('newDestinationCity','');
+
+  newExtraDestinations=[];
+  renderExtraDestinations('new');
 
   if($('newTransportMode')) $('newTransportMode').value='undecided';
   if($('newTripDateMode')) $('newTripDateMode').value='none';
@@ -9819,6 +10126,7 @@ async function createTrip(e){
     origin_city:$('newOriginCity')?.value||null,
     destination_country:$('newDestinationCountry')?.value||null,
     destination_city:$('newDestinationCity')?.value||null,
+    extra_destinations:currentCreateExtraDestinations(),
     transport_mode:$('newTransportMode')?.value||'undecided',
     start_date:startDate,
     end_date:endDate,
@@ -10691,10 +10999,15 @@ function openAIPlanner(){
     currentTrip.origin_country
   ].filter(Boolean).join(', ');
 
-  const destination=[
+  const destinationRoute=buildTripRouteLabels(
+    '',
+    '',
+    currentTrip.destination_country,
     currentTrip.destination_city,
-    currentTrip.destination_country
-  ].filter(Boolean).join(', ');
+    currentTrip.extra_destinations||[]
+  );
+
+  const destination=destinationRoute.join(' → ');
 
   const transport=TRANSPORT_TO_AI[currentTrip.transport_mode||'undecided']||'auto';
 
