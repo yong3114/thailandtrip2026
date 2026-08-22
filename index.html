@@ -7228,6 +7228,15 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 }
 </style>
 
+<style id="roadTripV63AIWorkspace">
+.aiWorkspaceToolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 2px 2px}.aiCompareBtn{min-width:112px}.aiCompareBtn:disabled{opacity:.45}
+.aiWorkspaceSection{margin-top:10px}.aiWorkspaceSectionHead{display:flex;align-items:center;justify-content:space-between;padding:0 2px 5px;color:var(--rt-text-2);font-size:10px;font-weight:900}.aiWorkspaceSectionHead span{min-width:22px;height:22px;display:grid;place-items:center;border-radius:999px;background:var(--rt-surface-2);border:1px solid var(--rt-border);color:var(--rt-muted);font-size:9px}
+.aiVersionRow{display:grid;grid-template-columns:26px minmax(0,1fr);gap:4px 6px;margin-top:7px;padding:7px;border:1px solid var(--rt-border);border-radius:14px;background:var(--rt-surface-2)}.aiVersionCompare{display:grid;place-items:center}.aiVersionCompare input{width:16px;height:16px;margin:0}.aiVersionMain{min-width:0;width:100%;display:grid;grid-template-columns:32px minmax(0,1fr) 18px;align-items:center;gap:8px;padding:3px;border:0;background:transparent;color:var(--rt-text);text-align:left}.aiVersionActions{grid-column:2;display:flex;justify-content:flex-end;gap:5px;padding-top:3px}.aiVersionActions button{min-height:30px;padding:5px 8px;font-size:9px}
+.aiCompareModal{width:min(760px,calc(100vw - 24px));max-height:min(88vh,860px);overflow:auto}.aiCompareHero{display:grid;grid-template-columns:minmax(0,1fr) 42px minmax(0,1fr);align-items:center;gap:8px;margin-top:12px;padding:12px;border:1px solid var(--rt-border);border-radius:16px;background:var(--rt-surface-2)}.aiCompareHero>div:not(.aiCompareVs){min-width:0;text-align:center}.aiCompareHero h3{margin:3px 0;font-size:18px}.aiCompareHero span{display:block;color:var(--rt-muted);font-size:9.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.aiCompareVs{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:var(--rt-surface);border:1px solid var(--rt-border);color:var(--rt-muted);font-size:10px;font-weight:900}
+.aiCompareTable{margin-top:10px;border:1px solid var(--rt-border);border-radius:15px;overflow:hidden}.aiCompareMetric{display:grid;grid-template-columns:150px minmax(0,1fr) minmax(0,1fr);border-bottom:1px solid var(--rt-border)}.aiCompareMetric:last-child{border-bottom:0}.aiCompareMetric>*{padding:9px;border-right:1px solid var(--rt-border);font-size:9.5px;line-height:1.4}.aiCompareMetric>*:last-child{border-right:0}.aiCompareMetric strong{background:var(--rt-surface-2);color:var(--rt-text-2)}.aiCompareMetric span{color:var(--rt-text)}
+.aiCompareDays{display:grid;gap:7px;margin-top:8px}.aiCompareDay{padding:8px;border:1px solid var(--rt-border);border-radius:11px;background:var(--rt-surface)}.aiCompareDay>strong{display:block;margin-bottom:5px;font-size:10px}.aiCompareDay>div{display:grid;grid-template-columns:34px minmax(0,1fr);gap:6px;margin-top:3px;font-size:9px}.aiCompareDay span{color:var(--rt-muted)}.aiCompareFoot{margin-top:10px;color:var(--rt-muted);font-size:9px;text-align:center}
+@media(max-width:640px){.aiWorkspaceToolbar{align-items:flex-start}.aiVersionRow{grid-template-columns:24px minmax(0,1fr)}.aiCompareMetric{grid-template-columns:92px minmax(0,1fr) minmax(0,1fr)}.aiCompareMetric>*{padding:7px 6px;font-size:8.7px}.aiCompareHero{grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);padding:9px}.aiCompareVs{width:30px;height:30px}}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -7400,7 +7409,7 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.2.2 · AI ENTRY RESTORE · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.3 · AI PLANNING WORKSPACE · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -7483,8 +7492,8 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
               <div class="aiDraftsSummaryLeft">
                 <span class="aiDraftsSummaryIcon">💾</span>
                 <div>
-                  <h3>AI Plan Drafts</h3>
-                  <div class="footerMini" id="aiDraftsMeta">已保存的 AI Preview</div>
+                  <h3>✨ AI Planning Workspace</h3>
+                  <div class="footerMini" id="aiDraftsMeta">当前 Trip 独立的 AI Versions</div>
                 </div>
               </div>
               <span class="aiDraftsChevron">⌄</span>
@@ -8721,6 +8730,7 @@ async function init(){
     $('openAIPlannerBtn')?.addEventListener('click',openAIPlanner);
   $('openAIPlannerOverviewBtn')?.addEventListener('click',openAIPlanner);
   $('cancelAIPlannerBtn')?.addEventListener('click',()=>$('aiPlannerDialog').close());
+  $('closeAICompareBtn')?.addEventListener('click',()=>$('aiCompareDialog').close());
   $('aiPlannerForm')?.addEventListener('submit',generateAIPlan);
   $('regenerateAIPlanBtn')?.addEventListener('click',generateAIPlan);
   $('importAIPlanBtn')?.addEventListener('click',importAIPlan);
@@ -9832,46 +9842,144 @@ function buildAIRequest(){
 }
 
 function renderAIDrafts(){
-  const card=$('aiDraftsCard');
-  const list=$('aiDraftsList');
-  const meta=$('aiDraftsMeta');
-  if(!card || !list || !meta) return;
-
-  const visible=(aiDrafts||[]).filter(d=>
-    d.status!=='archived' &&
-    String(d.trip_id||'')===String(currentTrip?.id||'')
-  );
+  const card=$('aiDraftsCard'), list=$('aiDraftsList'), meta=$('aiDraftsMeta');
+  if(!card||!list||!meta) return;
+  const visible=(aiDrafts||[]).filter(d=>d.status!=='archived' && String(d.trip_id||'')===String(currentTrip?.id||''));
   card.classList.toggle('hide',visible.length===0);
+  if(!visible.length){ list.innerHTML=''; meta.textContent='这个 Trip 还没有 AI Version'; return; }
 
-  if(!visible.length){
-    list.innerHTML='';
-    meta.textContent='还没有保存的 AI Draft';
-    return;
-  }
+  const imported=visible.filter(d=>d.status==='imported');
+  const review=visible.filter(d=>d.status==='review');
+  meta.textContent=`${visible.length} 个 Version · ${review.length} Review${imported.length?` · ${imported.length} Imported`:''}`;
 
-  const review=visible.filter(d=>d.status==='review').length;
-  meta.textContent=`${visible.length} 个 Draft${review?` · ${review} 个待 Review`:''}`;
+  const section=(title,rows,kind)=>rows.length?`<div class="aiWorkspaceSection">
+    <div class="aiWorkspaceSectionHead">${title}<span>${rows.length}</span></div>
+    ${rows.map(d=>aiDraftRowHtml(d,kind)).join('')}
+  </div>`:'';
 
-  list.innerHTML=visible.map(d=>{
-    const plan=d.plan_json||{};
-    const req=d.request_json||{};
-    const when=d.created_at?new Date(d.created_at).toLocaleString():'';
-    const status=d.status==='imported'?'✅ Imported':d.status==='review'?'🟣 Review':'📝 Draft';
+  list.innerHTML=`<div class="aiWorkspaceToolbar">
+    <div class="footerMini">每个 Trip 完全独立 · 最多选择 2 个版本比较</div>
+    <button type="button" class="ghost aiCompareBtn" id="compareAIDraftsBtn" disabled>⚖️ Compare</button>
+  </div>
+  ${section('✅ Current / Imported',imported,'imported')}
+  ${section('🟣 Review Drafts',review,'review')}`;
 
-    return `<button type="button" class="aiDraftRow" data-ai-draft-open="${d.id}">
-      <span class="aiDraftRowIcon">${d.status==='imported'?'✅':'✨'}</span>
+  document.querySelectorAll('[data-ai-draft-open]').forEach(btn=>btn.addEventListener('click',()=>openAIDraft(btn.dataset.aiDraftOpen)));
+  document.querySelectorAll('[data-ai-draft-duplicate]').forEach(btn=>btn.addEventListener('click',()=>duplicateAIDraft(btn.dataset.aiDraftDuplicate)));
+  document.querySelectorAll('[data-ai-draft-archive]').forEach(btn=>btn.addEventListener('click',()=>archiveAIDraft(btn.dataset.aiDraftArchive)));
+  document.querySelectorAll('.aiCompareCheck').forEach(box=>box.addEventListener('change',handleAICompareSelection));
+  $('compareAIDraftsBtn')?.addEventListener('click',compareSelectedAIDrafts);
+}
+
+function aiDraftRowHtml(d,kind){
+  const plan=d.plan_json||{}, req=d.request_json||{};
+  const when=d.created_at?new Date(d.created_at).toLocaleString():'';
+  const budget=Number(plan?.budget_summary?.estimated_total_rm||0);
+  const days=Array.isArray(plan?.days)?plan.days.length:Number(req.days||0);
+  return `<div class="aiVersionRow">
+    <label class="aiVersionCompare" title="选择比较"><input type="checkbox" class="aiCompareCheck" value="${d.id}"></label>
+    <button type="button" class="aiVersionMain" data-ai-draft-open="${d.id}">
+      <span class="aiDraftRowIcon">${kind==='imported'?'✅':'✨'}</span>
       <span class="aiDraftRowCopy">
-        <strong>${escapeHtml(d.title||plan.trip_title||'AI Trip Plan')}</strong>
-        <span>${escapeHtml(req.destination||'')} · V${Number(d.version||1)} · ${status}</span>
-        <span>${escapeHtml(when)}</span>
-      </span>
-      <span class="aiDraftRowArrow">›</span>
-    </button>`;
-  }).join('');
+        <strong>V${Number(d.version||1)} · ${escapeHtml(d.title||plan.trip_title||'AI Trip Plan')}</strong>
+        <span>${escapeHtml(req.destination||'')} · ${days||'—'} days · ${d.status==='imported'?'Imported':'Review'}</span>
+        <span>${budget?`${money(budget)} · `:''}${escapeHtml(when)}</span>
+      </span><span class="aiDraftRowArrow">›</span>
+    </button>
+    <div class="aiVersionActions">
+      <button type="button" class="ghost" data-ai-draft-duplicate="${d.id}">⧉ Modify</button>
+      ${d.status!=='imported'?`<button type="button" class="ghost" data-ai-draft-archive="${d.id}">Archive</button>`:''}
+    </div>
+  </div>`;
+}
 
-  document.querySelectorAll('[data-ai-draft-open]').forEach(btn=>{
-    btn.addEventListener('click',()=>openAIDraft(btn.dataset.aiDraftOpen));
-  });
+function handleAICompareSelection(e){
+  const boxes=[...document.querySelectorAll('.aiCompareCheck')], checked=boxes.filter(x=>x.checked);
+  if(checked.length>2){ e.target.checked=false; toast('一次最多比较 2 个 AI Version','err'); }
+  const selected=boxes.filter(x=>x.checked), btn=$('compareAIDraftsBtn');
+  if(btn){ btn.disabled=selected.length!==2; btn.textContent=selected.length===2?'⚖️ Compare 2 Versions':'⚖️ Compare'; }
+}
+
+function compareSelectedAIDrafts(){
+  const ids=[...document.querySelectorAll('.aiCompareCheck:checked')].map(x=>x.value);
+  if(ids.length!==2) return;
+  const drafts=ids.map(id=>(aiDrafts||[]).find(d=>d.id===id && String(d.trip_id||'')===String(currentTrip?.id||''))).filter(Boolean);
+  if(drafts.length!==2){ toast('Version 不属于当前 Trip，已阻止比较','err'); return; }
+  renderAIComparison(drafts[0],drafts[1]);
+  $('aiCompareDialog').showModal();
+}
+
+function renderAIComparison(a,b){
+  const host=$('aiCompareContent'); if(!host) return;
+  const pa=a.plan_json||{}, pb=b.plan_json||{}, ra=a.request_json||{}, rb=b.request_json||{};
+  const places=p=>(Array.isArray(p.days)?p.days:[]).reduce((n,d)=>n+(Array.isArray(d.places)?d.places.length:0),0);
+  const checks=p=>Array.isArray(p.checklist)?p.checklist.length:0;
+  const budget=p=>Number(p?.budget_summary?.estimated_total_rm||0);
+  const flight=p=>p?.estimated_flight?.applicable?Number(p.estimated_flight.estimated_total_rm||0):0;
+  const rows=[
+    ['💰 Estimated Total',money(budget(pa)),money(budget(pb))],
+    ['✈️ Flight Estimate',flight(pa)?money(flight(pa)):'—',flight(pb)?money(flight(pb)):'—'],
+    ['🚦 Transport',pa?.recommended_transport||'—',pb?.recommended_transport||'—'],
+    ['🌤 Best Month',pa?.season_analysis?.best_month||'—',pb?.season_analysis?.best_month||'—'],
+    ['⚖️ Pace',ra.style||'—',rb.style||'—'],
+    ['🏨 Hotel',ra.hotel_level||'—',rb.hotel_level||'—'],
+    ['📍 Places',String(places(pa)),String(places(pb))],
+    ['✅ Checklist',String(checks(pa)),String(checks(pb))]
+  ];
+  const dayRows=Math.max(Array.isArray(pa.days)?pa.days.length:0,Array.isArray(pb.days)?pb.days.length:0);
+
+  host.innerHTML=`<div class="aiCompareHero">
+    <div><div class="todayEyebrow">VERSION A</div><h3>V${Number(a.version||1)}</h3><span>${escapeHtml(a.title||pa.trip_title||'AI Plan')}</span></div>
+    <div class="aiCompareVs">VS</div>
+    <div><div class="todayEyebrow">VERSION B</div><h3>V${Number(b.version||1)}</h3><span>${escapeHtml(b.title||pb.trip_title||'AI Plan')}</span></div>
+  </div>
+  <div class="aiCompareTable">${rows.map(r=>`<div class="aiCompareMetric"><strong>${escapeHtml(r[0])}</strong><span>${escapeHtml(r[1])}</span><span>${escapeHtml(r[2])}</span></div>`).join('')}</div>
+  <details class="aiPlanningNotes" open><summary>🗓 Day-by-day Route Comparison</summary><div class="aiCompareDays">
+    ${Array.from({length:dayRows},(_,i)=>{
+      const da=(pa.days||[])[i]||{}, db=(pb.days||[])[i]||{};
+      return `<div class="aiCompareDay"><strong>Day ${i+1}</strong>
+        <div><b>V${Number(a.version||1)}</b><span>${escapeHtml(da.route||da.day_title||'—')}</span></div>
+        <div><b>V${Number(b.version||1)}</b><span>${escapeHtml(db.route||db.day_title||'—')}</span></div></div>`;
+    }).join('')}
+  </div></details>
+  <div class="aiCompareFoot">Comparison 只比较两个 AI Draft，不会修改你的实际 Trip。</div>`;
+}
+
+async function duplicateAIDraft(id){
+  const draft=(aiDrafts||[]).find(d=>d.id===id && String(d.trip_id||'')===String(currentTrip?.id||''));
+  if(!draft) return;
+  resetAIPlannerUi(); aiCurrentDraftId=null; aiGeneratedPlan=null; aiCurrentRequest=draft.request_json||{};
+  fillAIPlannerForm(aiCurrentRequest);
+  $('aiPlannerState').innerHTML=`<div class="saveState success">⧉ 已载入 V${Number(draft.version||1)} 的设定。修改后 Generate 会建立新 Version，不覆盖旧版。</div>`;
+  $('aiPlannerDialog').showModal();
+}
+
+async function archiveAIDraft(id){
+  const draft=(aiDrafts||[]).find(d=>d.id===id && String(d.trip_id||'')===String(currentTrip?.id||''));
+  if(!draft||draft.status==='imported') return;
+  if(!confirm(`Archive V${Number(draft.version||1)}？资料不会删除，只是不再显示。`)) return;
+  const {error}=await sb.from('ai_trip_plans').update({status:'archived'}).eq('id',id).eq('trip_id',currentTrip.id);
+  if(error){ toast(error.message,'err'); return; }
+  aiDrafts=aiDrafts.map(d=>d.id===id?{...d,status:'archived'}:d); renderAIDrafts(); toast(`V${Number(draft.version||1)} 已 Archive`);
+}
+
+function openAIDraft(id){
+  const draft=(aiDrafts||[]).find(x=>x.id===id && String(x.trip_id||'')===String(currentTrip?.id||''));
+  if(!draft){ toast('这个 AI Draft 不属于当前 Trip','err'); return; }
+  resetAIPlannerUi();
+  aiCurrentDraftId=draft.id; aiGeneratedPlan=draft.plan_json||null; aiCurrentRequest=draft.request_json||{};
+  fillAIPlannerForm(aiCurrentRequest);
+  if(aiGeneratedPlan){
+    renderAIPlanPreview(aiGeneratedPlan);
+    $('generateAIPlanBtn').classList.add('hide'); $('regenerateAIPlanBtn').classList.remove('hide');
+    if(draft.status!=='imported') $('importAIPlanBtn').classList.remove('hide');
+    $('aiDraftBadge').innerHTML=`💾 V${Number(draft.version||1)} · ${draft.status==='imported'?'Imported':'Review'} · 当前 Trip`;
+    $('aiDraftBadge').classList.remove('hide');
+    $('aiPlannerState').innerHTML=draft.status==='imported'
+      ?'<div class="saveState success">✅ 这个 Version 已导入。仍可查看、比较或 Modify 建立新版本。</div>'
+      :'<div class="saveState success">💾 Review Draft 已恢复。可以继续 Review、导入或建立新版本。</div>';
+  }
+  $('aiPlannerDialog').showModal();
 }
 
 function openAIPlanner(){
@@ -9881,43 +9989,6 @@ function openAIPlanner(){
   $('aiPlannerDialog').showModal();
 }
 
-function openAIDraft(id){
-  const draft=(aiDrafts||[]).find(x=>
-    x.id===id &&
-    String(x.trip_id||'')===String(currentTrip?.id||'')
-  );
-  if(!draft) return;
-
-  resetAIPlannerUi();
-
-  aiCurrentDraftId=draft.id;
-  aiGeneratedPlan=draft.plan_json||null;
-  aiCurrentRequest=draft.request_json||{};
-
-  fillAIPlannerForm(aiCurrentRequest);
-
-  if(aiGeneratedPlan){
-    renderAIPlanPreview(aiGeneratedPlan);
-
-    $('generateAIPlanBtn').classList.add('hide');
-    $('regenerateAIPlanBtn').classList.remove('hide');
-
-    if(draft.status!=='imported'){
-      $('importAIPlanBtn').classList.remove('hide');
-    }
-
-    $('aiDraftBadge').innerHTML=
-      `💾 Draft V${Number(draft.version||1)} · ${draft.status==='imported'?'Imported':'Review'} · 已自动保存`;
-    $('aiDraftBadge').classList.remove('hide');
-
-    $('aiPlannerState').innerHTML=
-      draft.status==='imported'
-        ? '<div class="saveState success">✅ 这个 AI Draft 已经导入过 Trip。你仍然可以查看或生成新版本。</div>'
-        : '<div class="saveState success">💾 已恢复之前保存的 AI Preview，可以继续 Review。</div>';
-  }
-
-  $('aiPlannerDialog').showModal();
-}
 
 function renderAIPlanPreview(plan){
   const preview=$('aiPlannerPreview');
@@ -10086,7 +10157,7 @@ async function saveAIDraft(request,plan,model){
 
   const latestVersion=Math.max(
     0,
-    ...(aiDrafts||[]).map(d=>Number(d.version||0))
+    ...(aiDrafts||[]).filter(d=>String(d.trip_id||'')===String(currentTrip.id)).map(d=>Number(d.version||0))
   );
 
   const payload={
@@ -12276,5 +12347,12 @@ async function copyInvite(){
   }
 }
 </script>
+<dialog id="aiCompareDialog">
+  <div class="modal aiCompareModal">
+    <div class="aiPlannerHead"><div class="aiPlannerSpark">⚖️</div><div><div class="todayEyebrow">AI VERSION COMPARE</div><h3>Compare Plans</h3><div class="footerMini">只比较当前 Trip 的两个 AI Version。</div></div></div>
+    <div id="aiCompareContent"></div>
+    <div class="modalActions"><button class="btn primary" type="button" id="closeAICompareBtn">完成</button></div>
+  </div>
+</dialog>
 </body>
 </html>
