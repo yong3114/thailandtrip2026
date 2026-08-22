@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="zh-Hans">
 <head>
-  <meta name="roadtrip-build" content="6.7.0">
-  <!-- RoadTrip internal build: 6.7.0 -->
+  <meta name="roadtrip-build" content="6.7.2">
+  <!-- RoadTrip internal build: 6.7.2 -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -9683,10 +9683,6 @@ async function init(){
     const actual=expenses.reduce((s,e)=>s+rmValue(e.amount,e.currency),0);
     const remain=Number(currentTrip?.budget_target||0)-actual;
     renderBudgetHub(actual,remain);
-  renderBlankTripStarter();
-  renderAIDrafts();
-  fillTripSettingsProfile();
-  updateChecklistFilterLabels();
   });
   $('cancelExpenseBtn').addEventListener('click',()=>$('expenseDialog').close());
   $('expenseForm').addEventListener('submit',saveExpense);
@@ -10755,7 +10751,8 @@ async function deleteOrLeaveTrip(tripId,isOwner){
 }
 
 async function openTrip(id,options={}){
-  aiDrafts=[];
+  const openSeq=++tripOpenSequence;
+
   aiGeneratedPlan=null;
   aiCurrentDraftId=null;
   aiCurrentRequest=null;
@@ -10763,13 +10760,17 @@ async function openTrip(id,options={}){
 
   const draftsCard=$('aiDraftsCard');
   const draftsList=$('aiDraftsList');
+  const draftsMeta=$('aiDraftsMeta');
 
   if(draftsCard){
     draftsCard.classList.remove('hide');
   }
 
-  if(draftsList){
-    draftsList.innerHTML='<div class="aiWorkspaceLoading">正在载入这个 Trip 的 AI Workspace…</div>';
+  // IMPORTANT:
+  // Do not write a "Loading..." row into aiDraftsList here.
+  // A second/open-history call could otherwise overwrite an already-rendered Workspace.
+  if(draftsMeta && !aiDrafts.length){
+    draftsMeta.textContent='正在读取当前 Trip 的 AI Versions…';
   }
 
   const {data,error}=await sb
@@ -10777,6 +10778,9 @@ async function openTrip(id,options={}){
     .select('*')
     .eq('id',id)
     .single();
+
+  // Ignore stale openTrip calls.
+  if(openSeq!==tripOpenSequence) return;
 
   if(error){
     toast(error.message,'err');
@@ -10798,7 +10802,11 @@ async function openTrip(id,options={}){
     mobileBar.classList.remove('hide');
   }
 
-  await refreshTrip();
+  await refreshTrip({openSeq});
+
+  // Ignore stale openTrip calls after async refresh.
+  if(openSeq!==tripOpenSequence) return;
+
   subscribeTrip();
 
   const initialPanel=
@@ -10821,8 +10829,11 @@ async function openTrip(id,options={}){
   }
 }
 
-async function refreshTrip(){
+async function refreshTrip(options={}){
   if(!currentTrip) return;
+
+  const requestedTripId=currentTrip.id;
+  const requestedOpenSeq=options.openSeq||null;
 
   const [tripRes, membersRes, itemsRes, votesRes, expensesRes, sharesRes, checklistRes, ticksRes, aiDraftsRes] = await Promise.all([
     sb.from('trips').select('*').eq('id',currentTrip.id).single(),
@@ -10835,6 +10846,14 @@ async function refreshTrip(){
     sb.from('trip_checklist_ticks').select('*'),
     sb.from('ai_trip_plans').select('*').eq('trip_id',currentTrip.id).order('created_at',{ascending:false})
   ]);
+
+  if(
+    !currentTrip ||
+    String(currentTrip.id)!==String(requestedTripId) ||
+    (requestedOpenSeq && requestedOpenSeq!==tripOpenSequence)
+  ){
+    return;
+  }
 
   if(tripRes.data) currentTrip=tripRes.data;
   members=(membersRes.data||[]);
@@ -10857,6 +10876,35 @@ async function refreshTrip(){
   aiDrafts=aiDraftsRes.error ? [] : (aiDraftsRes.data||[]);
 
   renderTrip();
+
+  // These depend on freshly loaded Trip/Draft/Profile data and must
+  // be refreshed every time the Project is opened/reloaded.
+  renderBlankTripStarter();
+
+  try{
+    renderAIDrafts();
+  }catch(err){
+    console.error('AI Workspace render failed',err);
+    aiDraftLoadError=err?.message||String(err);
+
+    const card=$('aiDraftsCard');
+    const list=$('aiDraftsList');
+    const meta=$('aiDraftsMeta');
+
+    card?.classList.remove('hide');
+    if(meta) meta.textContent='Workspace 显示失败';
+    if(list){
+      list.innerHTML=`<div class="aiWorkspaceError">
+        <strong>⚠️ AI Workspace 显示失败</strong>
+        <span>${escapeHtml(aiDraftLoadError)}</span>
+        <button type="button" class="ghost" id="retryAIDraftsBtn">↻ Retry</button>
+      </div>`;
+      $('retryAIDraftsBtn')?.addEventListener('click',()=>refreshTrip());
+    }
+  }
+
+  fillTripSettingsProfile();
+  updateChecklistFilterLabels();
 }
 
 function subscribeTrip(){
@@ -10877,6 +10925,12 @@ function subscribeTrip(){
     ch=ch.on('postgres_changes',{event:'*',schema:'public',table:'trip_checklist_ticks'},()=>refreshTrip());
   }
 
+  ch=ch.on(
+    'postgres_changes',
+    {event:'*',schema:'public',table:'ai_trip_plans',filter:`trip_id=eq.${currentTrip.id}`},
+    ()=>refreshTrip()
+  );
+
   channel=ch.subscribe();
 }
 function cleanupChannel(){ if(channel && sb){ sb.removeChannel(channel); channel=null; } }
@@ -10888,6 +10942,7 @@ function resetMobilePanelScroll(){
   });
 }
 let currentVisiblePanel='overview';
+let tripOpenSequence=0;
 
 function updateMobilePanelChrome(panel){
   const tripViewEl=$('tripView');
@@ -11471,6 +11526,11 @@ function renderAIDrafts(){
   const review=visible.filter(d=>d.status==='review');
 
   meta.textContent=`${visible.length} 个 Version · ${review.length} Review${imported.length?` · ${imported.length} Imported`:''}`;
+
+  // Once versions are available, remove any stale loading placeholder immediately.
+  if(list.querySelector('.aiWorkspaceLoading')){
+    list.innerHTML='';
+  }
 
   const section=(title,rows,kind)=>rows.length?`
     <div class="aiWorkspaceSection">
