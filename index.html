@@ -6163,6 +6163,56 @@ dialog .modalActions > .btn.primary{
 }
 </style>
 
+
+<style id="roadTripV5164DesktopScrollFix">
+/* =========================================================
+   V5.1.6.4 — Desktop native-scroll reset
+   Desktop only. Mobile behavior is untouched.
+   ========================================================= */
+@media(min-width:761px){
+  html,
+  body{
+    height:auto !important;
+    min-height:100% !important;
+    max-height:none !important;
+    overflow-x:hidden !important;
+    overflow-y:auto !important;
+    overscroll-behavior-y:auto !important;
+  }
+
+  body{
+    position:static !important;
+  }
+
+  .wrap,
+  #homeView,
+  #tripView,
+  #tripView .main,
+  #tripView .content,
+  #overviewPanel,
+  #itineraryPanel,
+  #expensesPanel,
+  #sharedPanel{
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    overflow-y:visible !important;
+  }
+
+  #homeView,
+  #tripView{
+    overflow-x:visible !important;
+  }
+
+  #tripView .main,
+  #tripView .content{
+    transform:none !important;
+    opacity:1 !important;
+    will-change:auto !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -6261,7 +6311,7 @@ dialog .modalActions > .btn.primary{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.6.3 · HOME TITLE FIX · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V5.1.6.4 · DESKTOP SCROLL FIX · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
