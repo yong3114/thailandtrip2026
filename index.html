@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="zh-Hans">
 <head>
-  <meta name="roadtrip-build" content="6.7.3">
-  <!-- RoadTrip internal build: 6.7.3 -->
+  <meta name="roadtrip-build" content="6.7.4">
+  <!-- RoadTrip internal build: 6.7.4 -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -10802,10 +10802,16 @@ async function openTrip(id,options={}){
     mobileBar.classList.remove('hide');
   }
 
+  // AI Workspace loads independently and must never wait for Expenses/Checklist/etc.
+  const aiWorkspacePromise=loadAIDraftsIndependent({openSeq});
+
   await refreshTrip({openSeq});
 
   // Ignore stale openTrip calls after async refresh.
   if(openSeq!==tripOpenSequence) return;
+
+  // Independent Workspace loader handles its own errors/rendering.
+  aiWorkspacePromise?.catch(err=>console.error('AI Workspace background load failed',err));
 
   subscribeTrip();
 
@@ -10829,13 +10835,82 @@ async function openTrip(id,options={}){
   }
 }
 
+async function loadAIDraftsIndependent(options={}){
+  if(!currentTrip) return;
+
+  const requestedTripId=currentTrip.id;
+  const requestedOpenSeq=options.openSeq||null;
+  const card=$('aiDraftsCard');
+  const list=$('aiDraftsList');
+  const meta=$('aiDraftsMeta');
+
+  card?.classList.remove('hide');
+  aiDraftLoadError='';
+
+  if(meta){
+    meta.textContent='正在读取当前 Trip 的 AI Versions…';
+  }
+
+  if(list && !(aiDrafts||[]).length){
+    list.innerHTML='<div class="aiWorkspaceLoading">正在读取已保存的 AI Plan…</div>';
+  }
+
+  const timeoutMs=10000;
+  let timer=null;
+
+  try{
+    const query=sb
+      .from('ai_trip_plans')
+      .select('*')
+      .eq('trip_id',requestedTripId)
+      .order('created_at',{ascending:false});
+
+    const timeout=new Promise((_,reject)=>{
+      timer=setTimeout(()=>reject(new Error('AI Workspace 查询超过 10 秒，请 Retry。')),timeoutMs);
+    });
+
+    const result=await Promise.race([query,timeout]);
+
+    if(
+      !currentTrip ||
+      String(currentTrip.id)!==String(requestedTripId) ||
+      (requestedOpenSeq && requestedOpenSeq!==tripOpenSequence)
+    ){
+      return;
+    }
+
+    if(result?.error){
+      throw result.error;
+    }
+
+    aiDrafts=result?.data||[];
+    aiDraftLoadError='';
+    renderAIDrafts();
+
+  }catch(err){
+    if(
+      !currentTrip ||
+      String(currentTrip.id)!==String(requestedTripId) ||
+      (requestedOpenSeq && requestedOpenSeq!==tripOpenSequence)
+    ){
+      return;
+    }
+
+    aiDrafts=[];
+    aiDraftLoadError=err?.message||String(err);
+    renderAIDrafts();
+  }finally{
+    if(timer) clearTimeout(timer);
+  }
+}
+
 async function refreshTrip(options={}){
   if(!currentTrip) return;
 
   const requestedTripId=currentTrip.id;
   const requestedOpenSeq=options.openSeq||null;
 
-  const withTimeout=(promise,label,ms=12000)=>Promise.race([
+  const withTimeout=(promise,label,ms=10000)=>Promise.race([
     promise,
     new Promise((_,reject)=>setTimeout(
       ()=>reject(new Error(`${label} timeout after ${ms/1000}s`)),
@@ -10844,22 +10919,14 @@ async function refreshTrip(options={}){
   ]);
 
   const queries=[
-    ['trip', sb.from('trips').select('*').eq('id',requestedTripId).single()],
-    ['members', sb.from('trip_members').select('*').eq('trip_id',requestedTripId).order('joined_at')],
-    ['items', sb.from('items').select('*').eq('trip_id',requestedTripId).order('created_at',{ascending:false})],
-    ['votes', sb.from('item_votes').select('item_id,user_id,created_at')],
-    ['expenses', sb.from('expenses').select('*').eq('trip_id',requestedTripId).order('spent_at',{ascending:false})],
-    ['shares', sb.from('expense_shares').select('expense_id,user_id')],
-    ['checklist', sb.from('trip_checklist').select('*').eq('trip_id',requestedTripId).order('created_at',{ascending:true})],
-    ['ticks', sb.from('trip_checklist_ticks').select('*')],
-    ['aiDrafts', withTimeout(
-      sb.from('ai_trip_plans')
-        .select('*')
-        .eq('trip_id',requestedTripId)
-        .order('created_at',{ascending:false}),
-      'AI Workspace',
-      12000
-    )]
+    ['trip', withTimeout(sb.from('trips').select('*').eq('id',requestedTripId).single(),'Trip')],
+    ['members', withTimeout(sb.from('trip_members').select('*').eq('trip_id',requestedTripId).order('joined_at'),'Members')],
+    ['items', withTimeout(sb.from('items').select('*').eq('trip_id',requestedTripId).order('created_at',{ascending:false}),'Items')],
+    ['votes', withTimeout(sb.from('item_votes').select('item_id,user_id,created_at'),'Votes')],
+    ['expenses', withTimeout(sb.from('expenses').select('*').eq('trip_id',requestedTripId).order('spent_at',{ascending:false}),'Expenses')],
+    ['shares', withTimeout(sb.from('expense_shares').select('expense_id,user_id'),'Expense shares')],
+    ['checklist', withTimeout(sb.from('trip_checklist').select('*').eq('trip_id',requestedTripId).order('created_at',{ascending:true}),'Checklist')],
+    ['ticks', withTimeout(sb.from('trip_checklist_ticks').select('*'),'Checklist ticks')]
   ];
 
   const settled=await Promise.allSettled(queries.map(([,promise])=>promise));
@@ -10879,14 +10946,10 @@ async function refreshTrip(options={}){
 
   const fulfilledData=(key)=>{
     const result=resultMap[key];
-
     if(result?.status!=='fulfilled'){
-      return {
-        data:null,
-        error:result?.reason||new Error(`${key} failed`)
-      };
+      console.warn(`${key} load failed`,result?.reason);
+      return {data:null,error:result?.reason||new Error(`${key} failed`)};
     }
-
     return result.value||{data:null,error:null};
   };
 
@@ -10898,10 +10961,8 @@ async function refreshTrip(options={}){
   const sharesRes=fulfilledData('shares');
   const checklistRes=fulfilledData('checklist');
   const ticksRes=fulfilledData('ticks');
-  const aiDraftsRes=fulfilledData('aiDrafts');
 
   if(tripRes.data) currentTrip=tripRes.data;
-
   members=(membersRes.data||[]);
   items=(itemsRes.data||[]);
 
@@ -10915,48 +10976,15 @@ async function refreshTrip(options={}){
   checklistAvailable=!checklistRes.error;
   checklist=(checklistRes.data||[]);
   const checklistIds=new Set(checklist.map(x=>x.id));
-
   checklistTicksAvailable=!ticksRes.error;
   checklistTicks=(ticksRes.data||[]).filter(t=>checklistIds.has(t.checklist_id));
 
-  if(aiDraftsRes.error){
-    aiDraftLoadError=aiDraftsRes.error.message||String(aiDraftsRes.error);
-    aiDrafts=[];
-  }else{
-    aiDraftLoadError='';
-    aiDrafts=aiDraftsRes.data||[];
-  }
-
   renderTrip();
   renderBlankTripStarter();
-
-  try{
-    renderAIDrafts();
-  }catch(err){
-    console.error('AI Workspace render failed',err);
-    aiDraftLoadError=err?.message||String(err);
-
-    const card=$('aiDraftsCard');
-    const list=$('aiDraftsList');
-    const meta=$('aiDraftsMeta');
-
-    card?.classList.remove('hide');
-    if(meta) meta.textContent='Workspace 显示失败';
-
-    if(list){
-      list.innerHTML=`<div class="aiWorkspaceError">
-        <strong>⚠️ AI Workspace 显示失败</strong>
-        <span>${escapeHtml(aiDraftLoadError)}</span>
-        <button type="button" class="ghost" id="retryAIDraftsBtn">↻ Retry</button>
-      </div>`;
-
-      $('retryAIDraftsBtn')?.addEventListener('click',()=>refreshTrip());
-    }
-  }
-
   fillTripSettingsProfile();
   updateChecklistFilterLabels();
 }
+
 
 function subscribeTrip(){
   cleanupChannel();
@@ -10979,7 +11007,7 @@ function subscribeTrip(){
   ch=ch.on(
     'postgres_changes',
     {event:'*',schema:'public',table:'ai_trip_plans',filter:`trip_id=eq.${currentTrip.id}`},
-    ()=>refreshTrip()
+    ()=>loadAIDraftsIndependent()
   );
 
   channel=ch.subscribe();
@@ -11551,7 +11579,7 @@ function renderAIDrafts(){
     `;
 
     $('retryAIDraftsBtn')?.addEventListener('click',async()=>{
-      await refreshTrip();
+      await loadAIDraftsIndependent();
     });
     $('emptyNewAIPlanBtn')?.addEventListener('click',openNewAIPlanner);
     return;
