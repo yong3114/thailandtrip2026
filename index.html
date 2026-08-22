@@ -6213,6 +6213,187 @@ dialog .modalActions > .btn.primary{
 }
 </style>
 
+
+<style id="roadTripV60Phase1">
+/* =========================================================
+   V6.0 Phase 1 — Trip Foundation
+   New trips start blank. Templates are optional.
+   ========================================================= */
+.blankTripStarter{
+  display:grid;
+  grid-template-columns:54px minmax(0,1fr);
+  gap:14px;
+  align-items:start;
+  margin-bottom:12px;
+  padding:18px;
+  border-color:color-mix(in srgb,var(--travel-sky,#2F80ED) 20%,var(--rt-border)) !important;
+  background:
+    radial-gradient(circle at 96% 0%,rgba(255,184,77,.14),transparent 34%),
+    var(--rt-surface);
+}
+
+.blankTripStarter.hide{
+  display:none !important;
+}
+
+.blankTripStarterIcon{
+  width:50px;
+  height:50px;
+  display:grid;
+  place-items:center;
+  border-radius:16px;
+  background:var(--travel-blue-soft,#EDF7FF);
+  border:1px solid #D8EBFB;
+  font-size:23px;
+}
+
+.blankTripStarterCopy h3{
+  margin:2px 0 5px;
+  font-size:18px;
+}
+
+.blankTripStarterActions{
+  grid-column:1/-1;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:2px;
+}
+
+.tripTemplatesCard{
+  margin-bottom:12px;
+  padding:0 !important;
+  overflow:hidden;
+}
+
+.tripTemplatesSummary{
+  list-style:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  min-height:68px;
+  padding:14px 16px;
+  cursor:pointer;
+}
+
+.tripTemplatesSummary::-webkit-details-marker{display:none}
+.tripTemplatesSummary::marker{content:""}
+
+.tripTemplatesSummaryLeft{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  min-width:0;
+}
+
+.tripTemplatesSummaryLeft h3{
+  margin:1px 0 2px;
+}
+
+.tripTemplatesIcon{
+  width:40px;
+  height:40px;
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  background:var(--travel-yellow-soft,#FFF7DF);
+  border:1px solid #F5E6BE;
+  font-size:18px;
+}
+
+.tripTemplatesChevron{
+  color:var(--rt-muted);
+  font-size:20px;
+  transition:transform .18s ease;
+}
+
+.tripTemplatesCard[open] .tripTemplatesChevron{
+  transform:rotate(180deg);
+}
+
+.tripTemplatesBody{
+  padding:0 14px 14px;
+  border-top:1px solid var(--rt-border);
+}
+
+.tripTemplateItem{
+  margin-top:12px;
+  padding:14px;
+  border:1px solid var(--rt-border);
+  border-radius:17px;
+  background:var(--rt-surface-2);
+}
+
+.tripTemplateTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.tripTemplateTop h3{
+  margin:2px 0 0;
+  line-height:1.3;
+}
+
+.tripTemplateSafeNote{
+  margin-top:8px !important;
+}
+
+@media(max-width:640px){
+  .blankTripStarter{
+    grid-template-columns:44px minmax(0,1fr);
+    gap:11px;
+    padding:14px;
+    border-radius:17px;
+  }
+
+  .blankTripStarterIcon{
+    width:42px;
+    height:42px;
+    border-radius:13px;
+    font-size:20px;
+  }
+
+  .blankTripStarterCopy h3{
+    font-size:16px;
+  }
+
+  .blankTripStarterActions{
+    display:grid;
+    grid-template-columns:1fr;
+  }
+
+  .blankTripStarterActions button{
+    min-height:43px;
+  }
+
+  .tripTemplatesSummary{
+    min-height:62px;
+    padding:12px 13px;
+  }
+
+  .tripTemplatesBody{
+    padding:0 11px 11px;
+  }
+
+  .tripTemplateItem{
+    padding:12px;
+    border-radius:15px;
+  }
+
+  .tripTemplateTop{
+    gap:8px;
+  }
+
+  .tripTemplateTop h3{
+    font-size:14px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -6311,7 +6492,7 @@ dialog .modalActions > .btn.primary{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V5.1.6.4 · DESKTOP SCROLL FIX · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.0 P1 · TRIP FOUNDATION · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -6418,19 +6599,48 @@ dialog .modalActions > .btn.primary{
             </div>
           </details>
 
-          <div class="card fullPlanImportCard" id="fullPlanImportCard">
-            <div class="fullPlanImportTop">
-              <div>
-                <div class="todayEyebrow">RESEARCHED 21 AUG 2026</div>
-                <h3>🧭 JB → Ipoh → Thailand → Cameron · 9D8N</h3>
-                <div class="footerMini" id="fullPlanImportStatus">完整模板：9天路线 + 大量候选地点 + Border/Weather Tips + 4人 Checklist。</div>
-              </div>
-              <span class="fullPlanBadge">11–19 NOV</span>
+          <div class="card blankTripStarter hide" id="blankTripStarter">
+            <div class="blankTripStarterIcon">🧳</div>
+            <div class="blankTripStarterCopy">
+              <div class="todayEyebrow">NEW TRIP</div>
+              <h3>这趟旅行还没有行程</h3>
+              <div class="footerMini">从空白开始。你可以自己添加地点，或选择一个 Trip Template。下一阶段会在这里加入 ✨ AI Planner。</div>
             </div>
-            <div class="fullPlanRouteMini">JB → Ipoh → Hat Yai/Songkhla → Krabi → Hat Yai → Cameron Highlands → JB</div>
-            <button class="btn primary fullPlanImportBtn" type="button" id="importFull9D8NBtn">导入 / 补齐完整 9D8N 行程</button>
-            <div class="footerMini" style="margin-top:8px">不会删除你现有资料；只补同 Day 同名不存在的地点。现有投票 / Expenses / 照片都会保留。</div>
+            <div class="blankTripStarterActions">
+              <button class="btn primary" type="button" id="blankAddPlaceBtn">＋ 自己添加地点</button>
+              <button class="ghost" type="button" id="blankOpenTemplatesBtn">📦 看 Templates</button>
+            </div>
           </div>
+
+          <details class="card tripTemplatesCard" id="fullPlanImportCard">
+            <summary class="tripTemplatesSummary" id="tripTemplatesSummary">
+              <div class="tripTemplatesSummaryLeft">
+                <span class="tripTemplatesIcon">📦</span>
+                <div>
+                  <div class="todayEyebrow">OPTIONAL</div>
+                  <h3>Trip Templates</h3>
+                  <div class="footerMini">需要时才使用，不会自动导入任何行程。</div>
+                </div>
+              </div>
+              <span class="tripTemplatesChevron">⌄</span>
+            </summary>
+
+            <div class="tripTemplatesBody">
+              <div class="tripTemplateItem">
+                <div class="tripTemplateTop">
+                  <div>
+                    <div class="todayEyebrow">THAILAND ROAD TRIP</div>
+                    <h3>🇲🇾 JB → Ipoh → Thailand → Cameron · 9D8N</h3>
+                  </div>
+                  <span class="fullPlanBadge">9D8N</span>
+                </div>
+                <div class="fullPlanRouteMini">JB → Ipoh → Hat Yai/Songkhla → Krabi → Hat Yai → Cameron Highlands → JB</div>
+                <div class="footerMini" id="fullPlanImportStatus">98 个研究项目 + 路线 + Border Tips + Shared Checklist。</div>
+                <button class="btn primary fullPlanImportBtn" type="button" id="importFull9D8NBtn">使用 Thailand 9D8N Template</button>
+                <div class="footerMini tripTemplateSafeNote">只会导入到你主动选择的这个 Trip；不会影响其他旅行。</div>
+              </div>
+            </div>
+          </details>
 
           <div class="card dayOverviewCard">
             <div class="sectionTitle">
@@ -7441,6 +7651,8 @@ async function init(){
     const actual=expenses.reduce((s,e)=>s+rmValue(e.amount,e.currency),0);
     const remain=Number(currentTrip?.budget_target||0)-actual;
     renderBudgetHub(actual,remain);
+  renderBlankTripStarter();
+  renderFullPlanImportStatus();
   });
   $('cancelExpenseBtn').addEventListener('click',()=>$('expenseDialog').close());
   $('expenseForm').addEventListener('submit',saveExpense);
@@ -7486,6 +7698,17 @@ async function init(){
     }
   });
   $('importFull9D8NBtn')?.addEventListener('click',importFull9D8NPlan);
+  $('blankAddPlaceBtn')?.addEventListener('click',()=>{
+    switchPanel('itinerary');
+    openItemDialog(null);
+  });
+  $('blankOpenTemplatesBtn')?.addEventListener('click',()=>{
+    const templates=$('fullPlanImportCard');
+    if(!templates) return;
+    templates.classList.remove('hide');
+    templates.open=true;
+    templates.scrollIntoView({behavior:'smooth',block:'center'});
+  });
 
   document.querySelectorAll('.mobileTab').forEach(btn=>{
     btn.addEventListener('click',()=>switchPanel(btn.dataset.panel));
@@ -8346,14 +8569,11 @@ async function toggleMyChecklistTick(checklistId,checked){
 
 function renderFullPlanImportStatus(){
   const el=$('fullPlanImportStatus');
-  const card=$('fullPlanImportCard');
+  const templates=$('fullPlanImportCard');
   if(!el || !currentTrip) return;
 
   const normalizeName=value=>
-    String(value||'')
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g,' ');
+    String(value||'').trim().toLowerCase().replace(/\s+/g,' ');
 
   const existingKeys=new Set(
     items.map(i=>`${Number(i.day_no)}::${normalizeName(i.name)}`)
@@ -8364,20 +8584,36 @@ function renderFullPlanImportStatus(){
   ).length;
 
   const total=ROADTRIP_9D8N_ITEMS.length;
-  const missing=Math.max(0,total-matched);
 
   if(matched===total){
-    if(card) card.classList.add('hide');
-    el.textContent=`完整 9D8N 模板已齐全：${total}/${total} 个项目 ✅`;
+    // Existing Thailand trip already has the whole template.
+    // Hide the template chooser so the Overview stays clean.
+    if(templates) templates.classList.add('hide');
+    el.textContent=`Thailand 9D8N Template 已完整导入：${total}/${total} ✅`;
     return;
   }
 
-  if(card) card.classList.remove('hide');
+  if(templates) templates.classList.remove('hide');
 
   if(matched>0){
-    el.textContent=`目前匹配 ${matched}/${total} 个模板项目 · 还差 ${missing} 个，可按下方按钮补齐。`;
+    el.textContent=`这个 Trip 已有 ${matched}/${total} 个 Thailand Template 项目；需要时可以继续补齐。`;
   }else{
-    el.textContent=`完整模板共 ${total} 个项目；按下方按钮导入。`;
+    el.textContent=`98 个研究项目 + 路线 + Border Tips + Shared Checklist。`;
+  }
+}
+
+function renderBlankTripStarter(){
+  const starter=$('blankTripStarter');
+  if(!starter || !currentTrip) return;
+
+  const realTripItems=items.filter(i=>!isBudgetItem(i));
+  const blank=realTripItems.length===0;
+
+  starter.classList.toggle('hide',!blank);
+
+  // Keep Templates collapsed by default on a blank trip.
+  if(blank && $('fullPlanImportCard')?.open){
+    $('fullPlanImportCard').open=false;
   }
 }
 
