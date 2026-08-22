@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="zh-Hans">
 <head>
-  <meta name="roadtrip-build" content="6.6.7">
-  <!-- RoadTrip internal build: 6.6.7 -->
+  <meta name="roadtrip-build" content="6.6.8">
+  <!-- RoadTrip internal build: 6.6.8 -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -7799,6 +7799,52 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
 }
 </style>
 
+
+<style id="roadTripV668UnifiedChecklistUI">
+/* Overview Shared Checklist now uses the same UI system as Shared. */
+.overviewSharedChecklist{
+  margin-bottom:12px;
+}
+
+.overviewSharedChecklistBody{
+  padding-bottom:12px;
+}
+
+.overviewSharedChecklistProgress{
+  display:block !important;
+}
+
+/* Match Shared: Add button sits before the checklist list. */
+.overviewChecklistPrimaryActions{
+  margin:10px 0;
+}
+
+/* Overview rows use the same full-size card styling as Shared. */
+#overviewChecklistList.checklistListCompact{
+  gap:inherit;
+}
+
+/* Keep both checklist cards visually identical in dark/light mode. */
+.overviewSharedChecklist .checklistItem{
+  width:100%;
+}
+
+@media(max-width:640px){
+  .overviewSharedChecklist{
+    border-radius:18px;
+  }
+
+  .overviewSharedChecklistBody{
+    padding-left:10px;
+    padding-right:10px;
+  }
+
+  .overviewChecklistPrimaryActions .btn{
+    width:100%;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -8063,22 +8109,28 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
             <div class="aiDraftsBody" id="aiDraftsList"></div>
           </details>
 
-          <details class="card overviewChecklist" id="overviewChecklistDetails">
-            <summary class="overviewChecklistSummary">
-              <div class="overviewChecklistSummaryLeft">
-                <span class="overviewChecklistIcon">✅</span>
+          <details class="card checklistCard sharedChecklistDetails overviewSharedChecklist" id="overviewChecklistDetails">
+            <summary class="sharedChecklistSummary">
+              <div class="sharedChecklistSummaryLeft">
+                <span class="sharedChecklistSummaryIcon">✅</span>
                 <div>
                   <h3>Shared Checklist</h3>
                   <div class="footerMini" id="overviewChecklistMeta">点开查看出发前清单</div>
                 </div>
               </div>
-              <div class="overviewChecklistSummaryRight">
-                <span class="overviewChecklistCount" id="overviewChecklistCount">0 / 0</span>
-                <span class="overviewChecklistChevron">⌄</span>
+              <div class="sharedChecklistSummaryRight">
+                <span class="checklistProgressText" id="overviewChecklistCount">0 / 0</span>
+                <span class="sharedChecklistChevron">⌄</span>
               </div>
             </summary>
-            <div class="overviewChecklistBody">
-              <div class="overviewChecklistProgress">
+
+            <div class="sharedChecklistBody overviewSharedChecklistBody">
+              <div class="sharedChecklistProgressHead">
+                <span>Checklist Progress</span>
+                <span>完成进度</span>
+              </div>
+
+              <div class="checklistProgress sharedChecklistProgressBar overviewSharedChecklistProgress">
                 <div id="overviewChecklistProgressBar" style="width:0%"></div>
               </div>
 
@@ -8093,13 +8145,16 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
                 </select>
                 <span id="overviewChecklistFilterCount" class="safeChecklistFilterCount"></span>
               </div>
+
               <div class="checklistDisabledNotice hide" id="overviewChecklistDisabledNotice">
-                Checklist 尚未启用，请先运行 V4.9 / V5.0 SQL。
+                Checklist 还没启用。请先运行 V5.1 SQL，然后重新打开 Trip。
               </div>
-              <div id="overviewChecklistList" class="checklistList checklistListCompact"></div>
-              <div class="overviewChecklistActions">
+
+              <div class="checklistPrimaryActions overviewChecklistPrimaryActions">
                 <button class="btn primary" type="button" id="openChecklistOverviewBtn">＋ 添加 Checklist</button>
               </div>
+
+              <div id="overviewChecklistList" class="checklistList"></div>
             </div>
           </details>
 
