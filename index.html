@@ -7693,6 +7693,34 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
 }
 </style>
 
+
+<style id="roadTripV661ChecklistDividerFix">
+/* Shared Checklist: remove the divider between progress bar and filter. */
+#sharedChecklistBody{
+  border-top:0 !important;
+}
+
+#sharedChecklistBody .checklistProgress{
+  border-bottom:0 !important;
+  box-shadow:none !important;
+  margin-bottom:8px !important;
+}
+
+#sharedChecklistBody .safeChecklistFilterRow{
+  border-top:0 !important;
+  box-shadow:none !important;
+  margin-top:0 !important;
+  padding-top:0 !important;
+}
+
+#sharedChecklistBody::before,
+#sharedChecklistBody .safeChecklistFilterRow::before,
+#sharedChecklistBody .safeChecklistFilterRow::after{
+  content:none !important;
+  display:none !important;
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -7865,7 +7893,7 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.6 · UX + SMART CHECKLIST + AI V3 · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.6.1 · CHECKLIST DIVIDER FIX · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
