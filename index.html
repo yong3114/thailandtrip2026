@@ -7721,6 +7721,12 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
 }
 </style>
 
+
+<style id="roadTripV662MobileBack">
+/* No visual redesign here.
+   This build only changes browser/phone Back navigation behavior. */
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -7893,7 +7899,7 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.6.1 · CHECKLIST DIVIDER FIX · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.6.2 · MOBILE BACK NAVIGATION · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -9288,53 +9294,131 @@ function nowLocalInput(){
 function ownerMember(){ return members.find(m=>m.role==='owner') }
 
 
+
 let appHistoryHandling=false;
+let appHistoryReady=false;
 
-function currentAppHistoryState(){
-  if(currentTrip){
-    return {roadtrip:true,view:'trip',tripId:currentTrip.id,panel:currentVisiblePanel||'overview'};
-  }
-  return {roadtrip:true,view:'home'};
+function buildHistoryState(view='home',panel='overview',tripId=null){
+  return {
+    roadtrip:true,
+    view,
+    panel,
+    tripId,
+    ts:Date.now()
+  };
 }
 
-function pushAppHistory(state,replace=false){
-  if(appHistoryHandling) return;
+function seedAppHistory(){
+  if(appHistoryReady) return;
+
+  const existing=history.state;
+
+  // Put a permanent in-app HOME state under the current page.
+  // This gives Android/iPhone browser Back somewhere inside the app
+  // to return to instead of immediately leaving the site.
+  if(!existing?.roadtrip){
+    history.replaceState(buildHistoryState('home'),'');
+    history.pushState(buildHistoryState('home'),'');
+  }
+
+  appHistoryReady=true;
+}
+
+function pushTripHistory(panel='overview',replace=false){
+  if(appHistoryHandling || !currentTrip) return;
+
+  const state=buildHistoryState('trip',panel,currentTrip.id);
+
   try{
-    if(replace) history.replaceState(state,'',location.href);
-    else history.pushState(state,'',location.href);
+    if(replace){
+      history.replaceState(state,'');
+    }else{
+      history.pushState(state,'');
+    }
   }catch(err){
-    console.warn('History state failed',err);
+    console.warn('Trip history write failed',err);
   }
 }
 
-async function handleAppBackState(state){
-  appHistoryHandling=true;
+function pushHomeHistory(replace=false){
+  if(appHistoryHandling) return;
+
+  const state=buildHistoryState('home');
+
   try{
-    if(state?.roadtrip && state.view==='trip' && state.tripId){
-      if(!currentTrip || String(currentTrip.id)!==String(state.tripId)){
-        await openTrip(state.tripId,{fromHistory:true});
+    if(replace){
+      history.replaceState(state,'');
+    }else{
+      history.pushState(state,'');
+    }
+  }catch(err){
+    console.warn('Home history write failed',err);
+  }
+}
+
+async function restoreHistoryState(state){
+  appHistoryHandling=true;
+
+  try{
+    // If browser lands on a non-app state, keep the user inside RoadTrip first.
+    if(!state?.roadtrip){
+      cleanupChannel();
+      currentTrip=null;
+
+      if(mobileBar){
+        mobileBar.classList.add('hide');
       }
-      switchPanel(state.panel||'overview',{fromHistory:true,preserveScroll:true});
+
+      await openHome({fromHistory:true});
+
+      history.pushState(buildHistoryState('home'),'');
       return;
     }
 
-    if(state?.roadtrip && state.view==='home'){
+    if(state.view==='home'){
       cleanupChannel();
       currentTrip=null;
-      if(mobileBar) mobileBar.classList.add('hide');
+
+      if(mobileBar){
+        mobileBar.classList.add('hide');
+      }
+
       await openHome({fromHistory:true});
       return;
     }
+
+    if(state.view==='trip' && state.tripId){
+      if(!currentTrip || String(currentTrip.id)!==String(state.tripId)){
+        await openTrip(state.tripId,{fromHistory:true});
+      }
+
+      switchPanel(
+        state.panel||'overview',
+        {
+          fromHistory:true,
+          preserveScroll:true
+        }
+      );
+
+      return;
+    }
+
+    await openHome({fromHistory:true});
+
+  }catch(err){
+    console.error('History restore failed',err);
   }finally{
     appHistoryHandling=false;
   }
 }
 
 window.addEventListener('popstate',event=>{
-  handleAppBackState(event.state);
+  restoreHistoryState(event.state);
 });
 
 async function init(){
+  seedAppHistory();
+
   const {data:{session}}=await sb.auth.getSession();
   user=session?.user||null;
   if(user) await openHome(); else show(authView);
@@ -9354,7 +9438,7 @@ async function init(){
 
   $('authForm').addEventListener('submit',onAuth);
   $('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut()});
-  $('backHomeBtn').addEventListener('click',()=>{ if(currentTrip) history.back(); else openHome(); });
+  $('backHomeBtn').addEventListener('click',async()=>{ if(currentTrip){ await openHome(); } else { await openHome({replaceHistory:true}); } });
   $('createTripForm').addEventListener('submit',createTrip);
 
   $('settingsForm')?.addEventListener('submit',async()=>{
@@ -9732,7 +9816,7 @@ async function openHome(options={}){
   await loadTripList();
 
   if(!options.fromHistory){
-    pushAppHistory({roadtrip:true,view:'home'},true);
+    pushHomeHistory(!!options.replaceHistory);
   }
 }
 
@@ -10601,7 +10685,7 @@ async function openTrip(id,options={}){
   switchPanel('overview',{fromHistory:true});
 
   if(!options.fromHistory){
-    pushAppHistory({roadtrip:true,view:'trip',tripId:currentTrip.id,panel:'overview'});
+    pushTripHistory('overview');
   }
 }
 
@@ -10717,7 +10801,7 @@ function switchPanel(panel,options={}){
   updateMobilePanelChrome(panel);
 
   if(options.pushHistory && currentTrip && !options.fromHistory){
-    pushAppHistory({roadtrip:true,view:'trip',tripId:currentTrip.id,panel});
+    pushTripHistory(panel);
   }
 
   requestAnimationFrame(()=>{
