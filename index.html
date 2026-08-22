@@ -7727,6 +7727,91 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
    This build only changes browser/phone Back navigation behavior. */
 </style>
 
+
+<style id="roadTripV663ChecklistCleanUI">
+/* Shared Checklist: remove the horizontal progress bar completely. */
+#sharedChecklistBody .checklistProgress{
+  display:none !important;
+}
+
+/* Tighten spacing after removing the bar. */
+#sharedChecklistBody .safeChecklistFilterRow{
+  margin-top:8px !important;
+  padding-top:0 !important;
+}
+
+/* Keep the card visually balanced on phone and desktop. */
+#sharedChecklistBody{
+  padding-top:10px !important;
+}
+</style>
+
+
+<style id="roadTripV664ChecklistProgressUI">
+/* Restore Shared Checklist progress bar and make its purpose obvious. */
+#sharedChecklistBody .checklistProgress{
+  display:block !important;
+  position:relative;
+  height:10px !important;
+  margin:28px 0 12px !important;
+  border-radius:999px !important;
+  overflow:visible !important;
+  background:var(--rt-surface-2) !important;
+  border:1px solid var(--rt-border) !important;
+}
+
+#sharedChecklistBody .checklistProgress::before{
+  content:"Checklist Progress";
+  position:absolute;
+  left:0;
+  top:-21px;
+  color:var(--rt-text-2);
+  font-size:9px;
+  font-weight:850;
+  letter-spacing:.02em;
+}
+
+#sharedChecklistBody .checklistProgress::after{
+  content:"完成进度";
+  position:absolute;
+  right:0;
+  top:-21px;
+  color:var(--rt-muted);
+  font-size:8.5px;
+  font-weight:700;
+}
+
+#sharedChecklistBody .checklistProgress > div{
+  height:100% !important;
+  border-radius:999px !important;
+  min-width:0;
+  transition:width .25s ease;
+}
+
+/* Filter sits cleanly below the progress section. */
+#sharedChecklistBody .safeChecklistFilterRow{
+  margin-top:0 !important;
+  padding-top:0 !important;
+}
+
+@media(max-width:640px){
+  #sharedChecklistBody .checklistProgress{
+    height:9px !important;
+    margin:26px 0 10px !important;
+  }
+
+  #sharedChecklistBody .checklistProgress::before{
+    top:-20px;
+    font-size:8.8px;
+  }
+
+  #sharedChecklistBody .checklistProgress::after{
+    top:-20px;
+    font-size:8px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -7899,7 +7984,7 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.6.2 · MOBILE BACK NAVIGATION · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.6.4 · CHECKLIST PROGRESS UI · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
