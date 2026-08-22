@@ -7310,6 +7310,62 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 }
 </style>
 
+
+<style id="roadTripV641SharedSettings">
+.tripSettingsProfileHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.tripSettingsProfileHead strong{
+  display:block;
+  margin-top:2px;
+  color:var(--rt-text);
+  font-size:13px;
+}
+.tripSettingsProfile .help{
+  display:block;
+  margin-top:5px;
+  color:var(--rt-muted);
+  font-size:8.8px;
+  font-weight:500;
+  line-height:1.4;
+}
+
+@media(max-width:640px){
+  .tripSettingsProfile{
+    padding:10px !important;
+  }
+  .tripSettingsProfile .tripProfileGrid{
+    grid-template-columns:1fr !important;
+  }
+}
+</style>
+
+
+<style id="roadTripV642AutoFxFix">
+.sharedFxInputRow{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:7px;
+  align-items:center;
+}
+
+.sharedFxRefreshBtn{
+  min-height:42px;
+  padding:8px 11px;
+  white-space:nowrap;
+}
+
+@media(max-width:640px){
+  .sharedFxRefreshBtn{
+    min-height:40px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -7482,7 +7538,7 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.4 · TRIP PROFILE + SMART LOCATION · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.4.2 · AUTO FX FIX · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -7882,15 +7938,22 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
               <label>天数<input id="setDays" type="number" min="1" max="30"></label>
               <label>人数<input id="setPeople" type="number" min="1" max="20"></label>
               <label>共同预算 RM<input id="setBudget" type="number" min="0"></label>
-              <label>THB→RM 汇率<input id="setRate" type="number" min="0" step="0.0001"></label>
               <div class="full tripSettingsProfile">
-                <div class="todayEyebrow">TRIP PROFILE</div>
+                <div class="tripSettingsProfileHead">
+                  <div>
+                    <div class="todayEyebrow">TRIP PROFILE</div>
+                    <strong>旅行基本资料</strong>
+                  </div>
+                  <span class="tripProfileOptional">可随时修改</span>
+                </div>
+
                 <div class="tripProfileGrid">
                   <label>出发国家 / 地区<select id="setOriginCountry"></select></label>
                   <label>出发城市<select id="setOriginCity"></select></label>
                   <label>目的国家 / 地区<select id="setDestinationCountry"></select></label>
                   <label>目的城市<select id="setDestinationCity"></select></label>
-                  <label>交通方式
+
+                  <label>主要交通方式
                     <select id="setTransportMode">
                       <option value="undecided">🤔 还没决定</option>
                       <option value="self_drive">🚗 自驾</option>
@@ -7899,9 +7962,63 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
                       <option value="mixed">🔀 Mixed</option>
                     </select>
                   </label>
+
                   <label>开始日期<input id="setTripStartDate" type="date"></label>
                   <label>结束日期<input id="setTripEndDate" type="date"></label>
+
+                  <label>目的地消费币种
+                    <select id="setSpendCurrency">
+                      <option value="">未设定</option>
+                      <option value="MYR">MYR</option>
+                      <option value="THB">THB</option>
+                      <option value="SGD">SGD</option>
+                      <option value="IDR">IDR</option>
+                      <option value="VND">VND</option>
+                      <option value="PHP">PHP</option>
+                      <option value="JPY">JPY</option>
+                      <option value="KRW">KRW</option>
+                      <option value="CNY">CNY</option>
+                      <option value="TWD">TWD</option>
+                      <option value="HKD">HKD</option>
+                      <option value="USD">USD</option>
+                      <option value="GBP">GBP</option>
+                      <option value="EUR">EUR</option>
+                      <option value="AUD">AUD</option>
+                      <option value="NZD">NZD</option>
+                    </select>
+                  </label>
+
+                  <label>记账 / 结算币种
+                    <select id="setSettleCurrency">
+                      <option value="MYR">MYR</option>
+                      <option value="THB">THB</option>
+                      <option value="SGD">SGD</option>
+                      <option value="IDR">IDR</option>
+                      <option value="VND">VND</option>
+                      <option value="PHP">PHP</option>
+                      <option value="JPY">JPY</option>
+                      <option value="KRW">KRW</option>
+                      <option value="CNY">CNY</option>
+                      <option value="TWD">TWD</option>
+                      <option value="HKD">HKD</option>
+                      <option value="USD">USD</option>
+                      <option value="GBP">GBP</option>
+                      <option value="EUR">EUR</option>
+                      <option value="AUD">AUD</option>
+                      <option value="NZD">NZD</option>
+                    </select>
+                  </label>
+
+                  <label class="full">当前汇率
+                    <div class="sharedFxInputRow">
+                      <input id="setTripRate" type="number" min="0" step="0.000001">
+                      <button class="ghost sharedFxRefreshBtn" type="button" id="refreshSharedFxBtn">↻ 更新</button>
+                    </div>
+                    <span class="help" id="setTripRateHint">用于预算换算；目的地改变时会自动更新，也可以手动修改。</span>
+                  </label>
                 </div>
+
+                <div class="tripProfileHint" id="setTripProfileHint"></div>
               </div>
               <label class="full">当前 Day 路线<input id="setCurrentRoute"></label>
               <button class="btn primary full" type="submit">保存设置</button>
@@ -8793,7 +8910,10 @@ async function init(){
       destination_city:$('setDestinationCity')?.value||null,
       transport_mode:$('setTransportMode')?.value||'undecided',
       start_date:$('setTripStartDate')?.value||null,
-      end_date:$('setTripEndDate')?.value||null
+      end_date:$('setTripEndDate')?.value||null,
+      spend_currency:$('setSpendCurrency')?.value||null,
+      settle_currency:$('setSettleCurrency')?.value||'MYR',
+      thb_rate:Number($('setTripRate')?.value||currentTrip.thb_rate||0)
     };
 
     const {error}=await sb.from('trips').update(patch).eq('id',currentTrip.id);
@@ -8804,9 +8924,43 @@ async function init(){
     }
 
     Object.assign(currentTrip,patch);
+    updateSharedTripProfileHint();
   });
 
-  $('joinTripForm').addEventListener('submit',joinTrip);
+
+  $('setOriginCountry')?.addEventListener('change',()=>{
+    populateCitySelect('setOriginCity',$('setOriginCountry').value);
+    updateSharedTripProfileHint();
+  });
+  $('setOriginCity')?.addEventListener('change',updateSharedTripProfileHint);
+
+  $('setDestinationCountry')?.addEventListener('change',()=>{
+    populateCitySelect('setDestinationCity',$('setDestinationCountry').value);
+
+    const currency=countryCurrency($('setDestinationCountry').value);
+
+    if(currency && $('setSpendCurrency')){
+      $('setSpendCurrency').value=currency;
+    }
+
+    if($('setSettleCurrency') && !$('setSettleCurrency').value){
+      $('setSettleCurrency').value='MYR';
+    }
+
+    updateSharedTripProfileHint();
+
+    requestAnimationFrame(()=>{
+      refreshSharedTripFx();
+    });
+  });
+  $('setDestinationCity')?.addEventListener('change',updateSharedTripProfileHint);
+  $('setTransportMode')?.addEventListener('change',updateSharedTripProfileHint);
+
+  $('setSpendCurrency')?.addEventListener('change',refreshSharedTripFx);
+  $('refreshSharedFxBtn')?.addEventListener('click',refreshSharedTripFx);
+  $('setSettleCurrency')?.addEventListener('change',refreshSharedTripFx);
+
+    $('joinTripForm').addEventListener('submit',joinTrip);
   $('openCreateTripBtn')?.addEventListener('click',openCreateTripDialog);
   document.querySelectorAll('[data-home-template]').forEach(btn=>{
     btn.addEventListener('click',()=>applyHomeTripTemplate(btn.dataset.homeTemplate));
@@ -9156,17 +9310,81 @@ function formatFxRate(rate){
   return n.toFixed(6);
 }
 
+
+async function fetchLiveFxRate(from,to){
+  from=String(from||'').toUpperCase();
+  to=String(to||'').toUpperCase();
+
+  if(!from || !to) throw new Error('Currency pair missing');
+  if(from===to){
+    return {rate:1,date:new Date().toISOString().slice(0,10),source:'same-currency'};
+  }
+
+  const attempts=[
+    async()=>{
+      const res=await fetch(
+        `https://api.frankfurter.dev/v2/rate/${encodeURIComponent(from)}/${encodeURIComponent(to)}`,
+        {cache:'no-store'}
+      );
+      if(!res.ok) throw new Error(`Frankfurter v2 HTTP ${res.status}`);
+      const data=await res.json();
+      const rate=Number(data?.rate);
+      if(!Number.isFinite(rate)||rate<=0) throw new Error('Frankfurter v2 invalid rate');
+      return {rate,date:data?.date||'',source:'Frankfurter v2'};
+    },
+
+    async()=>{
+      const res=await fetch(
+        `https://api.frankfurter.app/latest?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
+        {cache:'no-store'}
+      );
+      if(!res.ok) throw new Error(`Frankfurter v1 HTTP ${res.status}`);
+      const data=await res.json();
+      const rate=Number(data?.rates?.[to]);
+      if(!Number.isFinite(rate)||rate<=0) throw new Error('Frankfurter v1 invalid rate');
+      return {rate,date:data?.date||'',source:'Frankfurter v1'};
+    },
+
+    async()=>{
+      const res=await fetch(
+        `https://open.er-api.com/v6/latest/${encodeURIComponent(from)}`,
+        {cache:'no-store'}
+      );
+      if(!res.ok) throw new Error(`ER API HTTP ${res.status}`);
+      const data=await res.json();
+      const rate=Number(data?.rates?.[to]);
+      if(!Number.isFinite(rate)||rate<=0) throw new Error('ER API invalid rate');
+      return {
+        rate,
+        date:data?.time_last_update_utc
+          ? new Date(data.time_last_update_utc).toISOString().slice(0,10)
+          : '',
+        source:'ER API'
+      };
+    }
+  ];
+
+  let lastError=null;
+
+  for(const attempt of attempts){
+    try{
+      return await attempt();
+    }catch(err){
+      lastError=err;
+      console.warn('FX provider failed:',err);
+    }
+  }
+
+  throw lastError||new Error('All FX providers failed');
+}
+
 async function refreshCreateTripFx(){
   const {from,to}=fxPair();
 
   if(!$('fxRateMain') || !$('newRate')) return;
 
-  if(from===to){
-    $('newRate').value='1';
-    $('fxRateMain').textContent=`1 ${from} = 1 ${to}`;
-    $('fxRateReverse').textContent=`1 ${to} = 1 ${from}`;
-    $('fxStatus').textContent='同一货币';
-    $('fxStatus').classList.remove('fxError','fxLoading');
+  if(!from || !to){
+    $('fxStatus').textContent='请选择币种';
     return;
   }
 
@@ -9175,32 +9393,30 @@ async function refreshCreateTripFx(){
   $('fxStatus').classList.add('fxLoading');
 
   try{
-    const url=`https://api.frankfurter.dev/v2/rate/${encodeURIComponent(from)}/${encodeURIComponent(to)}`;
-    const response=await fetch(url,{cache:'no-store'});
-
-    if(!response.ok){
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    const data=await response.json();
-    const rate=Number(data.rate);
-
-    if(!Number.isFinite(rate) || rate<=0){
-      throw new Error('Invalid rate');
-    }
+    const {rate,date,source}=await fetchLiveFxRate(from,to);
 
     $('newRate').value=String(rate);
     $('fxRateMain').textContent=`1 ${from} = ${formatFxRate(rate)} ${to}`;
     $('fxRateReverse').textContent=`1 ${to} = ${formatFxRate(1/rate)} ${from}`;
-    $('fxStatus').textContent=data.date?`参考价 · ${data.date}`:'最新参考价';
+
+    $('fxStatus').textContent=
+      from===to
+        ? '同一货币'
+        : `${source}${date?` · ${date}`:''}`;
+
     $('fxStatus').classList.remove('fxLoading','fxError');
   }catch(err){
-    $('fxStatus').textContent='暂时无法更新 · 可手动填写';
+    console.error('Create Trip FX failed:',err);
+
+    $('fxStatus').textContent='自动更新失败 · 可手动填写';
     $('fxStatus').classList.remove('fxLoading');
     $('fxStatus').classList.add('fxError');
 
     const manual=Number($('newRate').value||0);
-    $('fxRateMain').textContent=`1 ${from} = ${manual>0?formatFxRate(manual):'—'} ${to}`;
+
+    $('fxRateMain').textContent=
+      `1 ${from} = ${manual>0?formatFxRate(manual):'—'} ${to}`;
+
     $('fxRateReverse').textContent=
       manual>0
         ? `1 ${to} = ${formatFxRate(1/manual)} ${from}`
@@ -9335,14 +9551,14 @@ function syncCreateTripCurrencyFromDestination(){
     $('newFromCurrency').value=currency;
   }
 
-  // For this app the user's accounting/base currency defaults to MYR.
   if($('newToCurrency')){
     $('newToCurrency').value='MYR';
   }
 
-  if(currency){
+  // Let the select value commit first, then fetch the new pair.
+  requestAnimationFrame(()=>{
     refreshCreateTripFx();
-  }
+  });
 }
 
 function updateCreateTripProfileHint(){
@@ -9410,6 +9626,53 @@ function initTripProfileControls(){
   });
 }
 
+
+function updateSharedTripProfileHint(){
+  const oCountry=$('setOriginCountry')?.value||currentTrip?.origin_country||'';
+  const oCity=$('setOriginCity')?.value||currentTrip?.origin_city||'';
+  const dCountry=$('setDestinationCountry')?.value||currentTrip?.destination_country||'';
+  const dCity=$('setDestinationCity')?.value||currentTrip?.destination_city||'';
+  const transport=$('setTransportMode')?.value||currentTrip?.transport_mode||'undecided';
+
+  const labels={
+    undecided:'交通未决定',
+    self_drive:'🚗 自驾',
+    flight:'✈️ 飞机',
+    public_transport:'🚆 公共交通',
+    mixed:'🔀 Mixed'
+  };
+
+  const origin=[oCity,oCountry].filter(Boolean).join(', ');
+  const destination=[dCity,dCountry].filter(Boolean).join(', ');
+  const hint=$('setTripProfileHint');
+  if(!hint) return;
+
+  hint.textContent=`${origin||'未设定出发地'} → ${destination||'未设定目的地'} · ${labels[transport]||'交通未决定'}`;
+}
+
+async function refreshSharedTripFx(){
+  const from=$('setSpendCurrency')?.value||'';
+  const to=$('setSettleCurrency')?.value||'MYR';
+
+  if(!from || !to || !$('setTripRate')) return;
+
+  $('setTripRateHint').textContent='正在更新最新参考汇率…';
+
+  try{
+    const {rate,date,source}=await fetchLiveFxRate(from,to);
+
+    $('setTripRate').value=String(rate);
+
+    $('setTripRateHint').textContent=
+      from===to
+        ? `1 ${from} = 1 ${to}`
+        : `参考：1 ${from} = ${formatFxRate(rate)} ${to} · ${source}${date?` · ${date}`:''}`;
+  }catch(err){
+    console.error('Shared Trip FX failed:',err);
+    $('setTripRateHint').textContent='自动汇率失败，可手动填写实际汇率。';
+  }
+}
+
 function fillTripSettingsProfile(){
   if(!currentTrip) return;
 
@@ -9427,6 +9690,17 @@ function fillTripSettingsProfile(){
   if($('setTripEndDate')){
     $('setTripEndDate').value=currentTrip.end_date||'';
   }
+  if($('setSpendCurrency')){
+    $('setSpendCurrency').value=currentTrip.spend_currency||countryCurrency(currentTrip.destination_country||'')||'';
+  }
+  if($('setSettleCurrency')){
+    $('setSettleCurrency').value=currentTrip.settle_currency||'MYR';
+  }
+  if($('setTripRate')){
+    $('setTripRate').value=Number(currentTrip.thb_rate||0);
+  }
+
+  updateSharedTripProfileHint();
 }
 
 const HOME_TRIP_TEMPLATES={
