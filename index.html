@@ -7086,6 +7086,119 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 }
 </style>
 
+
+<style id="roadTripV621ImportDraftTemplates">
+.homeTemplatesCard{
+  margin-top:14px;
+}
+
+.homeTemplatesTitle{
+  margin-bottom:12px !important;
+}
+
+.homeTemplateGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+}
+
+.homeTemplateCard{
+  width:100%;
+  min-width:0;
+  display:grid;
+  grid-template-columns:45px minmax(0,1fr) 20px;
+  align-items:center;
+  gap:10px;
+  padding:11px 12px;
+  text-align:left;
+  border:1px solid var(--rt-border);
+  border-radius:15px;
+  background:var(--rt-surface-2);
+  color:var(--rt-text);
+  box-shadow:none;
+}
+
+.homeTemplateCard:active{
+  transform:scale(.987) !important;
+}
+
+.homeTemplateEmoji{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  background:var(--rt-surface);
+  border:1px solid var(--rt-border);
+  font-size:18px;
+}
+
+.homeTemplateCopy{
+  min-width:0;
+}
+
+.homeTemplateCopy strong{
+  display:block;
+  color:var(--rt-text);
+  font-size:12px;
+  line-height:1.3;
+}
+
+.homeTemplateCopy small{
+  display:block;
+  margin-top:3px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:var(--rt-muted);
+  font-size:9.5px;
+}
+
+.homeTemplateCopy>span{
+  display:block;
+  margin-top:4px;
+  color:var(--travel-sky,#2F80ED);
+  font-size:9px;
+  font-weight:850;
+}
+
+.homeTemplateArrow{
+  justify-self:end;
+  color:var(--rt-muted);
+  font-size:19px;
+}
+
+.homeTemplatesHint{
+  margin-top:10px !important;
+  padding-top:9px;
+  border-top:1px solid var(--rt-border);
+}
+
+@media(max-width:640px){
+  .homeTemplateGrid{
+    grid-template-columns:1fr;
+    gap:7px;
+  }
+
+  .homeTemplateCard{
+    grid-template-columns:40px minmax(0,1fr) 18px;
+    padding:10px;
+    border-radius:14px;
+  }
+
+  .homeTemplateEmoji{
+    width:37px;
+    height:37px;
+    border-radius:11px;
+    font-size:16px;
+  }
+
+  .homeTemplateCopy strong{
+    font-size:11.5px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -7178,13 +7291,87 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
       </div>
       <div id="tripList"></div>
     </div>
+
+    <div class="card homeTemplatesCard">
+      <div class="sectionTitle homeTemplatesTitle">
+        <div>
+          <div class="homeEyebrow">STARTER IDEAS</div>
+          <h2>🧳 Trip Templates</h2>
+          <div class="footerMini">第一次用不知道怎么开始？先选一种旅行方式。建立后再让 AI 按你的日期、预算和喜好规划。</div>
+        </div>
+      </div>
+
+      <div class="homeTemplateGrid">
+        <button class="homeTemplateCard" type="button" data-home-template="malaysia_drive">
+          <span class="homeTemplateEmoji">🇲🇾🚗</span>
+          <span class="homeTemplateCopy">
+            <strong>Malaysia Road Trip</strong>
+            <small>JB → Melaka → KL → Ipoh → Penang</small>
+            <span>6D5N · 国内自驾</span>
+          </span>
+          <span class="homeTemplateArrow">›</span>
+        </button>
+
+        <button class="homeTemplateCard" type="button" data-home-template="thailand_drive">
+          <span class="homeTemplateEmoji">🇲🇾🚗🇹🇭</span>
+          <span class="homeTemplateCopy">
+            <strong>Thailand Cross-border Drive</strong>
+            <small>JB → Ipoh → Hat Yai → Krabi → Cameron</small>
+            <span>9D8N · 跨境自驾</span>
+          </span>
+          <span class="homeTemplateArrow">›</span>
+        </button>
+
+        <button class="homeTemplateCard" type="button" data-home-template="tokyo_flight">
+          <span class="homeTemplateEmoji">✈️🇯🇵</span>
+          <span class="homeTemplateCopy">
+            <strong>Tokyo City Trip</strong>
+            <small>Flight + Train / Metro</small>
+            <span>7D6N · 飞机出国</span>
+          </span>
+          <span class="homeTemplateArrow">›</span>
+        </button>
+
+        <button class="homeTemplateCard" type="button" data-home-template="bali_island">
+          <span class="homeTemplateEmoji">✈️🏝️</span>
+          <span class="homeTemplateCopy">
+            <strong>Bali Island Trip</strong>
+            <small>Beach · Cafe · Culture · Driver / Grab</small>
+            <span>5D4N · 海岛度假</span>
+          </span>
+          <span class="homeTemplateArrow">›</span>
+        </button>
+
+        <button class="homeTemplateCard" type="button" data-home-template="singapore_weekend">
+          <span class="homeTemplateEmoji">🇸🇬🚆</span>
+          <span class="homeTemplateCopy">
+            <strong>Singapore Weekend</strong>
+            <small>Public Transport · Food · Shopping</small>
+            <span>3D2N · 短途城市游</span>
+          </span>
+          <span class="homeTemplateArrow">›</span>
+        </button>
+
+        <button class="homeTemplateCard" type="button" data-home-template="family_flight">
+          <span class="homeTemplateEmoji">👨‍👩‍👧✈️</span>
+          <span class="homeTemplateCopy">
+            <strong>Family Overseas Trip</strong>
+            <small>轻松节奏 · Kids-friendly · 少走路</small>
+            <span>6D5N · 家庭旅行</span>
+          </span>
+          <span class="homeTemplateArrow">›</span>
+        </button>
+      </div>
+
+      <div class="footerMini homeTemplatesHint">这些是“起步模板”，不会偷偷导入固定景点。建立 Trip 后可以自己加、用 AI Planner，或再选择详细行程 Template。</div>
+    </div>
   </section>
 
   <section id="tripView" class="hide">
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.2 · AI PLANNER V2 + DRAFTS · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.2.1 · IMPORT + DRAFT SCOPE + HOME TEMPLATES · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -7763,7 +7950,7 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 
     <div class="formGrid">
       <label class="full">标题
-        <input id="newTitle" value="🇲🇾🚗🇹🇭 Thailand Road Trip 2026">
+        <input id="newTitle" value="✈️ My New Trip">
       </label>
 
       <label>天数
@@ -8433,6 +8620,9 @@ async function init(){
   $('createTripForm').addEventListener('submit',createTrip);
   $('joinTripForm').addEventListener('submit',joinTrip);
   $('openCreateTripBtn')?.addEventListener('click',openCreateTripDialog);
+  document.querySelectorAll('[data-home-template]').forEach(btn=>{
+    btn.addEventListener('click',()=>applyHomeTripTemplate(btn.dataset.homeTemplate));
+  });
   $('cancelCreateTripBtn')?.addEventListener('click',()=>$('createTripDialog').close());
   $('refreshFxBtn')?.addEventListener('click',refreshCreateTripFx);
   $('newFromCurrency')?.addEventListener('change',refreshCreateTripFx);
@@ -8725,8 +8915,21 @@ async function onAuth(e){
 }
 
 async function openHome(){
+  // Home must never keep a Draft from the previously opened Trip.
+  aiDrafts=[];
+  aiGeneratedPlan=null;
+  aiCurrentDraftId=null;
+  aiCurrentRequest=null;
+
+  const draftsCard=$('aiDraftsCard');
+  const draftsList=$('aiDraftsList');
+  if(draftsCard) draftsCard.classList.add('hide');
+  if(draftsList) draftsList.innerHTML='';
+
   show(homeView);
+
   if(mobileBar) mobileBar.classList.add('hide');
+
   $('userEmail').textContent=user.email||'';
   await loadTripList();
 }
@@ -8821,6 +9024,90 @@ async function refreshCreateTripFx(){
         ? `1 ${to} = ${formatFxRate(1/manual)} ${from}`
         : `1 ${to} = — ${from}`;
   }
+}
+
+
+const HOME_TRIP_TEMPLATES={
+  malaysia_drive:{
+    title:'🇲🇾 Malaysia Road Trip',
+    days:6,
+    people:4,
+    budget:4500,
+    spendCurrency:'MYR',
+    settleCurrency:'MYR',
+    rate:1
+  },
+  thailand_drive:{
+    title:'🇲🇾🚗🇹🇭 Thailand Cross-border Road Trip',
+    days:9,
+    people:4,
+    budget:6000,
+    spendCurrency:'THB',
+    settleCurrency:'MYR',
+    rate:0.13
+  },
+  tokyo_flight:{
+    title:'✈️🇯🇵 Tokyo City Trip',
+    days:7,
+    people:4,
+    budget:9000,
+    spendCurrency:'JPY',
+    settleCurrency:'MYR',
+    rate:0.03
+  },
+  bali_island:{
+    title:'✈️🏝️ Bali Island Trip',
+    days:5,
+    people:4,
+    budget:6500,
+    spendCurrency:'IDR',
+    settleCurrency:'MYR',
+    rate:0.00028
+  },
+  singapore_weekend:{
+    title:'🇸🇬 Singapore Weekend Trip',
+    days:3,
+    people:4,
+    budget:3000,
+    spendCurrency:'SGD',
+    settleCurrency:'MYR',
+    rate:3.3
+  },
+  family_flight:{
+    title:'👨‍👩‍👧 Family Overseas Trip',
+    days:6,
+    people:4,
+    budget:9000,
+    spendCurrency:'JPY',
+    settleCurrency:'MYR',
+    rate:0.03
+  }
+};
+
+function applyHomeTripTemplate(key){
+  const preset=HOME_TRIP_TEMPLATES[key];
+  if(!preset) return;
+
+  $('newTitle').value=preset.title;
+  $('newDays').value=preset.days;
+  $('newPeople').value=preset.people;
+  $('newBudget').value=preset.budget;
+
+  if($('newFromCurrency')){
+    $('newFromCurrency').value=preset.spendCurrency;
+  }
+  if($('newToCurrency')){
+    $('newToCurrency').value=preset.settleCurrency;
+  }
+  if($('newRate')){
+    $('newRate').value=String(preset.rate);
+  }
+
+  $('createTripDialog').showModal();
+
+  requestAnimationFrame(()=>{
+    refreshCreateTripFx();
+  });
 }
 
 function openCreateTripDialog(){
@@ -8944,11 +9231,29 @@ async function deleteOrLeaveTrip(tripId,isOwner){
 }
 
 async function openTrip(id){
+  // Clear every AI draft visual/state BEFORE switching Trip.
+  // This prevents the previous Trip's Draft rows remaining on screen
+  // while the new Trip is loading.
+  aiDrafts=[];
+  aiGeneratedPlan=null;
+  aiCurrentDraftId=null;
+  aiCurrentRequest=null;
+
+  const draftsCard=$('aiDraftsCard');
+  const draftsList=$('aiDraftsList');
+  if(draftsCard) draftsCard.classList.add('hide');
+  if(draftsList) draftsList.innerHTML='';
+
   const {data,error}=await sb.from('trips').select('*').eq('id',id).single();
   if(error){ toast(error.message,'err'); return; }
-  currentTrip=data; activeDay=Math.min(activeDay,currentTrip.days)||1;
+
+  currentTrip=data;
+  activeDay=Math.min(activeDay,currentTrip.days)||1;
+
   show(tripView);
+
   if(mobileBar) mobileBar.classList.remove('hide');
+
   await refreshTrip();
   subscribeTrip();
   switchPanel('overview');
@@ -9578,7 +9883,10 @@ function renderAIDrafts(){
   const meta=$('aiDraftsMeta');
   if(!card || !list || !meta) return;
 
-  const visible=(aiDrafts||[]).filter(d=>d.status!=='archived');
+  const visible=(aiDrafts||[]).filter(d=>
+    d.status!=='archived' &&
+    String(d.trip_id||'')===String(currentTrip?.id||'')
+  );
   card.classList.toggle('hide',visible.length===0);
 
   if(!visible.length){
@@ -9620,7 +9928,10 @@ function openAIPlanner(){
 }
 
 function openAIDraft(id){
-  const draft=(aiDrafts||[]).find(x=>x.id===id);
+  const draft=(aiDrafts||[]).find(x=>
+    x.id===id &&
+    String(x.trip_id||'')===String(currentTrip?.id||'')
+  );
   if(!draft) return;
 
   resetAIPlannerUi();
@@ -9923,6 +10234,136 @@ async function generateAIPlan(e){
   }
 }
 
+
+function aiBudgetCategoryName(category){
+  return ({
+    flight:'Flight',
+    hotel:'Hotel',
+    fuel:'Fuel',
+    toll:'Toll',
+    parking:'Parking',
+    rental_car:'Rental Car',
+    public_transport:'Public Transport',
+    airport_transfer:'Airport Transfer',
+    food:'Food',
+    attractions:'Attractions',
+    shopping:'Shopping',
+    insurance:'Insurance',
+    visa_border:'Visa / Border',
+    sim_internet:'SIM / Internet',
+    buffer:'Emergency Buffer',
+    other:'Other'
+  })[String(category||'').toLowerCase()] || 'Other';
+}
+
+function aiBudgetCategoryItemType(category){
+  const key=String(category||'').toLowerCase();
+
+  if(['hotel'].includes(key)) return '🏨 酒店';
+  if(['food'].includes(key)) return '🍜 美食';
+  if(['shopping'].includes(key)) return '🛍️ 购物';
+  if(['flight','fuel','toll','parking','rental_car','public_transport','airport_transfer'].includes(key)){
+    return '🚗 交通 / Border';
+  }
+
+  return '📝 其他';
+}
+
+function buildAIBudgetRows(plan,normalize){
+  const breakdown=Array.isArray(plan?.budget_breakdown)?plan.budget_breakdown:[];
+  const existingBudgetKeys=new Set(
+    items
+      .filter(isBudgetItem)
+      .map(i=>normalize(i.name))
+  );
+
+  const rows=[];
+
+  breakdown.forEach(entry=>{
+    const label=aiBudgetCategoryName(entry.category);
+    const name=`[Budget] AI ${label}`;
+    const key=normalize(name);
+
+    if(existingBudgetKeys.has(key)) return;
+    existingBudgetKeys.add(key);
+
+    rows.push({
+      trip_id:currentTrip.id,
+      day_no:1,
+      name,
+      category:aiBudgetCategoryItemType(entry.category),
+      priority:'👍 想去',
+      plan_status:'candidate',
+      auto_confirmed:false,
+      start_time:null,
+      duration_minutes:0,
+      travel_minutes:0,
+      location:'Whole Trip',
+      cost:Math.max(0,Number(entry.estimated_rm||0)),
+      link:'',
+      note:[
+        '✨ AI Budget Estimate',
+        entry.note?String(entry.note):''
+      ].filter(Boolean).join('\n'),
+      created_by:user.id
+    });
+  });
+
+  return rows;
+}
+
+function buildAIPlanningInfoRow(plan,normalize){
+  const name='[Budget] AI Trip Planning Summary';
+
+  const alreadyExists=items
+    .filter(isBudgetItem)
+    .some(i=>normalize(i.name)===normalize(name));
+
+  if(alreadyExists) return null;
+
+  const season=plan?.season_analysis||{};
+  const warnings=Array.isArray(plan?.travel_warnings)?plan.travel_warnings:[];
+  const flight=plan?.estimated_flight||{};
+  const budget=plan?.budget_summary||{};
+
+  const note=[
+    plan?.recommended_transport?`🚦 Recommended transport: ${plan.recommended_transport}`:'',
+    plan?.transport_reason?`Reason: ${plan.transport_reason}`:'',
+    season?.best_month?`🌤 Best month: ${season.best_month}`:'',
+    Array.isArray(season?.recommended_months)&&season.recommended_months.length
+      ? `Recommended months: ${season.recommended_months.join(', ')}`
+      : '',
+    season?.climate?`Climate: ${season.climate}`:'',
+    flight?.applicable
+      ? `✈️ Flight estimate: ${money(Number(flight.estimated_total_rm||0))} total · ${money(Number(flight.estimated_per_person_rm||0))}/person`
+      : '',
+    budget?.estimated_total_rm
+      ? `💰 AI estimated total: ${money(Number(budget.estimated_total_rm||0))}`
+      : '',
+    warnings.length
+      ? `⚠️ Warnings:\n${warnings.map(x=>`• ${x}`).join('\n')}`
+      : ''
+  ].filter(Boolean).join('\n\n');
+
+  return {
+    trip_id:currentTrip.id,
+    day_no:1,
+    name,
+    category:'📝 其他',
+    priority:'👍 想去',
+    plan_status:'candidate',
+    auto_confirmed:false,
+    start_time:null,
+    duration_minutes:0,
+    travel_minutes:0,
+    location:'Whole Trip',
+    cost:0,
+    link:'',
+    note,
+    created_by:user.id
+  };
+}
+
 async function importAIPlan(){
   if(!aiGeneratedPlan || !currentTrip || !user) return;
 
@@ -9931,6 +10372,7 @@ async function importAIPlan(){
     (Array.isArray(day.places)?day.places:[]).map(place=>({day,place}))
   );
   const aiChecks=Array.isArray(aiGeneratedPlan.checklist)?aiGeneratedPlan.checklist:[];
+  const aiBudgetBreakdown=Array.isArray(aiGeneratedPlan.budget_breakdown)?aiGeneratedPlan.budget_breakdown:[];
 
   if(!places.length){
     toast('这个 AI Plan 没有地点可以导入','err');
@@ -9940,6 +10382,7 @@ async function importAIPlan(){
   const ok=confirm(
     `把 AI Preview 的 ${places.length} 个地点加入这趟 Trip？\n\n`+
     '• 地点全部先进入“候选 / 投票”\n'+
+    `• AI Budget ${aiBudgetBreakdown.length} 项会补进 Budget / Trip Info\n`+
     `• AI Checklist ${aiChecks.length} 项会尝试补进 Shared Checklist\n`+
     '• 不会自动确认地点\n'+
     '• 同 Day 同名地点 / 同名 Checklist 会跳过\n'+
@@ -10018,6 +10461,18 @@ async function importAIPlan(){
       if(itemErr) throw itemErr;
     }
 
+    const budgetRows=buildAIBudgetRows(aiGeneratedPlan,normalize);
+    const planningInfoRow=buildAIPlanningInfoRow(aiGeneratedPlan,normalize);
+    if(planningInfoRow) budgetRows.push(planningInfoRow);
+
+    let addedBudget=0;
+
+    if(budgetRows.length){
+      const {error:budgetErr}=await sb.from('items').insert(budgetRows);
+      if(budgetErr) throw budgetErr;
+      addedBudget=budgetRows.length;
+    }
+
     let addedChecklist=0;
 
     if(checklistAvailable && aiChecks.length){
@@ -10070,6 +10525,7 @@ async function importAIPlan(){
 
     toast(
       `AI Plan 已加入 ${rows.length} 个候选地点`+
+      `${addedBudget?` + ${addedBudget} 个 Budget / Trip Info`:''}`+
       `${addedChecklist?` + ${addedChecklist} 个 Checklist`:''} ✅`
     );
 
