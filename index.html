@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="zh-Hans">
 <head>
-  <meta name="roadtrip-build" content="6.7.4">
-  <!-- RoadTrip internal build: 6.7.4 -->
+  <meta name="roadtrip-build" content="6.8.0">
+  <!-- RoadTrip internal build: 6.8.0 -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -7857,6 +7857,72 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
   .multiStopRowV67 .multiStopRemoveBtn{grid-column:3;grid-row:1 / span 3;align-self:center}
 }
 </style>
+
+<style id="roadTripV68LanguageSwitcher">
+.appLanguageControl{
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+
+.appLanguageBtn{
+  font-size:16px;
+}
+
+.appLanguageMenu{
+  position:absolute;
+  right:0;
+  top:calc(100% + 7px);
+  width:205px;
+  padding:7px;
+  border:1px solid var(--rt-border);
+  border-radius:15px;
+  background:var(--rt-surface);
+  box-shadow:0 18px 45px rgba(0,0,0,.2);
+  z-index:120;
+}
+
+.appLanguageMenu button{
+  width:100%;
+  min-height:43px;
+  display:flex;
+  align-items:center;
+  padding:8px 10px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:var(--rt-text);
+  font:inherit;
+  font-size:10.5px;
+  font-weight:850;
+  text-align:left;
+  cursor:pointer;
+}
+
+.appLanguageMenu button:hover,
+.appLanguageMenu button.active{
+  background:var(--rt-surface-2);
+}
+
+@media(max-width:640px){
+  .appLanguageMenu{
+    position:fixed;
+    left:14px;
+    right:14px;
+    top:auto;
+    bottom:calc(env(safe-area-inset-bottom,0px) + 18px);
+    width:auto;
+    border-radius:18px;
+    padding:8px;
+  }
+
+  .appLanguageMenu button{
+    min-height:50px;
+    font-size:12px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -7897,14 +7963,22 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
     <div class="hero homeHero">
       <div class="top">
         <div>
-          <div class="homeEyebrow">YOUR TRIPS</div>
-          <h1>✈️ My Road Trips</h1>
+          <div class="homeEyebrow" data-i18n="homeEyebrow">YOUR TRIPS</div>
+          <h1 data-i18n="homeTitle">✈️ My Road Trips</h1>
           <div class="sub" id="userEmail"></div>
         </div>
 
         <div class="homeTopActions">
+          <div class="appLanguageControl">
+            <button id="appLanguageBtn" class="homeThemeIconBtn appLanguageBtn" type="button" aria-label="更换语言" aria-expanded="false">🌐</button>
+            <div id="appLanguageMenu" class="appLanguageMenu hide">
+              <button type="button" data-app-language="zh">🇨🇳 中文</button>
+              <button type="button" data-app-language="en">🇬🇧 English</button>
+              <button type="button" data-app-language="ms">🇲🇾 Bahasa Melayu</button>
+            </div>
+          </div>
           <button id="homeThemeToggle" class="homeThemeIconBtn" type="button" aria-label="切换主题">◐</button>
-          <button id="logoutBtn" class="ghost">退出</button>
+          <button id="logoutBtn" class="ghost" data-i18n="logout">退出</button>
         </div>
       </div>
     </div>
@@ -7913,8 +7987,8 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
       <button class="homeActionCard homeCreateCard" type="button" id="openCreateTripBtn">
         <span class="homeActionIcon">＋</span>
         <span class="homeActionCopy">
-          <strong>建立新旅行</strong>
-          <small>标题、人数、预算与最新汇率</small>
+          <strong data-i18n="createTrip">建立新旅行</strong>
+          <small data-i18n="createTripSub">标题、人数、预算与最新汇率</small>
         </span>
         <span class="homeActionArrow">›</span>
       </button>
@@ -7923,8 +7997,8 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
         <summary>
           <span class="homeActionIcon">👥</span>
           <span class="homeActionCopy">
-            <strong>加入朋友的旅行</strong>
-            <small>使用 Invite Code 加入</small>
+            <strong data-i18n="joinTrip">加入朋友的旅行</strong>
+            <small data-i18n="joinTripSub">使用 Invite Code 加入</small>
           </span>
           <span class="homeActionArrow">⌄</span>
         </summary>
@@ -7933,7 +8007,7 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
             <label class="full">Invite Code
               <input id="joinCode" maxlength="8" placeholder="例如：A1B2C3D4">
             </label>
-            <button class="btn primary full" type="submit">加入旅行</button>
+            <button class="btn primary full" type="submit" data-i18n="joinTripButton">加入旅行</button>
           </form>
           <div class="footerMini">朋友把邀请码或带 ?join=CODE 的链接发给你即可。</div>
         </div>
@@ -7943,8 +8017,8 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
     <div class="card glass homeTripListCard">
       <div class="sectionTitle">
         <div>
-          <h2>你的旅行</h2>
-          <div class="footerMini">所有计划都在这里。</div>
+          <h2 data-i18n="yourTrips">你的旅行</h2>
+          <div class="footerMini" data-i18n="yourTripsSub">所有计划都在这里。</div>
         </div>
       </div>
       <div id="tripList"></div>
@@ -7953,9 +8027,9 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
     <div class="card homeTemplatesCard">
       <div class="sectionTitle homeTemplatesTitle">
         <div>
-          <div class="homeEyebrow">STARTER IDEAS</div>
-          <h2>🧳 Trip Templates</h2>
-          <div class="footerMini">第一次用不知道怎么开始？先选一种旅行方式。建立后再让 AI 按你的日期、预算和喜好规划。</div>
+          <div class="homeEyebrow" data-i18n="starterIdeas">STARTER IDEAS</div>
+          <h2 data-i18n="tripTemplates">🧳 Trip Templates</h2>
+          <div class="footerMini" data-i18n="tripTemplatesSub">第一次用不知道怎么开始？先选一种旅行方式。建立后再让 AI 按你的日期、预算和喜好规划。</div>
         </div>
       </div>
 
@@ -9564,7 +9638,172 @@ window.addEventListener('popstate',event=>{
   restoreAppHistory(event.state);
 });
 
+
+const APP_LANG={
+  zh:{
+    homeEyebrow:'YOUR TRIPS',
+    homeTitle:'✈️ My Road Trips',
+    createTrip:'建立新旅行',
+    createTripSub:'标题、人数、预算与最新汇率',
+    joinTrip:'加入朋友的旅行',
+    joinTripSub:'使用 Invite Code 加入',
+    joinTripButton:'加入旅行',
+    yourTrips:'你的旅行',
+    yourTripsSub:'所有计划都在这里。',
+    starterIdeas:'STARTER IDEAS',
+    tripTemplates:'🧳 Trip Templates',
+    tripTemplatesSub:'第一次用不知道怎么开始？先选一种旅行方式。建立后再让 AI 按你的日期、预算和喜好规划。',
+    logout:'退出',
+    overview:'首页',
+    itinerary:'行程',
+    expenses:'预算 / 开销',
+    shared:'共享',
+    openAI:'打开 AI Planner',
+    sharedChecklist:'Shared Checklist',
+    tripSettings:'旅行设置',
+    inviteFriends:'邀请朋友',
+    members:'成员'
+  },
+  en:{
+    homeEyebrow:'YOUR TRIPS',
+    homeTitle:'✈️ My Road Trips',
+    createTrip:'Create New Trip',
+    createTripSub:'Title, travellers, budget & live exchange rate',
+    joinTrip:'Join a Friend’s Trip',
+    joinTripSub:'Join using an Invite Code',
+    joinTripButton:'Join Trip',
+    yourTrips:'Your Trips',
+    yourTripsSub:'All your travel plans are here.',
+    starterIdeas:'STARTER IDEAS',
+    tripTemplates:'🧳 Trip Templates',
+    tripTemplatesSub:'Not sure where to start? Pick a travel style, then let AI plan around your dates, budget and preferences.',
+    logout:'Log out',
+    overview:'Overview',
+    itinerary:'Itinerary',
+    expenses:'Budget / Expenses',
+    shared:'Shared',
+    openAI:'Open AI Planner',
+    sharedChecklist:'Shared Checklist',
+    tripSettings:'Trip Settings',
+    inviteFriends:'Invite Friends',
+    members:'Members'
+  },
+  ms:{
+    homeEyebrow:'TRIP ANDA',
+    homeTitle:'✈️ Perjalanan Saya',
+    createTrip:'Cipta Perjalanan Baru',
+    createTripSub:'Tajuk, bilangan orang, bajet & kadar tukaran semasa',
+    joinTrip:'Sertai Trip Kawan',
+    joinTripSub:'Sertai menggunakan Invite Code',
+    joinTripButton:'Sertai Trip',
+    yourTrips:'Perjalanan Anda',
+    yourTripsSub:'Semua perancangan perjalanan ada di sini.',
+    starterIdeas:'IDEA PERMULAAN',
+    tripTemplates:'🧳 Template Trip',
+    tripTemplatesSub:'Tak pasti nak mula dari mana? Pilih gaya perjalanan, kemudian biar AI merancang ikut tarikh, bajet dan minat anda.',
+    logout:'Log keluar',
+    overview:'Utama',
+    itinerary:'Itinerari',
+    expenses:'Bajet / Perbelanjaan',
+    shared:'Kongsi',
+    openAI:'Buka AI Planner',
+    sharedChecklist:'Senarai Semak Bersama',
+    tripSettings:'Tetapan Perjalanan',
+    inviteFriends:'Jemput Kawan',
+    members:'Ahli'
+  }
+};
+
+let appLanguage=localStorage.getItem('roadtrip_language')||'zh';
+if(!APP_LANG[appLanguage]) appLanguage='zh';
+
+function langText(key){
+  return APP_LANG[appLanguage]?.[key]||APP_LANG.zh[key]||key;
+}
+
+function setNodeText(selector,text){
+  document.querySelectorAll(selector).forEach(el=>{ el.textContent=text; });
+}
+
+function setButtonVisibleText(el,text){
+  if(!el) return;
+  const icon=[...el.childNodes].find(n=>n.nodeType===Node.ELEMENT_NODE);
+  const textNode=[...el.childNodes].find(n=>n.nodeType===Node.TEXT_NODE && n.nodeValue.trim());
+  if(textNode) textNode.nodeValue=' '+text;
+  else if(icon) el.appendChild(document.createTextNode(' '+text));
+  else el.textContent=text;
+}
+
+function applyLanguage(){
+  document.documentElement.lang=appLanguage==='zh'?'zh-CN':appLanguage==='ms'?'ms':'en';
+
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.dataset.i18n;
+    const value=langText(key);
+    if(value) el.textContent=value;
+  });
+
+  // Desktop + mobile navigation
+  document.querySelectorAll('[data-panel="overview"]').forEach(el=>setButtonVisibleText(el,langText('overview')));
+  document.querySelectorAll('[data-panel="itinerary"]').forEach(el=>setButtonVisibleText(el,langText('itinerary')));
+  document.querySelectorAll('[data-panel="expenses"]').forEach(el=>setButtonVisibleText(el,langText('expenses')));
+  document.querySelectorAll('[data-panel="shared"]').forEach(el=>setButtonVisibleText(el,langText('shared')));
+
+  // Common stable UI sections
+  document.querySelectorAll('h3').forEach(h=>{
+    const t=h.textContent.trim();
+    if(['Shared Checklist','Senarai Semak Bersama'].includes(t)) h.textContent=langText('sharedChecklist');
+    if(['旅行设置','Trip Settings','Tetapan Perjalanan'].includes(t)) h.textContent=langText('tripSettings');
+    if(['邀请朋友','Invite Friends','Jemput Kawan'].includes(t)) h.textContent=langText('inviteFriends');
+    if(['成员','Members','Ahli'].includes(t)) h.textContent=langText('members');
+  });
+
+  const aiBtn=$('openAIPlannerBtn');
+  if(aiBtn) aiBtn.textContent=langText('openAI');
+
+  document.querySelectorAll('[data-app-language]').forEach(btn=>{
+    btn.classList.toggle('active',btn.dataset.appLanguage===appLanguage);
+  });
+}
+
+function setLanguage(lang){
+  if(!APP_LANG[lang]) return;
+  appLanguage=lang;
+  localStorage.setItem('roadtrip_language',lang);
+  applyLanguage();
+  $('appLanguageMenu')?.classList.add('hide');
+  $('appLanguageBtn')?.setAttribute('aria-expanded','false');
+}
+
+function initLanguageSwitcher(){
+  applyLanguage();
+
+  $('appLanguageBtn')?.addEventListener('click',e=>{
+    e.stopPropagation();
+    const menu=$('appLanguageMenu');
+    if(!menu) return;
+    const opening=menu.classList.contains('hide');
+    menu.classList.toggle('hide');
+    $('appLanguageBtn')?.setAttribute('aria-expanded',opening?'true':'false');
+  });
+
+  document.querySelectorAll('[data-app-language]').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      setLanguage(btn.dataset.appLanguage);
+    });
+  });
+
+  document.addEventListener('click',e=>{
+    if(!e.target.closest('.appLanguageControl')){
+      $('appLanguageMenu')?.classList.add('hide');
+      $('appLanguageBtn')?.setAttribute('aria-expanded','false');
+    }
+  });
+}
 async function init(){
+  initLanguageSwitcher();
+
   initAppHistory();
 
   const {data:{session}}=await sb.auth.getSession();
@@ -9966,6 +10205,8 @@ async function loadTripList(){
     </div>`).join('');
   document.querySelectorAll('[data-trip]').forEach(b=>b.addEventListener('click',()=>openTrip(b.dataset.trip)));
   document.querySelectorAll('[data-del-trip]').forEach(b=>b.addEventListener('click',()=>deleteOrLeaveTrip(b.dataset.delTrip, b.dataset.delOwner==='1')));
+
+  applyLanguage();
 }
 
 
@@ -13005,6 +13246,7 @@ function renderTrip(){
   $('setCurrentRoute').value=r[activeDay-1] || '';
 
   renderTravelUX();
+  applyLanguage();
 }
 
 
