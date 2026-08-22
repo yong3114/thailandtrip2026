@@ -7472,6 +7472,104 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 }
 </style>
 
+
+<style id="roadTripV651DraftResume">
+.aiWorkspaceToolbarActions{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex:0 0 auto;
+}
+
+@media(max-width:640px){
+  .aiWorkspaceToolbar{
+    flex-direction:column;
+    align-items:stretch !important;
+  }
+
+  .aiWorkspaceToolbarActions{
+    width:100%;
+  }
+
+  .aiWorkspaceToolbarActions button{
+    flex:1;
+  }
+}
+</style>
+
+
+<style id="roadTripV652WorkspacePersistence">
+#aiDraftsCard{
+  display:block !important;
+}
+
+#aiDraftsCard.hide{
+  display:block !important;
+}
+
+.aiWorkspaceLoading,
+.aiWorkspaceEmpty,
+.aiWorkspaceError{
+  margin-top:10px;
+  padding:14px;
+  border:1px solid var(--rt-border);
+  border-radius:14px;
+  background:var(--rt-surface-2);
+  color:var(--rt-muted);
+  font-size:10px;
+  line-height:1.5;
+}
+
+.aiWorkspaceLoading{
+  text-align:center;
+}
+
+.aiWorkspaceEmpty{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:6px;
+}
+
+.aiWorkspaceEmptyIcon{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  background:var(--rt-surface);
+  border:1px solid var(--rt-border);
+  font-size:18px;
+}
+
+.aiWorkspaceEmpty strong,
+.aiWorkspaceError strong{
+  color:var(--rt-text);
+  font-size:11px;
+}
+
+.aiWorkspaceEmpty span,
+.aiWorkspaceError span{
+  color:var(--rt-muted);
+  font-size:9px;
+}
+
+.aiWorkspaceEmpty button{
+  margin-top:4px;
+}
+
+.aiWorkspaceError{
+  display:grid;
+  gap:7px;
+  border-color:color-mix(in srgb,#E06A5F 30%,var(--rt-border));
+}
+
+.aiWorkspaceEmptyActions{
+  margin-top:8px;
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -7644,7 +7742,7 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.5 · MULTI-STOP TRIPS · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.5.2 · WORKSPACE PERSISTENCE FIX · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -8689,6 +8787,7 @@ let activeDay=1, todayDay=1, editingItem=null, editingExpense=null, channel=null
 let itemSearch='', itemCategoryFilter='全部', itemSortMode='default', itineraryMode='timeline';
 let budgetCategoryFilter='all';
 let aiGeneratedPlan=null, aiCurrentDraftId=null, aiCurrentRequest=null, aiDrafts=[];
+let aiDraftLoadError='';
 const mobileBar=$('mobileBar'), mobileAddBtn=$('mobileAddBtn');
 
 if(!configured){
@@ -9388,8 +9487,11 @@ async function openHome(){
 
   const draftsCard=$('aiDraftsCard');
   const draftsList=$('aiDraftsList');
-  if(draftsCard) draftsCard.classList.add('hide');
-  if(draftsList) draftsList.innerHTML='';
+  if(draftsCard) draftsCard.classList.remove('hide');
+  if(draftsList){
+    draftsList.innerHTML='<div class="aiWorkspaceLoading">正在载入这个 Trip 的 AI Workspace…</div>';
+  }
+  aiDraftLoadError='';
 
   show(homeView);
 
@@ -10296,6 +10398,7 @@ async function refreshTrip(){
   checklistTicksAvailable=!ticksRes.error;
   checklistTicks=(ticksRes.data||[]).filter(t=>checklistIds.has(t.checklist_id));
 
+  aiDraftLoadError=aiDraftsRes.error ? (aiDraftsRes.error.message||String(aiDraftsRes.error)) : '';
   aiDrafts=aiDraftsRes.error ? [] : (aiDraftsRes.data||[]);
 
   renderTrip();
@@ -10851,22 +10954,69 @@ function buildAIRequest(){
 function renderAIDrafts(){
   const card=$('aiDraftsCard'), list=$('aiDraftsList'), meta=$('aiDraftsMeta');
   if(!card||!list||!meta) return;
-  const visible=(aiDrafts||[]).filter(d=>d.status!=='archived' && String(d.trip_id||'')===String(currentTrip?.id||''));
-  card.classList.toggle('hide',visible.length===0);
-  if(!visible.length){ list.innerHTML=''; meta.textContent='这个 Trip 还没有 AI Version'; return; }
+
+  // Workspace must always exist for the current Trip.
+  card.classList.remove('hide');
+
+  const visible=(aiDrafts||[]).filter(d=>
+    d.status!=='archived' &&
+    String(d.trip_id||'')===String(currentTrip?.id||'')
+  );
+
+  if(aiDraftLoadError){
+    meta.textContent='Draft 读取失败';
+
+    list.innerHTML=`
+      <div class="aiWorkspaceError">
+        <strong>⚠️ AI Draft 暂时读取不到</strong>
+        <span>${escapeHtml(aiDraftLoadError)}</span>
+        <button type="button" class="ghost" id="retryAIDraftsBtn">↻ Retry</button>
+      </div>
+      <div class="aiWorkspaceEmptyActions">
+        <button type="button" class="btn primary" id="emptyNewAIPlanBtn">✨ New AI Plan</button>
+      </div>
+    `;
+
+    $('retryAIDraftsBtn')?.addEventListener('click',async()=>{
+      await refreshTrip();
+    });
+    $('emptyNewAIPlanBtn')?.addEventListener('click',openNewAIPlanner);
+    return;
+  }
+
+  if(!visible.length){
+    meta.textContent='这个 Trip 还没有 AI Version';
+
+    list.innerHTML=`
+      <div class="aiWorkspaceEmpty">
+        <div class="aiWorkspaceEmptyIcon">✨</div>
+        <strong>还没有保存的 AI Plan</strong>
+        <span>Generate 后会自动保存成 Review Draft，之后回来也会继续保留。</span>
+        <button type="button" class="btn primary" id="emptyNewAIPlanBtn">＋ New AI Plan</button>
+      </div>
+    `;
+
+    $('emptyNewAIPlanBtn')?.addEventListener('click',openNewAIPlanner);
+    return;
+  }
 
   const imported=visible.filter(d=>d.status==='imported');
   const review=visible.filter(d=>d.status==='review');
+
   meta.textContent=`${visible.length} 个 Version · ${review.length} Review${imported.length?` · ${imported.length} Imported`:''}`;
 
-  const section=(title,rows,kind)=>rows.length?`<div class="aiWorkspaceSection">
-    <div class="aiWorkspaceSectionHead">${title}<span>${rows.length}</span></div>
-    ${rows.map(d=>aiDraftRowHtml(d,kind)).join('')}
-  </div>`:'';
+  const section=(title,rows,kind)=>rows.length?`
+    <div class="aiWorkspaceSection">
+      <div class="aiWorkspaceSectionHead">${title}<span>${rows.length}</span></div>
+      ${rows.map(d=>aiDraftRowHtml(d,kind)).join('')}
+    </div>`:'';
 
   list.innerHTML=`<div class="aiWorkspaceToolbar">
-    <div class="footerMini">每个 Trip 完全独立 · 最多选择 2 个版本比较</div>
-    <button type="button" class="ghost aiCompareBtn" id="compareAIDraftsBtn" disabled>⚖️ Compare</button>
+    <div class="footerMini">每个 Trip 完全独立 · Review Draft 会自动继续</div>
+    <div class="aiWorkspaceToolbarActions">
+      <button type="button" class="ghost" id="newAIPlanBtn">＋ New Plan</button>
+      <button type="button" class="ghost aiCompareBtn" id="compareAIDraftsBtn" disabled>⚖️ Compare</button>
+    </div>
   </div>
   ${section('✅ Current / Imported',imported,'imported')}
   ${section('🟣 Review Drafts',review,'review')}`;
@@ -10875,9 +11025,10 @@ function renderAIDrafts(){
   document.querySelectorAll('[data-ai-draft-duplicate]').forEach(btn=>btn.addEventListener('click',()=>duplicateAIDraft(btn.dataset.aiDraftDuplicate)));
   document.querySelectorAll('[data-ai-draft-archive]').forEach(btn=>btn.addEventListener('click',()=>archiveAIDraft(btn.dataset.aiDraftArchive)));
   document.querySelectorAll('.aiCompareCheck').forEach(box=>box.addEventListener('change',handleAICompareSelection));
+
+  $('newAIPlanBtn')?.addEventListener('click',openNewAIPlanner);
   $('compareAIDraftsBtn')?.addEventListener('click',compareSelectedAIDrafts);
 }
-
 function aiDraftRowHtml(d,kind){
   const plan=d.plan_json||{}, req=d.request_json||{};
   const when=d.created_at?new Date(d.created_at).toLocaleString():'';
@@ -10980,7 +11131,7 @@ function openAIDraft(id){
     renderAIPlanPreview(aiGeneratedPlan);
     $('generateAIPlanBtn').classList.add('hide'); $('regenerateAIPlanBtn').classList.remove('hide');
     if(draft.status!=='imported') $('importAIPlanBtn').classList.remove('hide');
-    $('aiDraftBadge').innerHTML=`💾 V${Number(draft.version||1)} · ${draft.status==='imported'?'Imported':'Review'} · 当前 Trip`;
+    $('aiDraftBadge').innerHTML=`💾 V${Number(draft.version||1)} · ${draft.status==='imported'?'Imported':'Review'} · 已保存 · 当前 Trip`;
     $('aiDraftBadge').classList.remove('hide');
     $('aiPlannerState').innerHTML=draft.status==='imported'
       ?'<div class="saveState success">✅ 这个 Version 已导入。仍可查看、比较或 Modify 建立新版本。</div>'
@@ -10989,7 +11140,7 @@ function openAIDraft(id){
   $('aiPlannerDialog').showModal();
 }
 
-function openAIPlanner(){
+function openNewAIPlanner(){
   if(!currentTrip) return;
 
   resetAIPlannerUi();
@@ -11032,10 +11183,33 @@ function openAIPlanner(){
 
   $('aiPlannerState').innerHTML=
     (origin||destination)
-      ? '<div class="saveState success">📍 已自动读取这趟 Trip 的出发地 / 目的地 / 交通方式。你仍然可以在这里临时修改。</div>'
-      : '<div class="saveState saving">这趟 Trip 还没有设定地区。可以先在 AI Planner 选择，或之后去 Trip Info 设置。</div>';
+      ? '<div class="saveState success">📍 已自动读取这趟 Trip 的出发地 / 完整目的地路线 / 交通方式。你仍然可以临时修改。</div>'
+      : '<div class="saveState saving">这趟 Trip 还没有设定地区。可以先在这里规划，或之后去 Trip Info 设置。</div>';
 
   $('aiPlannerDialog').showModal();
+}
+
+function openAIPlanner(){
+  if(!currentTrip) return;
+
+  // Resume the latest REVIEW draft for the CURRENT Trip.
+  const latestReview=(aiDrafts||[])
+    .filter(d=>
+      d.status==='review' &&
+      String(d.trip_id||'')===String(currentTrip.id)
+    )
+    .sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0))[0];
+
+  if(latestReview){
+    openAIDraft(latestReview.id);
+
+    $('aiPlannerState').innerHTML=
+      `<div class="saveState success">↩️ 已自动继续上次的 Review Draft · V${Number(latestReview.version||1)}。如果要重新开始，请用 “＋ New Plan”。</div>`;
+
+    return;
+  }
+
+  openNewAIPlanner();
 }
 
 
@@ -11231,6 +11405,20 @@ async function saveAIDraft(request,plan,model){
   aiDrafts=[data,...(aiDrafts||[])];
   aiCurrentDraftId=data.id;
   aiCurrentRequest=request;
+  aiDraftLoadError='';
+
+  // Verify persistence by re-reading the current Trip's drafts from Supabase.
+  const {data:verifyRows,error:verifyError}=await sb
+    .from('ai_trip_plans')
+    .select('*')
+    .eq('trip_id',currentTrip.id)
+    .order('created_at',{ascending:false});
+
+  if(verifyError){
+    aiDraftLoadError=verifyError.message||String(verifyError);
+  }else{
+    aiDrafts=verifyRows||[];
+  }
 
   return data;
 }
@@ -11286,11 +11474,14 @@ async function generateAIPlan(e){
       renderAIDrafts();
 
       $('aiPlannerState').innerHTML=
-        '<div class="saveState success">✅ AI Plan 已生成并自动保存。关掉也不会消失，可以之后继续 Review。</div>';
+        '<div class="saveState success">✅ AI Plan 已生成并自动保存。关闭后再次打开 AI Planner，会自动继续这个 Review Draft。</div>';
+      toast(`AI Draft V${Number(draft.version||1)} 已保存 💾`);
     }catch(saveErr){
       console.error('AI draft save failed',saveErr);
+      aiDraftLoadError=saveErr?.message||String(saveErr);
       $('aiPlannerState').innerHTML=
         `<div class="saveState error"><b>⚠️ Plan 已生成，但 Draft 保存失败</b><br>${escapeHtml(saveErr?.message||String(saveErr))}</div>`;
+      toast('AI Draft 保存失败：'+(saveErr?.message||String(saveErr)),'err');
     }
 
     btn.classList.add('hide');
