@@ -7199,6 +7199,35 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 }
 </style>
 
+
+<style id="roadTripV622AIEntryRestore">
+/* Trip-level templates are removed; AI Planner remains the permanent planning entry. */
+#aiOverviewEntry{
+  display:flex !important;
+}
+
+#aiOverviewEntry.hide{
+  display:flex !important;
+}
+
+@media(max-width:640px){
+  #aiOverviewEntry{
+    display:flex !important;
+  }
+}
+
+/* Blank Trip starter now has only AI + manual add. */
+.blankTripStarterActions{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+@media(max-width:640px){
+  .blankTripStarterActions{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -7371,7 +7400,7 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.2.1 · IMPORT + DRAFT SCOPE + HOME TEMPLATES · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.2.2 · AI ENTRY RESTORE · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -7508,46 +7537,14 @@ body[data-theme="dark"] .aiOverviewEntryIcon{
             <div class="blankTripStarterCopy">
               <div class="todayEyebrow">NEW TRIP</div>
               <h3>这趟旅行还没有行程</h3>
-              <div class="footerMini">从空白开始。可以让 AI 先规划候选行程、自己添加地点，或使用 Trip Template。</div>
+              <div class="footerMini">从空白开始。可以让 AI 先规划候选行程，或自己添加地点。</div>
             </div>
             <div class="blankTripStarterActions">
               <button class="btn primary aiPlanStarterBtn" type="button" id="openAIPlannerBtn">✨ AI 帮我规划</button>
               <button class="ghost" type="button" id="blankAddPlaceBtn">＋ 自己添加地点</button>
-              <button class="ghost" type="button" id="blankOpenTemplatesBtn">📦 看 Templates</button>
             </div>
           </div>
-
-          <details class="card tripTemplatesCard" id="fullPlanImportCard">
-            <summary class="tripTemplatesSummary" id="tripTemplatesSummary">
-              <div class="tripTemplatesSummaryLeft">
-                <span class="tripTemplatesIcon">📦</span>
-                <div>
-                  <div class="todayEyebrow">OPTIONAL</div>
-                  <h3>Trip Templates</h3>
-                  <div class="footerMini">需要时才使用，不会自动导入任何行程。</div>
-                </div>
-              </div>
-              <span class="tripTemplatesChevron">⌄</span>
-            </summary>
-
-            <div class="tripTemplatesBody">
-              <div class="tripTemplateItem">
-                <div class="tripTemplateTop">
-                  <div>
-                    <div class="todayEyebrow">THAILAND ROAD TRIP</div>
-                    <h3>🇲🇾 JB → Ipoh → Thailand → Cameron · 9D8N</h3>
-                  </div>
-                  <span class="fullPlanBadge">9D8N</span>
-                </div>
-                <div class="fullPlanRouteMini">JB → Ipoh → Hat Yai/Songkhla → Krabi → Hat Yai → Cameron Highlands → JB</div>
-                <div class="footerMini" id="fullPlanImportStatus">98 个研究项目 + 路线 + Border Tips + Shared Checklist。</div>
-                <button class="btn primary fullPlanImportBtn" type="button" id="importFull9D8NBtn">使用 Thailand 9D8N Template</button>
-                <div class="footerMini tripTemplateSafeNote">只会导入到你主动选择的这个 Trip；不会影响其他旅行。</div>
-              </div>
-            </div>
-          </details>
-
-          <div class="card dayOverviewCard">
+<div class="card dayOverviewCard">
             <div class="sectionTitle">
               <div><h3>🗺️ 整趟路线</h3><div class="footerMini">点 Day 可以直接跳去当天行程</div></div>
             </div>
@@ -8676,7 +8673,6 @@ async function init(){
     const remain=Number(currentTrip?.budget_target||0)-actual;
     renderBudgetHub(actual,remain);
   renderBlankTripStarter();
-  renderFullPlanImportStatus();
   renderAIDrafts();
   });
   $('cancelExpenseBtn').addEventListener('click',()=>$('expenseDialog').close());
@@ -8722,7 +8718,6 @@ async function init(){
       toast('Checklist 已添加 ✅');
     }
   });
-  $('importFull9D8NBtn')?.addEventListener('click',importFull9D8NPlan);
     $('openAIPlannerBtn')?.addEventListener('click',openAIPlanner);
   $('openAIPlannerOverviewBtn')?.addEventListener('click',openAIPlanner);
   $('cancelAIPlannerBtn')?.addEventListener('click',()=>$('aiPlannerDialog').close());
@@ -8733,13 +8728,6 @@ async function init(){
   $('blankAddPlaceBtn')?.addEventListener('click',()=>{
     switchPanel('itinerary');
     openItemDialog(null);
-  });
-  $('blankOpenTemplatesBtn')?.addEventListener('click',()=>{
-    const templates=$('fullPlanImportCard');
-    if(!templates) return;
-    templates.classList.remove('hide');
-    templates.open=true;
-    templates.scrollIntoView({behavior:'smooth',block:'center'});
   });
 
   document.querySelectorAll('.mobileTab').forEach(btn=>{
@@ -9717,40 +9705,6 @@ async function toggleMyChecklistTick(checklistId,checked){
   await refreshTrip();
 }
 
-function renderFullPlanImportStatus(){
-  const el=$('fullPlanImportStatus');
-  const templates=$('fullPlanImportCard');
-  if(!el || !currentTrip) return;
-
-  const normalizeName=value=>
-    String(value||'').trim().toLowerCase().replace(/\s+/g,' ');
-
-  const existingKeys=new Set(
-    items.map(i=>`${Number(i.day_no)}::${normalizeName(i.name)}`)
-  );
-
-  const matched=ROADTRIP_9D8N_ITEMS.filter(t=>
-    existingKeys.has(`${Number(t.day_no)}::${normalizeName(t.name)}`)
-  ).length;
-
-  const total=ROADTRIP_9D8N_ITEMS.length;
-
-  if(matched===total){
-    // Existing Thailand trip already has the whole template.
-    // Hide the template chooser so the Overview stays clean.
-    if(templates) templates.classList.add('hide');
-    el.textContent=`Thailand 9D8N Template 已完整导入：${total}/${total} ✅`;
-    return;
-  }
-
-  if(templates) templates.classList.remove('hide');
-
-  if(matched>0){
-    el.textContent=`这个 Trip 已有 ${matched}/${total} 个 Thailand Template 项目；需要时可以继续补齐。`;
-  }else{
-    el.textContent=`98 个研究项目 + 路线 + Border Tips + Shared Checklist。`;
-  }
-}
 
 function renderBlankTripStarter(){
   const starter=$('blankTripStarter');
