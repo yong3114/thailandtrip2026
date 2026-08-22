@@ -7949,7 +7949,7 @@ body[data-theme="dark"] #recentItems .recentItemsEmpty{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.6.4A · SAFE CHECKLIST PROGRESS · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.6.5 · WHITE SCREEN HOTFIX · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -9305,7 +9305,6 @@ setTimeout(applySafeChecklistFilter,300);
   },{passive:true});
 })()
 
-init();
 }
 
 function show(view){[authView,homeView,tripView].forEach(v=>v.classList.add('hide'));view.classList.remove('hide')}
@@ -13994,6 +13993,11 @@ async function copyInvite(){
   }catch{
     prompt('复制下面内容发给朋友：', text);
   }
+}
+
+// V6.6.5: start only after the entire module has initialized.
+if(configured){
+  init();
 }
 </script>
 <dialog id="aiCompareDialog">
