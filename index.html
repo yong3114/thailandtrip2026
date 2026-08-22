@@ -6394,6 +6394,335 @@ dialog .modalActions > .btn.primary{
 }
 </style>
 
+
+<style id="roadTripV61AIPlanner">
+/* =========================================================
+   V6.1 — AI Planner Preview
+   ========================================================= */
+.aiPlanStarterBtn{
+  background:linear-gradient(135deg,#7C3AED,#2F80ED) !important;
+  border-color:transparent !important;
+  box-shadow:0 9px 20px rgba(91,77,219,.18) !important;
+}
+
+.aiPlannerModal{
+  width:min(760px,100%) !important;
+}
+
+.aiPlannerHead{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  margin-bottom:14px;
+}
+
+.aiPlannerSpark{
+  width:44px;
+  height:44px;
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  background:linear-gradient(135deg,#F4E8FF,#E8F3FF);
+  border:1px solid #DDD7FA;
+  font-size:20px;
+}
+
+body[data-theme="dark"] .aiPlannerSpark{
+  background:var(--rt-surface-2);
+  border-color:var(--rt-border);
+}
+
+.aiPlannerHead h3{
+  margin:2px 0 4px;
+}
+
+.aiPlannerFormGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.aiPlannerFormGrid .full{
+  grid-column:1/-1;
+}
+
+.aiInterestsBlock{
+  padding:12px;
+  border:1px solid var(--rt-border);
+  border-radius:16px;
+  background:var(--rt-surface-2);
+}
+
+.aiFieldLabel{
+  margin-bottom:9px;
+  color:var(--rt-text-2);
+  font-size:11px;
+  font-weight:900;
+}
+
+.aiInterestGrid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;
+}
+
+.aiInterestGrid label{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  min-width:0;
+  min-height:40px;
+  margin:0;
+  padding:8px 9px;
+  border:1px solid var(--rt-border);
+  border-radius:12px;
+  background:var(--rt-surface);
+  color:var(--rt-text-2);
+  font-size:10.5px;
+  font-weight:750;
+}
+
+.aiInterestGrid input{
+  width:auto !important;
+  min-height:auto !important;
+  margin:0 !important;
+}
+
+.aiPlannerState{
+  margin-top:12px;
+}
+
+.aiPlannerPreview{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid var(--rt-border);
+}
+
+.aiPreviewHero{
+  padding:14px;
+  border:1px solid color-mix(in srgb,#7C3AED 24%,var(--rt-border));
+  border-radius:17px;
+  background:
+    radial-gradient(circle at 96% 0%,rgba(124,58,237,.10),transparent 34%),
+    var(--rt-surface-2);
+}
+
+.aiPreviewHero h3{
+  margin:3px 0 5px;
+}
+
+.aiPreviewSummary{
+  color:var(--rt-text-2);
+  font-size:12px;
+  line-height:1.55;
+}
+
+.aiPlanningNotes{
+  margin-top:9px;
+  padding:10px 12px;
+  border:1px solid var(--rt-border);
+  border-radius:14px;
+  background:var(--rt-surface-2);
+}
+
+.aiPlanningNotes summary{
+  cursor:pointer;
+  font-size:11px;
+  font-weight:900;
+  color:var(--rt-text);
+}
+
+.aiPlanningNotes p{
+  margin:7px 0 0;
+  color:var(--rt-muted);
+  font-size:10.5px;
+  line-height:1.5;
+}
+
+.aiPreviewDays{
+  display:grid;
+  gap:10px;
+  margin-top:10px;
+}
+
+.aiPreviewDay{
+  padding:13px;
+  border:1px solid var(--rt-border);
+  border-radius:17px;
+  background:var(--rt-surface);
+}
+
+.aiPreviewDayHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.aiPreviewDayHead h4{
+  margin:4px 0 0;
+  color:var(--rt-text);
+  font-size:15px;
+  line-height:1.3;
+}
+
+.aiDayBadge{
+  display:inline-block;
+  padding:4px 7px;
+  border-radius:999px;
+  background:#EEF5FF;
+  color:#2F80ED;
+  font-size:8.5px;
+  font-weight:950;
+  letter-spacing:.08em;
+}
+
+body[data-theme="dark"] .aiDayBadge{
+  background:var(--rt-surface-2);
+}
+
+.aiPlaceCount{
+  color:var(--rt-muted);
+  font-size:9.5px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.aiDayRoute{
+  margin-top:8px;
+  color:var(--rt-text-2);
+  font-size:10.5px;
+  font-weight:800;
+}
+
+.aiDayNote{
+  margin-top:5px;
+  color:var(--rt-muted);
+  font-size:10.5px;
+  line-height:1.45;
+}
+
+.aiPreviewPlaces{
+  display:grid;
+  gap:7px;
+  margin-top:10px;
+}
+
+.aiPreviewPlace{
+  padding:10px 11px;
+  border:1px solid var(--rt-border);
+  border-radius:13px;
+  background:var(--rt-surface-2);
+}
+
+.aiPlaceTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.aiPlaceTop strong{
+  display:block;
+  color:var(--rt-text);
+  font-size:12px;
+  line-height:1.35;
+}
+
+.aiPlaceTop span{
+  display:block;
+  margin-top:3px;
+  color:var(--rt-muted);
+  font-size:9.5px;
+}
+
+.aiPlaceCost{
+  flex:0 0 auto;
+  color:var(--rt-text);
+  font-size:10.5px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.aiPlaceMeta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:6px;
+  color:var(--rt-muted);
+  font-size:9.5px;
+}
+
+.aiPlaceLocation,
+.aiPlaceReason,
+.aiPlaceTip{
+  margin-top:6px;
+  color:var(--rt-text-2);
+  font-size:10px;
+  line-height:1.45;
+}
+
+.aiPlaceTip{
+  color:var(--rt-muted);
+}
+
+.aiPreviewImportNote{
+  margin-top:11px;
+  padding:10px 12px;
+  border-radius:13px;
+  background:#EAF9F4;
+  color:#266553;
+  font-size:10.5px;
+  line-height:1.5;
+}
+
+body[data-theme="dark"] .aiPreviewImportNote{
+  background:var(--rt-surface-2);
+  color:var(--rt-text-2);
+}
+
+.aiPlannerActions{
+  flex-wrap:wrap;
+}
+
+@media(max-width:640px){
+  .aiPlannerFormGrid{
+    grid-template-columns:1fr;
+  }
+
+  .aiPlannerFormGrid .full{
+    grid-column:auto;
+  }
+
+  .aiInterestGrid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .aiPlannerHead{
+    gap:10px;
+  }
+
+  .aiPlannerSpark{
+    width:40px;
+    height:40px;
+    border-radius:13px;
+  }
+
+  .aiPreviewDay{
+    padding:11px;
+  }
+
+  .aiPlaceTop{
+    gap:7px;
+  }
+
+  .aiPlannerActions{
+    justify-content:flex-end !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -6492,7 +6821,7 @@ dialog .modalActions > .btn.primary{
 <div class="hero">
       <div class="top">
         <div>
-          <div class="appV2Badge">✦ ROADTRIP V6.0 P1 · TRIP FOUNDATION · FULL 9D8N PLAN</div>
+          <div class="appV2Badge">✦ ROADTRIP V6.1 · AI PLANNER PREVIEW · FULL 9D8N PLAN</div>
           <h1 id="tripTitle"></h1>
           <div class="sub" id="tripSubtitle"></div>
         </div>
@@ -6604,10 +6933,11 @@ dialog .modalActions > .btn.primary{
             <div class="blankTripStarterCopy">
               <div class="todayEyebrow">NEW TRIP</div>
               <h3>这趟旅行还没有行程</h3>
-              <div class="footerMini">从空白开始。你可以自己添加地点，或选择一个 Trip Template。下一阶段会在这里加入 ✨ AI Planner。</div>
+              <div class="footerMini">从空白开始。可以让 AI 先规划候选行程、自己添加地点，或使用 Trip Template。</div>
             </div>
             <div class="blankTripStarterActions">
-              <button class="btn primary" type="button" id="blankAddPlaceBtn">＋ 自己添加地点</button>
+              <button class="btn primary aiPlanStarterBtn" type="button" id="openAIPlannerBtn">✨ AI 帮我规划</button>
+              <button class="ghost" type="button" id="blankAddPlaceBtn">＋ 自己添加地点</button>
               <button class="ghost" type="button" id="blankOpenTemplatesBtn">📦 看 Templates</button>
             </div>
           </div>
@@ -6919,6 +7249,76 @@ dialog .modalActions > .btn.primary{
     </div>
   </div>
 
+
+<dialog id="aiPlannerDialog">
+  <form id="aiPlannerForm" class="modal aiPlannerModal">
+    <div class="aiPlannerHead">
+      <div class="aiPlannerSpark">✨</div>
+      <div>
+        <div class="todayEyebrow">AI TRIP PLANNER</div>
+        <h3>让 AI 帮你规划这趟旅行</h3>
+        <div class="footerMini">先生成 Preview。你确认后，才会加入现有 Candidate / Voting 系统。</div>
+      </div>
+    </div>
+
+    <div class="aiPlannerFormGrid">
+      <label class="full">从哪里出发
+        <input id="aiOrigin" placeholder="例如：Johor Bahru, Malaysia" required>
+      </label>
+
+      <label class="full">目的地
+        <input id="aiDestination" placeholder="例如：Tokyo, Japan" required>
+      </label>
+
+      <label>天数
+        <input id="aiDays" type="number" min="1" max="30" required>
+      </label>
+
+      <label>人数
+        <input id="aiPeople" type="number" min="1" max="20" required>
+      </label>
+
+      <label class="full">总预算 RM
+        <input id="aiBudget" type="number" min="0" step="1" required>
+      </label>
+
+      <label class="full">旅行节奏
+        <select id="aiStyle">
+          <option value="relaxed">😌 Relaxed · 轻松</option>
+          <option value="balanced" selected>⚖️ Balanced · 平衡</option>
+          <option value="packed">🔥 Packed · 充实</option>
+        </select>
+      </label>
+
+      <div class="full aiInterestsBlock">
+        <div class="aiFieldLabel">喜欢什么？</div>
+        <div class="aiInterestGrid">
+          <label><input type="checkbox" class="aiInterest" value="food" checked> 🍜 Food</label>
+          <label><input type="checkbox" class="aiInterest" value="shopping"> 🛍 Shopping</label>
+          <label><input type="checkbox" class="aiInterest" value="photo spots"> 📸 Photo</label>
+          <label><input type="checkbox" class="aiInterest" value="nature"> 🌿 Nature</label>
+          <label><input type="checkbox" class="aiInterest" value="beach"> 🏖 Beach</label>
+          <label><input type="checkbox" class="aiInterest" value="nightlife"> 🌃 Nightlife</label>
+          <label><input type="checkbox" class="aiInterest" value="cafe"> ☕ Cafe</label>
+          <label><input type="checkbox" class="aiInterest" value="massage and spa"> 💆 Massage</label>
+          <label><input type="checkbox" class="aiInterest" value="culture and temples"> 🛕 Culture</label>
+          <label><input type="checkbox" class="aiInterest" value="family friendly"> 👨‍👩‍👧 Family</label>
+        </div>
+      </div>
+    </div>
+
+    <div id="aiPlannerState" class="aiPlannerState"></div>
+
+    <div id="aiPlannerPreview" class="aiPlannerPreview hide"></div>
+
+    <div class="modalActions aiPlannerActions">
+      <button class="iconbtn" type="button" id="cancelAIPlannerBtn">关闭</button>
+      <button class="ghost hide" type="button" id="regenerateAIPlanBtn">↻ 重新生成</button>
+      <button class="btn primary" type="submit" id="generateAIPlanBtn">✨ Generate Plan</button>
+      <button class="btn primary hide" type="button" id="importAIPlanBtn">✅ 加入我的 Trip</button>
+    </div>
+  </form>
+</dialog>
 
 <dialog id="createTripDialog">
   <form id="createTripForm" class="modal createTripModal">
@@ -7259,6 +7659,7 @@ let checklist=[], checklistTicks=[], checklistAvailable=false, checklistTicksAva
 let activeDay=1, todayDay=1, editingItem=null, editingExpense=null, channel=null;
 let itemSearch='', itemCategoryFilter='全部', itemSortMode='default', itineraryMode='timeline';
 let budgetCategoryFilter='all';
+let aiGeneratedPlan=null;
 const mobileBar=$('mobileBar'), mobileAddBtn=$('mobileAddBtn');
 
 if(!configured){
@@ -7432,7 +7833,7 @@ function installNativeSheet(dialogId){
 }
 
 // Apply the native interaction to all add/edit sheets.
-['itemDialog','expenseDialog','quickAddDialog','todayDialog','checklistDialog','createTripDialog'].forEach(installNativeSheet);
+['itemDialog','expenseDialog','quickAddDialog','todayDialog','checklistDialog','createTripDialog','aiPlannerDialog'].forEach(installNativeSheet);
 
 
 
@@ -7698,6 +8099,11 @@ async function init(){
     }
   });
   $('importFull9D8NBtn')?.addEventListener('click',importFull9D8NPlan);
+    $('openAIPlannerBtn')?.addEventListener('click',openAIPlanner);
+  $('cancelAIPlannerBtn')?.addEventListener('click',()=>$('aiPlannerDialog').close());
+  $('aiPlannerForm')?.addEventListener('submit',generateAIPlan);
+  $('regenerateAIPlanBtn')?.addEventListener('click',generateAIPlan);
+  $('importAIPlanBtn')?.addEventListener('click',importAIPlan);
   $('blankAddPlaceBtn')?.addEventListener('click',()=>{
     switchPanel('itinerary');
     openItemDialog(null);
@@ -8614,6 +9020,307 @@ function renderBlankTripStarter(){
   // Keep Templates collapsed by default on a blank trip.
   if(blank && $('fullPlanImportCard')?.open){
     $('fullPlanImportCard').open=false;
+  }
+}
+
+
+function aiCategoryToItem(category){
+  return ({
+    food:'🍜 美食',
+    attraction:'📍 景点',
+    hotel:'🏨 酒店',
+    shopping:'🛍️ 购物',
+    massage:'💆 按摩',
+    transport:'🚗 交通 / Border',
+    nature:'📍 景点',
+    beach:'📍 景点',
+    nightlife:'📍 景点',
+    other:'📝 其他'
+  })[String(category||'').toLowerCase()] || '📝 其他';
+}
+
+function aiPriorityToItem(priority){
+  return ({
+    must_go:'⭐ 必去',
+    recommended:'👍 想去',
+    optional:'🙂 有空再去'
+  })[String(priority||'').toLowerCase()] || '👍 想去';
+}
+
+function selectedAIInterests(){
+  return [...document.querySelectorAll('.aiInterest:checked')].map(el=>el.value);
+}
+
+function openAIPlanner(){
+  if(!currentTrip) return;
+
+  aiGeneratedPlan=null;
+
+  $('aiOrigin').value='';
+  $('aiDestination').value='';
+  $('aiDays').value=Number(currentTrip.days||1);
+  $('aiPeople').value=Number(currentTrip.people||1);
+  $('aiBudget').value=Number(currentTrip.budget_target||0);
+  $('aiStyle').value='balanced';
+
+  $('aiPlannerState').innerHTML='';
+  $('aiPlannerPreview').innerHTML='';
+  $('aiPlannerPreview').classList.add('hide');
+  $('importAIPlanBtn').classList.add('hide');
+  $('regenerateAIPlanBtn').classList.add('hide');
+  $('generateAIPlanBtn').classList.remove('hide');
+  $('generateAIPlanBtn').disabled=false;
+  $('generateAIPlanBtn').textContent='✨ Generate Plan';
+
+  $('aiPlannerDialog').showModal();
+}
+
+function renderAIPlanPreview(plan){
+  const preview=$('aiPlannerPreview');
+  if(!preview || !plan) return;
+
+  const notes=Array.isArray(plan.planning_notes)?plan.planning_notes:[];
+  const days=Array.isArray(plan.days)?plan.days:[];
+
+  preview.innerHTML=`
+    <div class="aiPreviewHero">
+      <div class="todayEyebrow">AI PREVIEW</div>
+      <h3>${escapeHtml(plan.trip_title||'AI Trip Plan')}</h3>
+      <div class="aiPreviewSummary">${escapeHtml(plan.summary||'')}</div>
+    </div>
+
+    ${notes.length?`
+      <details class="aiPlanningNotes">
+        <summary>⚠️ Planning Notes · ${notes.length}</summary>
+        <div>${notes.map(n=>`<p>• ${escapeHtml(n)}</p>`).join('')}</div>
+      </details>`:''}
+
+    <div class="aiPreviewDays">
+      ${days.map(day=>`
+        <div class="aiPreviewDay">
+          <div class="aiPreviewDayHead">
+            <div>
+              <span class="aiDayBadge">DAY ${Number(day.day_no||0)}</span>
+              <h4>${escapeHtml(day.day_title||`Day ${day.day_no}`)}</h4>
+            </div>
+            <span class="aiPlaceCount">${Array.isArray(day.places)?day.places.length:0} places</span>
+          </div>
+
+          ${day.route?`<div class="aiDayRoute">🗺️ ${escapeHtml(day.route)}</div>`:''}
+          ${day.notes?`<div class="aiDayNote">${escapeHtml(day.notes)}</div>`:''}
+
+          <div class="aiPreviewPlaces">
+            ${(Array.isArray(day.places)?day.places:[]).map(place=>`
+              <div class="aiPreviewPlace">
+                <div class="aiPlaceTop">
+                  <div>
+                    <strong>${escapeHtml(place.name||'')}</strong>
+                    <span>${escapeHtml(aiCategoryToItem(place.category))} · ${escapeHtml(aiPriorityToItem(place.priority))}</span>
+                  </div>
+                  <div class="aiPlaceCost">${Number(place.estimated_cost_rm||0)>0?money(place.estimated_cost_rm):'Free / —'}</div>
+                </div>
+
+                <div class="aiPlaceMeta">
+                  ${place.recommended_time?`<span>🕒 ${escapeHtml(place.recommended_time)}</span>`:''}
+                  ${Number(place.duration_minutes||0)>0?`<span>⏱ ${Number(place.duration_minutes)} min</span>`:''}
+                </div>
+
+                ${place.location?`<div class="aiPlaceLocation">📍 ${escapeHtml(place.location)}</div>`:''}
+                ${place.why_recommended?`<div class="aiPlaceReason">${escapeHtml(place.why_recommended)}</div>`:''}
+                ${place.tips?`<div class="aiPlaceTip">💡 ${escapeHtml(place.tips)}</div>`:''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="aiPreviewImportNote">
+      ✅ 按“加入我的 Trip”后，以上地点会进入现有 <b>候选 / 投票</b> 系统，不会自动变成已确认时间表。
+    </div>
+  `;
+
+  preview.classList.remove('hide');
+}
+
+async function generateAIPlan(e){
+  if(e) e.preventDefault();
+  if(!currentTrip || !user) return;
+
+  const form=$('aiPlannerForm');
+  if(!form.reportValidity()) return;
+
+  const btn=$('generateAIPlanBtn');
+  const regen=$('regenerateAIPlanBtn');
+
+  btn.disabled=true;
+  if(regen) regen.disabled=true;
+
+  $('aiPlannerState').innerHTML=
+    '<div class="saveState saving">✨ AI 正在研究路线、候选地点和预算… 可能需要几秒钟。</div>';
+
+  try{
+    const {data:{session}}=await sb.auth.getSession();
+    if(!session?.access_token){
+      throw new Error('登录 Session 已过期，请重新登录。');
+    }
+
+    const body={
+      origin:$('aiOrigin').value.trim(),
+      destination:$('aiDestination').value.trim(),
+      days:Number($('aiDays').value||currentTrip.days||1),
+      people:Number($('aiPeople').value||currentTrip.people||1),
+      budget_rm:Number($('aiBudget').value||0),
+      style:$('aiStyle').value||'balanced',
+      interests:selectedAIInterests()
+    };
+
+    const {data,error}=await sb.functions.invoke('ai-trip-planner',{
+      body,
+      headers:{
+        Authorization:`Bearer ${session.access_token}`
+      }
+    });
+
+    if(error){
+      throw new Error(error.message||'AI Planner Function 调用失败');
+    }
+
+    if(!data?.ok || !data?.plan){
+      throw new Error(data?.error||'AI 没有返回可用的旅行计划。');
+    }
+
+    aiGeneratedPlan=data.plan;
+    renderAIPlanPreview(aiGeneratedPlan);
+
+    $('aiPlannerState').innerHTML=
+      '<div class="saveState success">✅ AI Plan 已生成。先检查 Preview，再决定是否加入 Trip。</div>';
+
+    btn.classList.add('hide');
+    $('importAIPlanBtn').classList.remove('hide');
+    regen?.classList.remove('hide');
+
+  }catch(err){
+    console.error('AI Planner error',err);
+    $('aiPlannerState').innerHTML=
+      `<div class="saveState error"><b>❌ AI Planner 失败</b><br>${escapeHtml(err?.message||String(err))}</div>`;
+  }finally{
+    btn.disabled=false;
+    if(regen) regen.disabled=false;
+    btn.textContent='✨ Generate Plan';
+  }
+}
+
+async function importAIPlan(){
+  if(!aiGeneratedPlan || !currentTrip || !user) return;
+
+  const days=Array.isArray(aiGeneratedPlan.days)?aiGeneratedPlan.days:[];
+  const places=days.flatMap(day=>
+    (Array.isArray(day.places)?day.places:[]).map(place=>({day,place}))
+  );
+
+  if(!places.length){
+    toast('这个 AI Plan 没有地点可以导入','err');
+    return;
+  }
+
+  const ok=confirm(
+    `把 AI Preview 的 ${places.length} 个地点加入这趟 Trip？\n\n`+
+    '• 全部会先进入“候选 / 投票”\n'+
+    '• 不会自动确认\n'+
+    '• 同 Day 同名已存在的地点会跳过\n'+
+    '• 现有 Expense / Vote / Checklist 不会删除'
+  );
+  if(!ok) return;
+
+  const btn=$('importAIPlanBtn');
+  btn.disabled=true;
+  btn.textContent='正在加入 Trip…';
+
+  try{
+    const normalize=value=>String(value||'').trim().toLowerCase().replace(/\s+/g,' ');
+    const existing=new Set(
+      items
+        .filter(i=>!isBudgetItem(i))
+        .map(i=>`${Number(i.day_no)}::${normalize(i.name)}`)
+    );
+
+    const rows=[];
+
+    for(const {day,place} of places){
+      const dayNo=Math.max(1,Number(day.day_no||1));
+      const name=String(place.name||'').trim();
+      if(!name) continue;
+
+      const key=`${dayNo}::${normalize(name)}`;
+      if(existing.has(key)) continue;
+      existing.add(key);
+
+      const noteParts=[
+        place.recommended_time?`✨ AI建议时间：${place.recommended_time}`:'',
+        place.why_recommended?`推荐理由：${place.why_recommended}`:'',
+        place.tips?`Tips：${place.tips}`:''
+      ].filter(Boolean);
+
+      rows.push({
+        trip_id:currentTrip.id,
+        day_no:dayNo,
+        name,
+        category:aiCategoryToItem(place.category),
+        priority:aiPriorityToItem(place.priority),
+        plan_status:'candidate',
+        auto_confirmed:false,
+        start_time:null,
+        duration_minutes:Math.max(0,Number(place.duration_minutes||60)),
+        travel_minutes:0,
+        location:String(place.location||'').trim(),
+        cost:Math.max(0,Number(place.estimated_cost_rm||0)),
+        link:'',
+        note:noteParts.join('\n'),
+        created_by:user.id
+      });
+    }
+
+    if(!rows.length){
+      toast('所有 AI 地点都已经存在，没有需要新增的项目。');
+      return;
+    }
+
+    const routeList=days
+      .sort((a,b)=>Number(a.day_no||0)-Number(b.day_no||0))
+      .map(day=>String(day.route||`Day ${day.day_no} · AI Plan`));
+
+    const tripPatch={
+      days:Math.max(1,days.length),
+      routes:routeList
+    };
+
+    const {error:tripErr}=await sb
+      .from('trips')
+      .update(tripPatch)
+      .eq('id',currentTrip.id);
+
+    if(tripErr) throw tripErr;
+
+    const {error:itemErr}=await sb.from('items').insert(rows);
+    if(itemErr) throw itemErr;
+
+    activeDay=1;
+    itineraryMode='candidates';
+
+    await refreshTrip();
+
+    $('aiPlannerDialog').close();
+    switchPanel('itinerary');
+
+    toast(`AI Plan 已加入 ${rows.length} 个候选地点 ✅`);
+
+  }catch(err){
+    console.error('AI import failed',err);
+    toast('AI Plan 导入失败：'+(err?.message||String(err)),'err');
+  }finally{
+    btn.disabled=false;
+    btn.textContent='✅ 加入我的 Trip';
   }
 }
 
